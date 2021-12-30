@@ -1,10 +1,10 @@
-<html lang="zh">
+<html>
 <head>
     <meta charset="utf-8" />
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>关于 - Sugar&#39;s Blog</title>
+<title>算法刷题日记-两数之和 | Sugar&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1640855647158">
 
@@ -33,7 +33,7 @@
 <!--<script src="media/scripts/index.js"></script>-->
 
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
@@ -105,14 +105,97 @@
     }
 </script>
     <div class="post-container">
-        <div class="post-detail">
+        <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
-                <div class="post-content">
+                <h2 class="post-title">
+                    算法刷题日记-两数之和
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-12-30 ·
+                    </time>
                     
+                        <a href="https://sugar940.github.io/tag/6Rjnu17MX/" class="post-tags">
+                            # 数据结构
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="暴力解法">暴力解法</h2>
+<p>算法时间复杂度为O(n^2)，空间复杂度O(1)</p>
+<p>两次遍历循环整个数组即可。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        vector&lt;int&gt; result;
+        for(int i = 0; i &lt; nums.size();i++){
+            for(int j = 0;j &lt; nums.size();j++){
+                if(nums[i] + nums[j] == target &amp;&amp; i != j){
+                    
+                    result.push_back(i);
+                    result.push_back(j);
+                    return result;
+                }
+            }
+        }
+
+        return result;
+
+    }
+};
+</code></pre>
+<h2 id="技巧解法">技巧解法</h2>
+<p>时间复杂度O(nlog2n)</p>
+<p>注：map.find()的时间复杂度是log2n。是基于红黑树进行查找。</p>
+<p>利用map的映射求解，将值记录在map中，直接查询map是否有符合要求的值，有则直接返回。</p>
+<p>思路：遍历整个数组，每次都看map中是否有对应需求的差值，有则返回，没有则添加。</p>
+<p>注：用目标值减去数组的值得到差值，显然差值与目标值之和符合题目要求。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        vector&lt;int&gt; result;
+        map&lt;int,int&gt; mp;
+        int mTarget;
+        for(int i = 0; i &lt; nums.size();i++){
+            mTarget = target - nums[i];
+            map&lt;int,int&gt;::iterator it = mp.find(mTarget);
+            if(it == mp.end()){
+                mp[nums[i]] = i;
+            }else{
+                result.push_back(mp[mTarget]);
+                result.push_back(i);
+                
+                return result;
+            }
+            
+        }
+        return result;
+    }
+};
+</code></pre>
+<h2 id="函数使用问题">函数使用问题</h2>
+<p>map.find(type value)若找不到指定的值，会返回end，所以如果it == map.end()则说明数组中没有这个值。</p>
+
                 </div>
             </article>
         </div>
-        <br>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/pai-xu-zong-jie/" class="post-title gt-a-link">
+                    排序总结
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/suan-fa-shua-ti-ri-ji-liang-shu-zhi-he/" class="leancloud_visitors" data-flag-title="算法刷题日记-两数之和">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
         
 
         
@@ -143,7 +226,6 @@
 </script>
 
         
-
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first">舒格小栈</div>
