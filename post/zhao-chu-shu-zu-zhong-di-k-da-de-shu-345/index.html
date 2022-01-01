@@ -4,7 +4,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>图的遍历 | Sugar&#39;s Blog</title>
+<title>找出数组中第k大的数（345） | Sugar&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1641027989895">
 
@@ -108,36 +108,108 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    图的遍历
+                    找出数组中第k大的数（345）
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
-                        · 2021-10-05 ·
+                        · 2022-01-01 ·
                     </time>
                     
-                        <a href="https://sugar940.github.io/tag/FS1EyrQBR/" class="post-tags">
-                            # 图
+                        <a href="https://sugar940.github.io/tag/Boh11eVWb/" class="post-tags">
+                            # 快速排序
                         </a>
                     
-                        <a href="https://sugar940.github.io/tag/6Rjnu17MX/" class="post-tags">
-                            # 数据结构
+                        <a href="https://sugar940.github.io/tag/EbIJlgK9q/" class="post-tags">
+                            # leetcode刷题记录
                         </a>
                     
                 </div>
                 <div class="post-content">
-                    <h1 id="广度优先搜索bfs与深度优先搜索dfs">广度优先搜索（BFS）与深度优先搜索（DFS）</h1>
-<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1633439711911.png" alt="" loading="lazy"></figure>
-<h2 id="性能分析">性能分析</h2>
-<h3 id="空间复杂度">空间复杂度</h3>
-<p>BFS需要构造辅助队列：O（v）<br>
-DFS需要构造辅助栈：O（v）</p>
-<h3 id="邻接矩阵">邻接矩阵</h3>
-<p>查找每个顶点的邻接点所需时间：O（V）<br>
-查找所有顶点的邻接点时间复杂度：O（V^2）</p>
-<h3 id="链接表">链接表</h3>
-<p>查找每个顶点的邻接点所需时间：O（E）<br>
-访问每个顶点的邻接点所需时间：O（V）<br>
-查找访问所有顶点的邻接点时间复杂度：O（V+E）</p>
+                    <h2 id="快速排序解法">快速排序解法</h2>
+<p>第27组数据发生超时！！！问题严重</p>
+<p>即使使用随机快速排序算法进行优化仍然无法解决问题</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int findKthLargest(vector&lt;int&gt;&amp; nums, int k) {
+        quickSort(0,nums.size()-1,nums);
+        return nums[nums.size()-k];
+    }
+    void quickSort(int left,int right,vector&lt;int&gt;&amp; nums){//这一块没有写好，注意理解一下快排的思路
+        
+        if(left &lt; right){
+            int pos = Randpartition(left,right,nums);//接收返回的基准值
+            quickSort(left,pos-1,nums);
+            quickSort(pos+1,nums.size()-1,nums);//注意这里是pos-1和pos+1
+        }
+        
+        
+    }
+
+    int Randpartition(int left,int right,vector&lt;int&gt;&amp; nums){
+        int p = round(1.0*rand()/RAND_MAX*(right-left)+left);//在0-1间取一个随机数，用它来乘区间得到(0,区间),对这个区间+left得到(left,right)之间的随机数
+        swap(p,left,nums);
+        int temp = nums[left];
+        while(left &lt; right){
+            while(left &lt; right &amp;&amp; temp &lt;= nums[right]) right--;
+            nums[left] = nums[right];
+            while(left &lt; right &amp;&amp; nums[left] &lt;= temp) left++;//注意这里是小于等于，不是小于，为什么呢？因为如果遇到一个一样的数就卡住的话
+            nums[right] = nums[left];
+        }
+        nums[left] = temp;
+        return left;
+    }
+
+    void swap(int p,int left,vector&lt;int&gt; nums){
+        int temp = nums[left];
+        nums[left] = nums[p];
+        nums[p] = temp;
+    }
+
+    
+};
+</code></pre>
+<p>后面经过排查是quickSort写错了，应该传入的数据是left和right，而不是left和nums.size()-1</p>
+<h2 id="快速排序解决方案">快速排序解决方案</h2>
+<pre><code class="language-C++">class Solution {
+public:
+    int findKthLargest(vector&lt;int&gt;&amp; nums, int k) {
+        quickSort(0,nums.size()-1,nums);
+        return nums[nums.size()-k];
+    }
+    void quickSort(int left,int right,vector&lt;int&gt;&amp; nums){//这一块没有写好，注意理解一下快排的思路
+        
+        if(left &lt; right){
+            int pos = Randpartition(left,right,nums);//接收返回的基准值
+            quickSort(left,pos-1,nums);
+            quickSort(pos+1,right,nums);//注意这里是pos-1和pos+1
+        }
+    }
+
+    int Randpartition(int left,int right,vector&lt;int&gt;&amp; nums){
+        
+        //int p = round(1.0*rand()/RAND_MAX*(right-left)+left);//在0-1间取一个随机数，用它来乘区间得到(0,区间),对这个区间+left得到(left,right)之间的随机数
+        int p = left + (right-left)/2;//这样写可以代替取随机数的写法。
+        swap(nums[p],nums[left]);
+        int temp = nums[left];
+        while(left &lt; right){
+            while(left &lt; right &amp;&amp; temp &lt;= nums[right]) --right;
+            nums[left] = nums[right];
+            
+            while(left &lt; right &amp;&amp; nums[left] &lt;= temp) ++left;//注意这里是小于等于，不是小于，为什么呢？因为如果遇到一个一样的数就卡住的话
+            nums[right] = nums[left];
+            
+        }
+        nums[left] = temp;
+        return left;
+    }
+
+
+    
+};
+</code></pre>
+<h2 id="堆排序解决方案">堆排序解决方案</h2>
+<pre><code class="language-C++">
+</code></pre>
 
                 </div>
             </article>
@@ -146,14 +218,14 @@ DFS需要构造辅助栈：O（v）</p>
         
             <div class="next-post">
                 <div class="next gt-c-content-color-first">下一篇</div>
-                <a href="https://sugar940.github.io/post/tu-de-cun-chu/" class="post-title gt-a-link">
-                    图的存储
+                <a href="https://sugar940.github.io/post/ping-fang-shu-zhi-he-633/" class="post-title gt-a-link">
+                    平方数之和（633）
                 </a>
             </div>
         
 
         
-            <span id="/post/tu-de-bian-li/" class="leancloud_visitors" data-flag-title="图的遍历">
+            <span id="/post/zhao-chu-shu-zu-zhong-di-k-da-de-shu-345/" class="leancloud_visitors" data-flag-title="找出数组中第k大的数（345）">
                 <em class="post-meta-item-text">阅读量 </em>
                 <i class="leancloud-visitors-count">0</i>
             </span>
