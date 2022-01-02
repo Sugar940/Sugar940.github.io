@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://sugar940.github.io/</id>
     <title>Sugar&apos;s Blog</title>
-    <updated>2022-01-02T07:35:01.889Z</updated>
+    <updated>2022-01-02T08:26:29.851Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://sugar940.github.io/"/>
     <link rel="self" href="https://sugar940.github.io/atom.xml"/>
@@ -16,7 +16,9 @@
         <link href="https://sugar940.github.io/post/zui-chang-zi-xu-lie-pi-pei-524/">
         </link>
         <updated>2022-01-01T09:05:39.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="双指针解法">双指针解法</h2>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641111900057.png" alt="" loading="lazy"></figure>
+<h2 id="双指针解法">双指针解法</h2>
 <p>思路：每次从数组中取出来一个字符串与目标字符串对比，sl指向目标字符串，tl指向取出来的子字符串，若匹配sl和tl同时加1，若不匹配++sl。经过该过程后判断tl是否和子字符串长度一样，一样则说明匹配，然后更新结果即可。</p>
 <pre><code class="language-C++">class Solution {
 public:
@@ -60,7 +62,9 @@ public:
         <link href="https://sugar940.github.io/post/pan-duan-lian-biao-shi-fou-you-huan-141/">
         </link>
         <updated>2022-01-01T09:04:17.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="一直没有解决的问题">一直没有解决的问题</h2>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<p><img src="https://sugar940.github.io//post-images/1641111867478.png" alt="" loading="lazy">!</p>
+<h2 id="一直没有解决的问题">一直没有解决的问题</h2>
 <p>当输入空串时报错。</p>
 <h2 id="问题代码">问题代码</h2>
 <pre><code class="language-C++">/**
@@ -135,7 +139,9 @@ public:
         <link href="https://sugar940.github.io/post/zui-chang-hui-wen-chuan-680/">
         </link>
         <updated>2022-01-01T09:03:24.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="错误解法">错误解法</h2>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641111917147.png" alt="" loading="lazy"></figure>
+<h2 id="错误解法">错误解法</h2>
 <pre><code class="language-C++">class Solution
 {
 public:
@@ -222,7 +228,9 @@ public:
         <link href="https://sugar940.github.io/post/zhao-chu-shu-zu-zhong-di-k-da-de-shu-345/">
         </link>
         <updated>2022-01-01T09:02:18.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="快速排序解法">快速排序解法</h2>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641111934202.png" alt="" loading="lazy"></figure>
+<h2 id="快速排序解法">快速排序解法</h2>
 <p>第27组数据发生超时！！！问题严重</p>
 <p>即使使用随机快速排序算法进行优化仍然无法解决问题</p>
 <pre><code class="language-C++">class Solution {
@@ -315,7 +323,9 @@ public:
         <link href="https://sugar940.github.io/post/ping-fang-shu-zhi-he-633/">
         </link>
         <updated>2022-01-01T09:01:13.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="双指针解法">双指针解法</h2>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641111952351.png" alt="" loading="lazy"></figure>
+<h2 id="双指针解法">双指针解法</h2>
 <p>时间复杂度O(sqrt(n))</p>
 <pre><code class="language-C++">class Solution {
 public:
@@ -351,7 +361,9 @@ public:
         <link href="https://sugar940.github.io/post/suan-fa-shua-ti-ri-ji-liang-shu-zhi-he/">
         </link>
         <updated>2021-12-30T09:13:06.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="暴力解法">暴力解法</h2>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641111981063.png" alt="" loading="lazy"></figure>
+<h2 id="暴力解法">暴力解法</h2>
 <p>算法时间复杂度为O(n^2)，空间复杂度O(1)</p>
 <p>两次遍历循环整个数组即可。</p>
 <pre><code class="language-C++">class Solution {
