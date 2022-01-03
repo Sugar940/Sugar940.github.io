@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://sugar940.github.io/</id>
     <title>Sugar&apos;s Blog</title>
-    <updated>2022-01-02T08:26:29.851Z</updated>
+    <updated>2022-01-03T05:16:22.862Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://sugar940.github.io/"/>
     <link rel="self" href="https://sugar940.github.io/atom.xml"/>
@@ -10,6 +10,44 @@
     <logo>https://sugar940.github.io/images/avatar.png</logo>
     <icon>https://sugar940.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Sugar&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[数组中前k个高频的字母]]></title>
+        <id>https://sugar940.github.io/post/shu-zu-zhong-qian-k-ge-gao-pin-de-zi-mu/</id>
+        <link href="https://sugar940.github.io/post/shu-zu-zhong-qian-k-ge-gao-pin-de-zi-mu/">
+        </link>
+        <updated>2022-01-03T05:15:36.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641186967377.png" alt="" loading="lazy"></figure>
+<h2 id="桶排序求解">桶排序求解</h2>
+<pre><code class="language-C++">class Solution {
+public:
+    //由大到小排序
+    static bool cmp(pair&lt;int,int&gt; &amp;a,pair&lt;int,int&gt; &amp;b){
+        return a.second &gt; b.second;
+    }
+    vector&lt;int&gt; topKFrequent(vector&lt;int&gt;&amp; nums, int k) {
+        unordered_map&lt;int,int&gt; bucket;
+        //把相应的数值存入桶里面
+        //初始值为0
+        for(int i:nums) ++bucket[i];
+        vector&lt;pair&lt;int,int&gt;&gt; res(bucket.begin(),bucket.end());//把从桶的头指针至尾指针的所有数放到pair类型的vector中
+        //对res的头到尾的顺序进行cmp所定义的规则的排序
+        sort(res.begin(),res.end(),cmp);
+        vector&lt;int&gt; ans;
+        for(int i = 0;i &lt; k;i++){
+            ans.push_back(res[i].first);//注意此处不要写错了
+        }
+        return ans;
+        
+        
+    }
+};
+</code></pre>
+<h2 id="补充">补充</h2>
+<p>对map型数据进行排序，可以将其放到pair型结构中，bucket.begin()包含由first和second两个元素，vector&lt;pair&lt;int,int&gt;&gt; res(bucket.begin(),bucket.end());就是把从桶的头指针至尾指针的所有数放到pair类型的vector中，之后再对vector进行排序即可。</p>
+<p>因为map是基于pair类型实现的，所以可以直接将map放到pair型中，map.begin代表的是一个pair。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[最长子序列匹配（524）]]></title>
         <id>https://sugar940.github.io/post/zui-chang-zi-xu-lie-pi-pei-524/</id>
@@ -633,34 +671,6 @@ DFS需要构造辅助栈：O（v）</p>
 <p>查找每个顶点的邻接点所需时间：O（E）<br>
 访问每个顶点的邻接点所需时间：O（V）<br>
 查找访问所有顶点的邻接点时间复杂度：O（V+E）</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[图的存储]]></title>
-        <id>https://sugar940.github.io/post/tu-de-cun-chu/</id>
-        <link href="https://sugar940.github.io/post/tu-de-cun-chu/">
-        </link>
-        <updated>2021-10-05T12:33:27.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="邻接矩阵法">邻接矩阵法</h1>
-<h2 id="无向图的邻接矩阵">无向图的邻接矩阵</h2>
-<p>1、一定是一个对称矩阵<br>
-2、每一行（列）的非零元素个数正好是顶点的度</p>
-<h2 id="有向图的邻接矩阵">有向图的邻接矩阵</h2>
-<p>1、每一行的非零元素个数对应出度<br>
-2、每一列的非零元素个数对应入度</p>
-<h2 id="共性">共性</h2>
-<p>1、邻接矩阵容易确定两个点是否相连但是难以确定边数（需要逐行列遍历）<br>
-2、邻接矩阵适合存储稠密图</p>
-<h1 id="链接表法">链接表法</h1>
-<h2 id="存储空间">存储空间</h2>
-<p>1、无向图的存储空间为顶点数加边数乘2，有向图则为顶点数加边数</p>
-<h2 id="特性">特性</h2>
-<p>1、适合存储稀疏图<br>
-2、很容易找到一个顶点的所有邻边，而邻接矩阵则需要遍历一行<br>
-3、但是要确定给定的两个顶点之间是否存在边邻接矩阵则可以快速找到<br>
-4、链接表表示不唯一</p>
-<h2 id="手绘图">手绘图</h2>
-<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1633439058292.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>

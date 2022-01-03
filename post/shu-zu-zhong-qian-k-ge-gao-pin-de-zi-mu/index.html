@@ -4,7 +4,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>排序总结 | Sugar&#39;s Blog</title>
+<title>数组中前k个高频的字母 | Sugar&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1641186978986">
 
@@ -108,158 +108,45 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    排序总结
+                    数组中前k个高频的字母
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
-                        · 2021-10-11 ·
+                        · 2022-01-03 ·
                     </time>
-                    
-                        <a href="https://sugar940.github.io/tag/6Rjnu17MX/" class="post-tags">
-                            # 数据结构
-                        </a>
                     
                 </div>
                 <div class="post-content">
-                    <h2 id="插入排序">插入排序</h2>
-<table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center">直接插入排序</th>
-<th style="text-align:center">折半排序</th>
-<th style="text-align:center">希尔排序</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">过程</td>
-<td style="text-align:center">遍历将元素插入前面的有序队列之中</td>
-<td style="text-align:center">在直接插入的基础上改进：通过折半查找找出要插入的位置</td>
-<td style="text-align:center">通过设定步长对步长内的数组进行排序，多次反复使得数组基本有序，之后使用直接插入排序</td>
-</tr>
-<tr>
-<td style="text-align:center">空间复杂度</td>
-<td style="text-align:center">O（1）</td>
-<td style="text-align:center">O（1）</td>
-<td style="text-align:center">O（1）</td>
-</tr>
-<tr>
-<td style="text-align:center">比较一个元素时间复杂度</td>
-<td style="text-align:center">最好（基本有序）：O（1）<br />最坏（顺序相反）：O（n）</td>
-<td style="text-align:center">平均：O(nlog2n)</td>
-<td style="text-align:center"></td>
-</tr>
-<tr>
-<td style="text-align:center">总体时间复杂度</td>
-<td style="text-align:center">O（n^2）</td>
-<td style="text-align:center">O(n^2)</td>
-<td style="text-align:center">最好：O(n^(1/3))<br />最坏：O(n^2)</td>
-</tr>
-<tr>
-<td style="text-align:center">稳定性</td>
-<td style="text-align:center">稳定</td>
-<td style="text-align:center">稳定</td>
-<td style="text-align:center">不稳定</td>
-</tr>
-<tr>
-<td style="text-align:center">适用性</td>
-<td style="text-align:center">顺序存储和链式存储</td>
-<td style="text-align:center">顺序存储和链式存储</td>
-<td style="text-align:center">仅顺序存储</td>
-</tr>
-<tr>
-<td style="text-align:center">特点</td>
-<td style="text-align:center">基本有序时效率最高，最后一趟开始之前所有元素可能都不在最终位置上</td>
-<td style="text-align:center"></td>
-<td style="text-align:center">组内排序使用直接插入排序</td>
-</tr>
-</tbody>
-</table>
-<h2 id="交换排序">交换排序</h2>
-<table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center">冒泡排序</th>
-<th style="text-align:center">快速排序</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">过程</td>
-<td style="text-align:center">每次找出一个最值放到队头或者队尾</td>
-<td style="text-align:center">不断地将待排序表进行划分，左边都比中间小，右边都比中间大直到待排序表基本有序为止</td>
-</tr>
-<tr>
-<td style="text-align:center">空间复杂度</td>
-<td style="text-align:center">O(1)</td>
-<td style="text-align:center">最好情况：O（log2n）<br />最坏情况：O（n）<br />平均：O（log2n）</td>
-</tr>
-<tr>
-<td style="text-align:center">比较次数</td>
-<td style="text-align:center">n(n-1)/2</td>
-<td style="text-align:center"></td>
-</tr>
-<tr>
-<td style="text-align:center">时间复杂度</td>
-<td style="text-align:center">O(n^2)</td>
-<td style="text-align:center">O(n^2)</td>
-</tr>
-<tr>
-<td style="text-align:center">稳定性</td>
-<td style="text-align:center">稳定</td>
-<td style="text-align:center">不稳定</td>
-</tr>
-<tr>
-<td style="text-align:center">特点</td>
-<td style="text-align:center">元素相同时不会进行交换保证了稳定性</td>
-<td style="text-align:center">是所有内部排序算法中平均效率最高的算法</td>
-</tr>
-</tbody>
-</table>
-<h2 id="选择排序">选择排序</h2>
-<table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center">简单选择排序</th>
-<th style="text-align:center">堆排序</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">过程</td>
-<td style="text-align:center">遍历待排序表将最小（大）的放到前面，反复该过程</td>
-<td style="text-align:center">先建立堆（大顶堆或小顶堆），输出堆顶数据后将堆底的数据放到堆顶然后向下调整。对堆进行排序则是从堆的最后一个元素开始进行排序，向上调整之后向下调整。</td>
-</tr>
-<tr>
-<td style="text-align:center">空间复杂度</td>
-<td style="text-align:center">O(1)</td>
-<td style="text-align:center">O(1)</td>
-</tr>
-<tr>
-<td style="text-align:center">比较次数</td>
-<td style="text-align:center">n(n-1)/2</td>
-<td style="text-align:center">实际情况实际分析</td>
-</tr>
-<tr>
-<td style="text-align:center">时间复杂度</td>
-<td style="text-align:center">O（n^2）</td>
-<td style="text-align:center">O(nlog2n)（插入元素与删除元素的时间复杂度都是）</td>
-</tr>
-<tr>
-<td style="text-align:center">稳定性</td>
-<td style="text-align:center">不稳定</td>
-<td style="text-align:center">稳定</td>
-</tr>
-<tr>
-<td style="text-align:center">特点</td>
-<td style="text-align:center"></td>
-<td style="text-align:center">调整时间与树高有关，树越高调整时间越长，堆可以视为一颗完全二叉树，采用顺序存储的方式且对于大顶堆的次大值一定能在根的下一层，取出堆顶元素之后用堆最后一个元素替换堆顶元素后向下调整，若只是对堆进行排序则应该从最后一个元素开始进行排序。</td>
-</tr>
-</tbody>
-</table>
+                    <h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641186967377.png" alt="" loading="lazy"></figure>
+<h2 id="桶排序求解">桶排序求解</h2>
+<pre><code class="language-C++">class Solution {
+public:
+    //由大到小排序
+    static bool cmp(pair&lt;int,int&gt; &amp;a,pair&lt;int,int&gt; &amp;b){
+        return a.second &gt; b.second;
+    }
+    vector&lt;int&gt; topKFrequent(vector&lt;int&gt;&amp; nums, int k) {
+        unordered_map&lt;int,int&gt; bucket;
+        //把相应的数值存入桶里面
+        //初始值为0
+        for(int i:nums) ++bucket[i];
+        vector&lt;pair&lt;int,int&gt;&gt; res(bucket.begin(),bucket.end());//把从桶的头指针至尾指针的所有数放到pair类型的vector中
+        //对res的头到尾的顺序进行cmp所定义的规则的排序
+        sort(res.begin(),res.end(),cmp);
+        vector&lt;int&gt; ans;
+        for(int i = 0;i &lt; k;i++){
+            ans.push_back(res[i].first);//注意此处不要写错了
+        }
+        return ans;
+        
+        
+    }
+};
+</code></pre>
+<h2 id="补充">补充</h2>
+<p>对map型数据进行排序，可以将其放到pair型结构中，bucket.begin()包含由first和second两个元素，vector&lt;pair&lt;int,int&gt;&gt; res(bucket.begin(),bucket.end());就是把从桶的头指针至尾指针的所有数放到pair类型的vector中，之后再对vector进行排序即可。</p>
+<p>因为map是基于pair类型实现的，所以可以直接将map放到pair型中，map.begin代表的是一个pair。</p>
 
                 </div>
             </article>
@@ -268,14 +155,14 @@
         
             <div class="next-post">
                 <div class="next gt-c-content-color-first">下一篇</div>
-                <a href="https://sugar940.github.io/post/tu-de-ying-yong/" class="post-title gt-a-link">
-                    图的应用
+                <a href="https://sugar940.github.io/post/zui-chang-zi-xu-lie-pi-pei-524/" class="post-title gt-a-link">
+                    最长子序列匹配（524）
                 </a>
             </div>
         
 
         
-            <span id="/post/pai-xu-zong-jie/" class="leancloud_visitors" data-flag-title="排序总结">
+            <span id="/post/shu-zu-zhong-qian-k-ge-gao-pin-de-zi-mu/" class="leancloud_visitors" data-flag-title="数组中前k个高频的字母">
                 <em class="post-meta-item-text">阅读量 </em>
                 <i class="leancloud-visitors-count">0</i>
             </span>
