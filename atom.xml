@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://sugar940.github.io/</id>
     <title>Sugar&apos;s Blog</title>
-    <updated>2022-01-03T08:40:48.288Z</updated>
+    <updated>2022-01-03T11:25:57.968Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://sugar940.github.io/"/>
     <link rel="self" href="https://sugar940.github.io/atom.xml"/>
@@ -46,6 +46,33 @@ public:
 <h2 id="补充">补充</h2>
 <p>对map型数据进行排序，可以将其放到pair型结构中，bucket.begin()包含由first和second两个元素，vector&lt;pair&lt;int,int&gt;&gt; res(bucket.begin(),bucket.end());就是把从桶的头指针至尾指针的所有数放到pair类型的vector中，之后再对vector进行排序即可。</p>
 <p>因为map是基于pair类型实现的，所以可以直接将map放到pair型中，map.begin代表的是一个pair。</p>
+<h2 id="题目-2">题目</h2>
+<figure data-type="image" tabindex="2"><img src="https://sugar940.github.io//post-images/1641209149653.png" alt="" loading="lazy"></figure>
+<h2 id="桶排序解法">桶排序解法</h2>
+<pre><code class="language-C++">class Solution {
+public:
+    static bool cmp(pair&lt;char,int&gt; &amp;a,pair&lt;char,int&gt; &amp;b){
+        return a.second &gt; b.second;
+    }
+    string frequencySort(string s) {
+        unordered_map&lt;char,int&gt; bucket;
+        for(char i : s){
+            bucket[i]++;
+        }
+        
+        vector&lt;pair&lt;char,int&gt;&gt; res (bucket.begin(),bucket.end());
+        sort(res.begin(),res.end(),cmp);
+        string ans;
+        for(int i = 0; i &lt; res.size();i++){
+            for(int j = 0;j &lt; res[i].second;j++){
+                ans.push_back(res[i].first);
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>这一题和上面一题的解法是一样的，只需要把函数的里对应的类型修改一下，并且注意最后是把所有的字符都输出而不是单独输出字母。</p>
 ]]></content>
     </entry>
     <entry>
