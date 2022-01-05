@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://sugar940.github.io/</id>
     <title>Sugar&apos;s Blog</title>
-    <updated>2022-01-03T13:59:27.019Z</updated>
+    <updated>2022-01-05T02:57:47.586Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://sugar940.github.io/"/>
     <link rel="self" href="https://sugar940.github.io/atom.xml"/>
@@ -10,6 +10,101 @@
     <logo>https://sugar940.github.io/images/avatar.png</logo>
     <icon>https://sugar940.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Sugar&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[荷兰国旗问题（75）]]></title>
+        <id>https://sugar940.github.io/post/he-lan-guo-qi-wen-ti-75/</id>
+        <link href="https://sugar940.github.io/post/he-lan-guo-qi-wen-ti-75/">
+        </link>
+        <updated>2022-01-05T02:56:51.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<h2 id="三指针解法">三指针解法</h2>
+<p>一个指针指向头，一个指针指向尾，一个指针代表进度。</p>
+<p>进度指针每次移动判断它的值</p>
+<p>为0的时候把对应的数值和左指针换，进度+1，左指针+1</p>
+<p>为1的时候进度+1，即不动数组</p>
+<p>为2的时候和右指针换，进度不变（因为还过来的可能是1也可能是0，所以进度无法准确推进，但是和左指针换的时候可以保证换过来的数只可能是1或0，因为2走过去之后2不可能在左边。所以和左指针换的时候可以进度和左指针同时+1）</p>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    void sortColors(vector&lt;int&gt;&amp; nums) {
+        int left = 0,right = nums.size()-1;
+        int index = 0;
+        while(index &lt;= right){
+            if(nums[index] == 0){
+                swap(nums[left++],nums[index++]);//此处index往前走
+            }
+            else if(nums[index] == 1){
+                index++;
+            }
+            else if(nums[index] == 2){
+                swap(nums[right--],nums[index]);//注意此处index不往前走，因为换过来的数字可能是1也可能是0需要再次判断
+            }
+        }
+        
+    }
+};
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[无重叠区间（435) +分发饼干（455）]]></title>
+        <id>https://sugar940.github.io/post/wu-chong-die-qu-jian-435-fen-fa-bing-gan-455/</id>
+        <link href="https://sugar940.github.io/post/wu-chong-die-qu-jian-435-fen-fa-bing-gan-455/">
+        </link>
+        <updated>2022-01-05T02:52:46.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641351217414.png" alt="" loading="lazy"></figure>
+<h2 id="贪心算法">贪心算法</h2>
+<figure data-type="image" tabindex="2"><img src="https://sugar940.github.io//post-images/1641351317446.png" alt="" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+public:
+    int eraseOverlapIntervals(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+        if (intervals.empty()) {
+            return 0;
+        }
+        
+        sort(intervals.begin(), intervals.end(), [](const auto&amp; u, const auto&amp; v) {
+            return u[1] &lt; v[1];
+        });
+
+        int n = intervals.size();
+        int right = intervals[0][1];
+        int ans = 1;
+        for (int i = 1; i &lt; n; ++i) {
+            if (intervals[i][0] &gt;= right) {
+                ++ans;
+                right = intervals[i][1];
+            }
+        }
+        return n - ans;
+    }
+};
+
+</code></pre>
+<h2 id="题目-2">题目</h2>
+<figure data-type="image" tabindex="3"><img src="https://sugar940.github.io//post-images/1641351324990.png" alt="" loading="lazy"></figure>
+<h2 id="贪心算法-2">贪心算法</h2>
+<pre><code class="language-C++">class Solution {
+public:
+    int findContentChildren(vector&lt;int&gt;&amp; g, vector&lt;int&gt;&amp; s) {
+        int result = 0;
+        sort(g.begin(),g.end());
+        sort(s.begin(),s.end());
+        int gt = 0, st = 0;
+        while(st &lt; s.size() &amp;&amp; gt &lt; g.size()){
+            if(g[gt] &lt;= s[st]){
+                ++gt;
+                ++st;
+            }else if(g[gt] &gt; s[st]){
+                st++;
+            }
+        }
+        return gt;
+    }
+};
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[数组中前k个高频的字母和数字（347）（451）]]></title>
         <id>https://sugar940.github.io/post/shu-zu-zhong-qian-k-ge-gao-pin-de-zi-mu/</id>
@@ -658,46 +753,6 @@ public:
 </tr>
 </tbody>
 </table>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[图的应用]]></title>
-        <id>https://sugar940.github.io/post/tu-de-ying-yong/</id>
-        <link href="https://sugar940.github.io/post/tu-de-ying-yong/">
-        </link>
-        <updated>2021-10-05T13:26:04.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="最小生成树">最小生成树</h1>
-<h2 id="含义">含义</h2>
-<p>包含图的所有顶点且长度最小</p>
-<h2 id="prim算法">Prim算法</h2>
-<p>思想：从点开始：选取一个点后选择最短路径出发，之后重复该过程，但是只会去没有去过的结点，如果最短路径指向的结点去过了则会选取另外一个路径第二短的结点，以此类推直到没有结点可以去。<br>
-<img src="https://sugar940.github.io//post-images/1633441740051.png" alt="" loading="lazy"></p>
-<h2 id="kruskal克鲁斯卡尔算法">Kruskal（克鲁斯卡尔）算法</h2>
-<p>思想：从边开始：每次选取最短的边，若要选取的边所连接的结点都已经被之前的边连接了，则不选取这条边而是去选取第二短的边，以此类推知道选取的边把所有的结点都连接起来就得到了最小生成树。<br>
-<img src="https://sugar940.github.io//post-images/1633441744030.png" alt="" loading="lazy"></p>
-<h1 id="最短路径">最短路径</h1>
-<h2 id="dijkstra算法">Dijkstra算法</h2>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[图的遍历]]></title>
-        <id>https://sugar940.github.io/post/tu-de-bian-li/</id>
-        <link href="https://sugar940.github.io/post/tu-de-bian-li/">
-        </link>
-        <updated>2021-10-05T13:04:57.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="广度优先搜索bfs与深度优先搜索dfs">广度优先搜索（BFS）与深度优先搜索（DFS）</h1>
-<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1633439711911.png" alt="" loading="lazy"></figure>
-<h2 id="性能分析">性能分析</h2>
-<h3 id="空间复杂度">空间复杂度</h3>
-<p>BFS需要构造辅助队列：O（v）<br>
-DFS需要构造辅助栈：O（v）</p>
-<h3 id="邻接矩阵">邻接矩阵</h3>
-<p>查找每个顶点的邻接点所需时间：O（V）<br>
-查找所有顶点的邻接点时间复杂度：O（V^2）</p>
-<h3 id="链接表">链接表</h3>
-<p>查找每个顶点的邻接点所需时间：O（E）<br>
-访问每个顶点的邻接点所需时间：O（V）<br>
-查找访问所有顶点的邻接点时间复杂度：O（V+E）</p>
 ]]></content>
     </entry>
 </feed>

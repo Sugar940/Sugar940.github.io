@@ -1,10 +1,10 @@
-<html lang="zh">
+<html>
 <head>
     <meta charset="utf-8" />
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>关于 - Sugar&#39;s Blog</title>
+<title>无重叠区间（435) +分发饼干（455） | Sugar&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1641351464554">
 
@@ -33,7 +33,7 @@
 <!--<script src="media/scripts/index.js"></script>-->
 
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
@@ -105,14 +105,98 @@
     }
 </script>
     <div class="post-container">
-        <div class="post-detail">
+        <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
-                <div class="post-content">
+                <h2 class="post-title">
+                    无重叠区间（435) +分发饼干（455）
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-01-05 ·
+                    </time>
                     
+                        <a href="https://sugar940.github.io/tag/cKdSEGr_B/" class="post-tags">
+                            # 贪心算法
+                        </a>
+                    
+                        <a href="https://sugar940.github.io/tag/EbIJlgK9q/" class="post-tags">
+                            # leetcode刷题记录
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641351217414.png" alt="" loading="lazy"></figure>
+<h2 id="贪心算法">贪心算法</h2>
+<figure data-type="image" tabindex="2"><img src="https://sugar940.github.io//post-images/1641351317446.png" alt="" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+public:
+    int eraseOverlapIntervals(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+        if (intervals.empty()) {
+            return 0;
+        }
+        
+        sort(intervals.begin(), intervals.end(), [](const auto&amp; u, const auto&amp; v) {
+            return u[1] &lt; v[1];
+        });
+
+        int n = intervals.size();
+        int right = intervals[0][1];
+        int ans = 1;
+        for (int i = 1; i &lt; n; ++i) {
+            if (intervals[i][0] &gt;= right) {
+                ++ans;
+                right = intervals[i][1];
+            }
+        }
+        return n - ans;
+    }
+};
+
+</code></pre>
+<h2 id="题目-2">题目</h2>
+<figure data-type="image" tabindex="3"><img src="https://sugar940.github.io//post-images/1641351324990.png" alt="" loading="lazy"></figure>
+<h2 id="贪心算法-2">贪心算法</h2>
+<pre><code class="language-C++">class Solution {
+public:
+    int findContentChildren(vector&lt;int&gt;&amp; g, vector&lt;int&gt;&amp; s) {
+        int result = 0;
+        sort(g.begin(),g.end());
+        sort(s.begin(),s.end());
+        int gt = 0, st = 0;
+        while(st &lt; s.size() &amp;&amp; gt &lt; g.size()){
+            if(g[gt] &lt;= s[st]){
+                ++gt;
+                ++st;
+            }else if(g[gt] &gt; s[st]){
+                st++;
+            }
+        }
+        return gt;
+    }
+};
+</code></pre>
+
                 </div>
             </article>
         </div>
-        <br>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/shu-zu-zhong-qian-k-ge-gao-pin-de-zi-mu/" class="post-title gt-a-link">
+                    数组中前k个高频的字母和数字（347）（451）
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/wu-chong-die-qu-jian-435-fen-fa-bing-gan-455/" class="leancloud_visitors" data-flag-title="无重叠区间（435) +分发饼干（455）">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
         
 
         
@@ -143,7 +227,6 @@
 </script>
 
         
-
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first">舒格小栈</div>
