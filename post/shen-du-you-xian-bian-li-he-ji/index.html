@@ -6,7 +6,7 @@
 
 <title>深度优先遍历合集 | Sugar&#39;s Blog</title>
 
-<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1642586187463">
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1642586694579">
 
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
@@ -85,7 +85,7 @@
             
         </div>
         <div style="text-align: center">
-            <form id="gridea-search-form" style="position: relative" data-update="1642586187463"
+            <form id="gridea-search-form" style="position: relative" data-update="1642586694579"
                 action="/search/">
                 <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
                 <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
@@ -310,7 +310,72 @@ public:
 
 </code></pre>
 <p>对于被围绕区域的筛查，首先可以把和边界相连的区域进行标记，之后再对剩余的区域进行深度优先遍历，使之变成x，之后再把之前标记过的元素还原为O即可。</p>
-<h2 id=""></h2>
+<h2 id="417太平洋和大西洋水流问题">417.太平洋和大西洋水流问题</h2>
+<p><a href="https://leetcode.com/problems/pacific-atlantic-water-flow/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/pacific-atlantic-water-flow/description/">力扣</a></p>
+<pre><code>Given the following 5x5 matrix:
+
+  Pacific ~   ~   ~   ~   ~
+       ~  1   2   2   3  (5) *
+       ~  3   2   3  (4) (4) *
+       ~  2   4  (5)  3   1  *
+       ~ (6) (7)  1   4   5  *
+       ~ (5)  1   1   2   4  *
+          *   *   *   *   * Atlantic
+
+Return:
+[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+</code></pre>
+<p>左边和上边是太平洋，右边和下边是大西洋，内部的数字代表海拔，海拔高的地方的水能够流到低的地方，求解水能够流到太平洋和大西洋的所有位置。</p>
+<pre><code class="language-C++">class Solution {
+private:
+    vector&lt;int&gt; direction{-1, 0, 1, 0, -1};
+    void DFS(const vector&lt;vector&lt;int&gt;&gt;&amp; heights, vector&lt;vector&lt;bool&gt;&gt;&amp; canReach, int i, int j) {
+        if (canReach[i][j]) return;
+        canReach[i][j] = true;
+        for (int k = 0; k &lt; 4; k++) {
+            int p = i + direction[k];
+            int q = j + direction[k + 1];
+            if (p &gt;= 0 &amp;&amp; p &lt; heights.size() &amp;&amp; q &gt;= 0 &amp;&amp; q &lt; heights[0].size() &amp;&amp; heights[p][q] &gt;= heights[i][j]) {
+                DFS(heights, canReach, p, q);
+            }
+        }
+    }
+public:
+    vector&lt;vector&lt;int&gt;&gt; pacificAtlantic(vector&lt;vector&lt;int&gt;&gt;&amp; heights) {
+        // 采用 DFS 
+        if (heights.empty() || heights[0].empty()) {
+            return {};
+        }
+        int m = heights.size(), n = heights[0].size();
+        vector&lt;vector&lt;int&gt;&gt; res;
+        vector&lt;vector&lt;bool&gt;&gt; canReachA (m, vector&lt;bool&gt;(n, false));
+        vector&lt;vector&lt;bool&gt;&gt; canReachP (m, vector&lt;bool&gt;(n, false));
+        // can reach Atlantic
+        for (int i = 0; i &lt; m; i++) {
+            // 左边太平洋
+            DFS(heights, canReachA, i, 0);
+            // 右边大西洋
+            DFS(heights, canReachP, i, n - 1);
+        }
+        for (int j = 0; j &lt; heights[0].size(); j++) {
+            // 上边太平洋
+            DFS(heights, canReachA, 0, j);
+            // 下边大西洋
+            DFS(heights, canReachP, m - 1, j);
+        }
+        // 找到都能到达的坐标
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (canReachA[i][j] &amp;&amp; canReachP[i][j]) {
+                    res.push_back({i, j});
+                }
+            }
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>直接考虑从高处往低处流的情况比较难考虑，因为水流既要满足大西洋又要满足太平洋，很难写出同时满足的判断代码，所以此题换一个角度进行考虑，逆向思维，反过来求解水往高处流，分别从大西洋和太平洋出发进行深度优先遍历，把可以到达的点都进行记录，最后取两个记录数组的交集就是既可以到达大西洋又可以到达太平洋的点。</p>
 
                 </div>
             </article>
