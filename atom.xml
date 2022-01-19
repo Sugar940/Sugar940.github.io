@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://sugar940.github.io/</id>
     <title>Sugar&apos;s Blog</title>
-    <updated>2022-01-19T04:57:59.985Z</updated>
+    <updated>2022-01-19T09:56:31.221Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://sugar940.github.io/"/>
     <link rel="self" href="https://sugar940.github.io/atom.xml"/>
@@ -10,6 +10,200 @@
     <logo>https://sugar940.github.io/images/avatar.png</logo>
     <icon>https://sugar940.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Sugar&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[深度优先遍历合集]]></title>
+        <id>https://sugar940.github.io/post/shen-du-you-xian-bian-li-he-ji/</id>
+        <link href="https://sugar940.github.io/post/shen-du-you-xian-bian-li-he-ji/">
+        </link>
+        <updated>2022-01-19T09:55:23.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="695查找最大连通面积">695.查找最大连通面积</h2>
+<p><a href="https://leetcode.com/problems/max-area-of-island/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/max-area-of-island/description/">力扣</a></p>
+<pre><code>[[0,0,1,0,0,0,0,1,0,0,0,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,1,1,0,1,0,0,0,0,0,0,0,0],
+ [0,1,0,0,1,1,0,0,1,0,1,0,0],
+ [0,1,0,0,1,1,0,0,1,1,1,0,0],
+ [0,0,0,0,0,0,0,0,0,0,1,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,0,0,0,0,0,0,1,1,0,0,0,0]]
+</code></pre>
+<p>示例 1：</p>
+<figure data-type="image" tabindex="1"><img src="https://assets.leetcode.com/uploads/2021/05/01/maxarea1-grid.jpg" alt="img" loading="lazy"></figure>
+<p>输入：grid = [[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]<br>
+输出：6<br>
+解释：答案不应该是 11 ，因为岛屿只能包含水平或垂直这四个方向上的 1 。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int dfs(vector&lt;vector&lt;int&gt;&gt;&amp; grid,int x,int y){
+        if(x &lt; 0 || y &lt; 0 ||  x == grid.size()  || y == grid[0].size() ||grid[x][y] == 0 ){
+            return 0;
+        }
+        int d_x[4] = {0,0,-1,1};
+        int d_y[4] = {1,-1,0,0};
+        int ans = 1;
+        grid[x][y] = 0;
+        for(int i =0;i &lt; 4;i++){
+            int new_x = x+d_x[i];
+            int new_y = y+d_y[i];
+            ans += dfs(grid,new_x,new_y);
+        }
+        return ans;
+    }
+    int maxAreaOfIsland(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int ans = 0;
+        for(int i = 0;i &lt; grid.size();i++){
+            for(int j = 0;j &lt; grid[0].size();j++){
+                ans = max(ans,dfs(grid,i,j));
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>使用深度优先遍历对每一个地图块进行深度优先遍历，同时记录每一次遍历的最大值，最终返回最大值就是可以得到的最大块数。</p>
+<h2 id="200岛屿数量">200.岛屿数量</h2>
+<p><a href="https://leetcode.com/problems/number-of-islands/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/number-of-islands/description/">力扣</a></p>
+<pre><code>Input:
+11000
+11000
+00100
+00011
+
+Output: 3
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; grid,int x,int y){
+        if(x &lt; 0 || y &lt; 0 || x == grid.size() || y == grid[0].size() || grid[x][y] == '0'){
+            return false;
+        }
+        int d_x[4] = {0,0,1,-1};
+        int d_y[4] = {1,-1,0,0};
+        grid[x][y] = '0';
+        for(int i = 0; i &lt; 4;i++){
+            int new_x = x+d_x[i];
+            int new_y = y+d_y[i];
+            dfs(grid,new_x,new_y);
+        }
+        return true;
+
+    }
+    int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        int ans = 0;
+        for(int i = 0;i &lt; grid.size();i++){
+            for(int j = 0; j &lt; grid[0].size();j++){
+                if(dfs(grid,i,j)){
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>对每一格进行深度遍历，把遍历过的岛屿都变成海，同时进行计数，没填一个岛屿就进行加一，最终返回计数的总数即可。</p>
+<h2 id="547省份数量">547.省份数量</h2>
+<p><a href="https://leetcode.com/problems/friend-circles/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/friend-circles/description/">力扣</a></p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/12/24/graph1.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input:
+[[1,1,0],
+ [1,1,0],
+ [0,0,1]]
+
+Output: 2
+
+Explanation:The 0th and 1st students are direct friends, so they are in a friend circle.
+The 2nd student himself is in a friend circle. So return 2.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected, vector&lt;int&gt;&amp; visited, int provinces, int i) {
+        for (int j = 0; j &lt; provinces; j++) {
+            if (isConnected[i][j] == 1 &amp;&amp; !visited[j]) {
+                visited[j] = 1;
+                dfs(isConnected, visited, provinces, j);
+            }
+        }
+    }
+
+    int findCircleNum(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected) {
+        int provinces = isConnected.size();
+        vector&lt;int&gt; visited(provinces);
+        int circles = 0;
+        for (int i = 0; i &lt; provinces; i++) {
+            if (!visited[i]) {
+                dfs(isConnected, visited, provinces, i);
+                circles++;
+            }
+        }
+        return circles;
+    }
+};
+</code></pre>
+<p>对省份进行深度优先遍历，使用visited数组来记录已经访问过的省份。</p>
+<h2 id="130被围绕的区域">130.被围绕的区域</h2>
+<p><a href="https://leetcode.com/problems/surrounded-regions/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/surrounded-regions/description/">力扣</a></p>
+<pre><code>For example,
+X X X X
+X O O X
+X X O X
+X O X X
+
+After running your function, the board should be:
+X X X X
+X X X X
+X X X X
+X O X X
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    int n, m;
+
+    void dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board, int x, int y) {
+        if (x &lt; 0 || x &gt;= n || y &lt; 0 || y &gt;= m || board[x][y] != 'O') {
+            return;
+        }
+        board[x][y] = 'A';
+        dfs(board, x + 1, y);
+        dfs(board, x - 1, y);
+        dfs(board, x, y + 1);
+        dfs(board, x, y - 1);
+    }
+
+    void solve(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        n = board.size();
+        if (n == 0) {
+            return;
+        }
+        m = board[0].size();
+        //遍历边界，把和边界相连的的O变为A
+        for (int i = 0; i &lt; n; i++) {
+            dfs(board, i, 0);
+            dfs(board, i, m - 1);
+        }
+        for (int i = 1; i &lt; m - 1; i++) {
+            dfs(board, 0, i);
+            dfs(board, n - 1, i);
+        }
+        //遍历数组，把边界的A还原为X，把正常的O变为X。
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; m; j++) {
+                if (board[i][j] == 'A') {
+                    board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+};
+
+
+</code></pre>
+<p>对于被围绕区域的筛查，首先可以把和边界相连的区域进行标记，之后再对剩余的区域进行深度优先遍历，使之变成x，之后再把之前标记过的元素还原为O即可。</p>
+<h2 id=""></h2>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[BFS广度有限搜索合集]]></title>
         <id>https://sugar940.github.io/post/bfs-guang-du-you-xian-sou-suo-he-ji/</id>
@@ -1112,95 +1306,6 @@ public:
         
         
     }
-};
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[最长回文串（680）]]></title>
-        <id>https://sugar940.github.io/post/zui-chang-hui-wen-chuan-680/</id>
-        <link href="https://sugar940.github.io/post/zui-chang-hui-wen-chuan-680/">
-        </link>
-        <updated>2022-01-01T09:03:24.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641111917147.png" alt="" loading="lazy"></figure>
-<h2 id="错误解法">错误解法</h2>
-<pre><code class="language-C++">class Solution
-{
-public:
-    bool validPalindrome(string s)
-    {
-        int i = 0, j = s.length() - 1;
-        int count = 1;
-        while (i &lt;= j)
-        {
-            if (s[i] == s[j])
-            {
-                ++i;
-                --j;
-            }
-            else if (count == 1 &amp;&amp; s[i] != s[j])
-            {
-                if (s[i] == s[j - 1])
-                {
-                    --j;
-                    --count;
-                }
-                else if (s[i + 1] == s[j])
-                {
-                    ++i;
-                    --count;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-};
-
-</code></pre>
-<h2 id="正确解法">正确解法</h2>
-<p>核心：只要首部+1或者尾部-1其中一个可以使得答案正确，那么就符合题目要求！</p>
-<pre><code class="language-C++">class Solution
-{
-public:
-    bool validAgain(int head,int rear,string s){
-        while(head &lt; rear){
-            if(s[head] == s[rear]){
-                ++head;
-                --rear;
-            }else{
-                return false;
-            }
-        }
-        return true;
-    }
-    bool validPalindrome(string s)
-    {
-       int head = 0,rear = s.length()-1;
-       while(head &lt; rear){
-           if(s[head] == s[rear]){
-               ++head;
-               --rear;
-           }else{
-               if(validAgain(head+1,rear,s)||validAgain(head,rear-1,s)){
-                   return true;
-               }else{
-                   return false;
-               }
-           }
-       }
-       return true;
-    }
-    
 };
 </code></pre>
 ]]></content>
