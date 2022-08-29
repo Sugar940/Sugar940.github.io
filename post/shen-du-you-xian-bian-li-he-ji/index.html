@@ -1,0 +1,464 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>深度优先遍历合集 | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1661763873600">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1661763873600"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    深度优先遍历合集
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-01-19 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/iy67adBWl/" class="post-tags">
+                            # DFS
+                        </a>
+                    
+                        <a href="https://sugar940.github.io/tag/EbIJlgK9q/" class="post-tags">
+                            # leetcode刷题记录
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="695查找最大连通面积">695.查找最大连通面积</h2>
+<p><a href="https://leetcode.com/problems/max-area-of-island/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/max-area-of-island/description/">力扣</a></p>
+<pre><code>[[0,0,1,0,0,0,0,1,0,0,0,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,1,1,0,1,0,0,0,0,0,0,0,0],
+ [0,1,0,0,1,1,0,0,1,0,1,0,0],
+ [0,1,0,0,1,1,0,0,1,1,1,0,0],
+ [0,0,0,0,0,0,0,0,0,0,1,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,0,0,0,0,0,0,1,1,0,0,0,0]]
+</code></pre>
+<p>示例 1：</p>
+<figure data-type="image" tabindex="1"><img src="https://assets.leetcode.com/uploads/2021/05/01/maxarea1-grid.jpg" alt="img" loading="lazy"></figure>
+<p>输入：grid = [[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]<br>
+输出：6<br>
+解释：答案不应该是 11 ，因为岛屿只能包含水平或垂直这四个方向上的 1 。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int dfs(vector&lt;vector&lt;int&gt;&gt;&amp; grid,int x,int y){
+        if(x &lt; 0 || y &lt; 0 ||  x == grid.size()  || y == grid[0].size() ||grid[x][y] == 0 ){
+            return 0;
+        }
+        int d_x[4] = {0,0,-1,1};
+        int d_y[4] = {1,-1,0,0};
+        int ans = 1;
+        grid[x][y] = 0;
+        for(int i =0;i &lt; 4;i++){
+            int new_x = x+d_x[i];
+            int new_y = y+d_y[i];
+            ans += dfs(grid,new_x,new_y);
+        }
+        return ans;
+    }
+    int maxAreaOfIsland(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int ans = 0;
+        for(int i = 0;i &lt; grid.size();i++){
+            for(int j = 0;j &lt; grid[0].size();j++){
+                ans = max(ans,dfs(grid,i,j));
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>使用深度优先遍历对每一个地图块进行深度优先遍历，同时记录每一次遍历的最大值，最终返回最大值就是可以得到的最大块数。</p>
+<h2 id="200岛屿数量">200.岛屿数量</h2>
+<p><a href="https://leetcode.com/problems/number-of-islands/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/number-of-islands/description/">力扣</a></p>
+<pre><code>Input:
+11000
+11000
+00100
+00011
+
+Output: 3
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; grid,int x,int y){
+        if(x &lt; 0 || y &lt; 0 || x == grid.size() || y == grid[0].size() || grid[x][y] == '0'){
+            return false;
+        }
+        int d_x[4] = {0,0,1,-1};
+        int d_y[4] = {1,-1,0,0};
+        grid[x][y] = '0';
+        for(int i = 0; i &lt; 4;i++){
+            int new_x = x+d_x[i];
+            int new_y = y+d_y[i];
+            dfs(grid,new_x,new_y);
+        }
+        return true;
+
+    }
+    int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        int ans = 0;
+        for(int i = 0;i &lt; grid.size();i++){
+            for(int j = 0; j &lt; grid[0].size();j++){
+                if(dfs(grid,i,j)){
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>对每一格进行深度遍历，把遍历过的岛屿都变成海，同时进行计数，没填一个岛屿就进行加一，最终返回计数的总数即可。</p>
+<h2 id="547省份数量">547.省份数量</h2>
+<p><a href="https://leetcode.com/problems/friend-circles/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/friend-circles/description/">力扣</a></p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/12/24/graph1.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input:
+[[1,1,0],
+ [1,1,0],
+ [0,0,1]]
+
+Output: 2
+
+Explanation:The 0th and 1st students are direct friends, so they are in a friend circle.
+The 2nd student himself is in a friend circle. So return 2.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected, vector&lt;int&gt;&amp; visited, int provinces, int i) {
+        for (int j = 0; j &lt; provinces; j++) {
+            if (isConnected[i][j] == 1 &amp;&amp; !visited[j]) {
+                visited[j] = 1;
+                dfs(isConnected, visited, provinces, j);
+            }
+        }
+    }
+
+    int findCircleNum(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected) {
+        int provinces = isConnected.size();
+        vector&lt;int&gt; visited(provinces);
+        int circles = 0;
+        for (int i = 0; i &lt; provinces; i++) {
+            if (!visited[i]) {
+                dfs(isConnected, visited, provinces, i);
+                circles++;
+            }
+        }
+        return circles;
+    }
+};
+</code></pre>
+<p>对省份进行深度优先遍历，使用visited数组来记录已经访问过的省份。</p>
+<h2 id="130被围绕的区域">130.被围绕的区域</h2>
+<p><a href="https://leetcode.com/problems/surrounded-regions/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/surrounded-regions/description/">力扣</a></p>
+<pre><code>For example,
+X X X X
+X O O X
+X X O X
+X O X X
+
+After running your function, the board should be:
+X X X X
+X X X X
+X X X X
+X O X X
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    int n, m;
+
+    void dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board, int x, int y) {
+        if (x &lt; 0 || x &gt;= n || y &lt; 0 || y &gt;= m || board[x][y] != 'O') {
+            return;
+        }
+        board[x][y] = 'A';
+        dfs(board, x + 1, y);
+        dfs(board, x - 1, y);
+        dfs(board, x, y + 1);
+        dfs(board, x, y - 1);
+    }
+
+    void solve(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        n = board.size();
+        if (n == 0) {
+            return;
+        }
+        m = board[0].size();
+        //遍历边界，把和边界相连的的O变为A
+        for (int i = 0; i &lt; n; i++) {
+            dfs(board, i, 0);
+            dfs(board, i, m - 1);
+        }
+        for (int i = 1; i &lt; m - 1; i++) {
+            dfs(board, 0, i);
+            dfs(board, n - 1, i);
+        }
+        //遍历数组，把边界的A还原为X，把正常的O变为X。
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; m; j++) {
+                if (board[i][j] == 'A') {
+                    board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+};
+
+
+</code></pre>
+<p>对于被围绕区域的筛查，首先可以把和边界相连的区域进行标记，之后再对剩余的区域进行深度优先遍历，使之变成x，之后再把之前标记过的元素还原为O即可。</p>
+<h2 id="417太平洋和大西洋水流问题">417.太平洋和大西洋水流问题</h2>
+<p><a href="https://leetcode.com/problems/pacific-atlantic-water-flow/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/pacific-atlantic-water-flow/description/">力扣</a></p>
+<pre><code>Given the following 5x5 matrix:
+
+  Pacific ~   ~   ~   ~   ~
+       ~  1   2   2   3  (5) *
+       ~  3   2   3  (4) (4) *
+       ~  2   4  (5)  3   1  *
+       ~ (6) (7)  1   4   5  *
+       ~ (5)  1   1   2   4  *
+          *   *   *   *   * Atlantic
+
+Return:
+[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+</code></pre>
+<p>左边和上边是太平洋，右边和下边是大西洋，内部的数字代表海拔，海拔高的地方的水能够流到低的地方，求解水能够流到太平洋和大西洋的所有位置。</p>
+<pre><code class="language-C++">class Solution {
+private:
+    vector&lt;int&gt; direction{-1, 0, 1, 0, -1};
+    void DFS(const vector&lt;vector&lt;int&gt;&gt;&amp; heights, vector&lt;vector&lt;bool&gt;&gt;&amp; canReach, int i, int j) {
+        if (canReach[i][j]) return;
+        canReach[i][j] = true;
+        for (int k = 0; k &lt; 4; k++) {
+            int p = i + direction[k];
+            int q = j + direction[k + 1];
+            if (p &gt;= 0 &amp;&amp; p &lt; heights.size() &amp;&amp; q &gt;= 0 &amp;&amp; q &lt; heights[0].size() &amp;&amp; heights[p][q] &gt;= heights[i][j]) {
+                DFS(heights, canReach, p, q);
+            }
+        }
+    }
+public:
+    vector&lt;vector&lt;int&gt;&gt; pacificAtlantic(vector&lt;vector&lt;int&gt;&gt;&amp; heights) {
+        // 采用 DFS 
+        if (heights.empty() || heights[0].empty()) {
+            return {};
+        }
+        int m = heights.size(), n = heights[0].size();
+        vector&lt;vector&lt;int&gt;&gt; res;
+        vector&lt;vector&lt;bool&gt;&gt; canReachA (m, vector&lt;bool&gt;(n, false));
+        vector&lt;vector&lt;bool&gt;&gt; canReachP (m, vector&lt;bool&gt;(n, false));
+        // can reach Atlantic
+        for (int i = 0; i &lt; m; i++) {
+            // 左边太平洋
+            DFS(heights, canReachA, i, 0);
+            // 右边大西洋
+            DFS(heights, canReachP, i, n - 1);
+        }
+        for (int j = 0; j &lt; heights[0].size(); j++) {
+            // 上边太平洋
+            DFS(heights, canReachA, 0, j);
+            // 下边大西洋
+            DFS(heights, canReachP, m - 1, j);
+        }
+        // 找到都能到达的坐标
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (canReachA[i][j] &amp;&amp; canReachP[i][j]) {
+                    res.push_back({i, j});
+                }
+            }
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>直接考虑从高处往低处流的情况比较难考虑，因为水流既要满足大西洋又要满足太平洋，很难写出同时满足的判断代码，所以此题换一个角度进行考虑，逆向思维，反过来求解水往高处流，分别从大西洋和太平洋出发进行深度优先遍历，把可以到达的点都进行记录，最后取两个记录数组的交集就是既可以到达大西洋又可以到达太平洋的点。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/bfs-guang-du-you-xian-sou-suo-he-ji/" class="post-title gt-a-link">
+                    BFS广度有限搜索合集
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/shen-du-you-xian-bian-li-he-ji/" class="leancloud_visitors" data-flag-title="深度优先遍历合集">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

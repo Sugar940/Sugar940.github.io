@@ -1,0 +1,2109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://sugar940.github.io/</id>
+    <title>Sugar&apos;s Blog</title>
+    <updated>2022-08-29T09:07:37.956Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://sugar940.github.io/"/>
+    <link rel="self" href="https://sugar940.github.io/atom.xml"/>
+    <subtitle>舒格小栈</subtitle>
+    <logo>https://sugar940.github.io/images/avatar.png</logo>
+    <icon>https://sugar940.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2022, Sugar&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Shell学习记录]]></title>
+        <id>https://sugar940.github.io/post/shell-xue-xi-ji-lu/</id>
+        <link href="https://sugar940.github.io/post/shell-xue-xi-ji-lu/">
+        </link>
+        <updated>2022-08-29T08:53:01.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-shell入门">1. Shell入门</h1>
+<h2 id="创建shell文件">创建shell文件</h2>
+<p>使用文本编辑器来创建一个shell文件，注意在第一行指定使用的编辑器。</p>
+<pre><code>#!/bin/bash
+</code></pre>
+<p>一般#代表注释，但是在第一行#!代表指定编辑器。</p>
+<h2 id="执行shell">执行shell</h2>
+<p>执行shell有两种方式，一种是添加到path目录中，一种是sh指定路径下的shell文件。当shell文件的权限不足时，应该使用chmod来修改对应的权限。</p>
+<h2 id="使用shell输出语句">使用shell输出语句</h2>
+<p>正常情况下直接在shell里面使用echo命令即可，但是如果有时候要输出引号，则需要在外面再用一层引号将其包围，不然可能会导致误判。</p>
+<h1 id="2shell中的变量">2.shell中的变量</h1>
+<h2 id="注意事项">注意事项</h2>
+<p>shell的赋值语句中，=两边是不允许有空格的！一定要注意！</p>
+<h2 id="自定义变量">自定义变量</h2>
+<p>直接变量名=变量值即可</p>
+<pre><code>var1=10
+</code></pre>
+<h2 id="调用变量">调用变量</h2>
+<p>调用变量要使用$变量，否则shell不知道你是要输出名字还是变量。</p>
+<pre><code>echo $var1 #10
+var2=$var1
+echo $var2 #10
+echo var2 #var2
+echo &quot;var1 is&quot;$var1
+</code></pre>
+<h2 id="输出命令">输出命令</h2>
+<p>有时候需要将命令获取的内容输出，比如需要获取date的内容，此时只需要使用反引号字符(`)或者$()格式即可<br>
+一般情况下都将命令赋予变量，最后再输出变量即可。</p>
+<pre><code>echo `date` #输出date命令的内容
+date=`date`
+echo date #同上效果
+date2=$(date +%y%m%d%)
+echo date2 #同上效果
+</code></pre>
+<h1 id="3内容重定向">3.内容重定向</h1>
+<h2 id="文件覆盖">文件覆盖</h2>
+<p>shell中可以直接使用&gt;来覆盖文件</p>
+<pre><code>command &gt; outputfile
+</code></pre>
+<p>如上使用一定的命令就可以将内容覆盖到outputfile中。</p>
+<p>PS:此处有一个小技巧，可以直接使用&gt;来创建文件</p>
+<pre><code>&gt; newfile
+</code></pre>
+<p>因为没有内容重定向，所以此处会创建一个空的新文件newfile</p>
+<h2 id="文件追加">文件追加</h2>
+<p>文件追加命令使用&gt;&gt;来实现，其用法类似&gt;，只是效果是在文件的最后一行添加内容而不是覆盖内容。</p>
+<pre><code>added &gt;&gt; oldfile
+</code></pre>
+<h2 id="命令内容追加">命令内容追加</h2>
+<p>命令内容追加可以理解为把文件里面的内容添加给命令，此处使用和文件夹方向相反的符号，即&lt;。</p>
+<pre><code>wc &lt; test
+</code></pre>
+<p>如上，将test文件的内容传给wc，wc会将文本的行数、词数和字节数进行输出。</p>
+<h2 id="管道">管道</h2>
+<p>如上文所说的重定向都是需要借助文件实现的重定向，但是有时候若想要将命令的内容传递给命令，使用上文的方式只能将命令获取的内容传递到文件中去，然后再从文件中获取输出给下一个命令，这样的过程则较为繁琐，有没有一种方式能够直接将命令的内容传递给命令呢？<br>
+这正是管道。</p>
+<pre><code>command1 | command2
+</code></pre>
+<p>如上诉代码，可以将command1获取的命令传递给command2<br>
+管道是打通两个命令之间的符号，是的多个命令可以组合起来灵活使用。</p>
+<pre><code>rpm -qa | sort &gt; rpm.list
+</code></pre>
+<h1 id="4数学运算">4.数学运算</h1>
+<p>由于expr命令使用较为繁杂，此处只介绍使用方括号的方式来进行数学运算的方法。</p>
+<h2 id="中括号">中括号</h2>
+<p>如下，因为linux中直接使用运算符有时候会出现各种各样的问题，所以我们直接用中括号包起来，可以避免所有奇怪的问题。</p>
+<pre><code>var1=$[1+5]
+echo $var1 #6
+var2=$[$var1 * 2]
+echo $var2 #12
+</code></pre>
+<h2 id="浮点问题的处理">浮点问题的处理</h2>
+<p>虽然中括号解决了数学运算符的识别问题，但是这种计算只适用于非浮点的运算，如果运算存在浮点是无法准确地计算出来的。</p>
+<pre><code>var1=100
+var2=45
+var3=$[var1/$var2]
+echo var3 #2
+</code></pre>
+<p>为了解决浮点运算的问题我们使用bc方法。如下所示：</p>
+<pre><code>bc
+12 * 5.4
+64.8
+</code></pre>
+<p>使用bc相对于进入到一个计算器的页面，在里面输入需要计算的数学运算式子即可。<br>
+可是我不可能说每一次都进入到bc的运算界面进行运算，所以此处可以使用管道将内容传递给bc计算器。</p>
+<h3 id="使用管道传递给bc">使用管道传递给bc</h3>
+<pre><code>var1=$(echo &quot;scale=4; 3.44/5&quot; | bc)
+echo var1 #.6880
+</code></pre>
+<p>如上式子的意思是将指定的内容传递给bc同时设置结果的小数位为4，神奇的就是要通过echo的方式将内容传递给bc，同时在echo中知道你scale的值，用；进行分割刻度与式子。</p>
+<h3 id="使用注释传递给bc">使用注释传递给bc</h3>
+<p>虽然使用管道也可以实现浮点的运算，但是如果有时候式子比较多，再使用管道进行数据的传输则会较为麻烦。所以此处还有另外一种方法来进行内容的传递</p>
+<pre><code>$ cat test12
+#!/bin/bash
+
+var1=10.46
+var2=43.67
+var3=33.2
+var4=71
+
+var5=$(bc &lt;&lt; EOF
+scale = 4
+a1 = ( $var1 * $var2)
+b1 = ($var3 * $var4)
+a1 + b1
+EOF
+)
+
+echo The final answer for this mess is $var5
+$
+</code></pre>
+<p>此处可以发现，我们还可以通过bc赋值给变量。</p>
+<h1 id="5test命令">5.test命令</h1>
+<p>有时候比如要判断文件是否可读，需要使用命令进行判断，这时候就需要用到test指令了。<br>
+一帮使用中括号将需要test的内容围起来进行判断即可，无需每次都使用test指令。</p>
+<pre><code>if [$value -gt 5]
+then ...
+</code></pre>
+<h2 id="三种比较">三种比较</h2>
+<h3 id="数字比较">数字比较</h3>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1661763411203.png" alt="" loading="lazy"></figure>
+<h3 id="字符串比较">字符串比较</h3>
+<p><img src="https://sugar940.github.io//post-images/1661763422964.png" alt="" loading="lazy"><br>
+使用字符串要注意字符的转义，比如&gt;会被识别为文件重定向，需要在前面添加转移斜杆即&gt;</p>
+<h3 id="文件比较">文件比较</h3>
+<figure data-type="image" tabindex="2"><img src="https://sugar940.github.io//post-images/1661763430875.png" alt="" loading="lazy"></figure>
+<h2 id="复合条件">复合条件</h2>
+<p>可以使用符合条件来结合多个条件进行联合比较。格式如下：<br>
+[condition1] &amp;&amp; [condition2] 两个条件同时满足<br>
+[condition1] || [condition2] 满足其中一个条件</p>
+<h1 id="6if-else的高级特性">6.if-else的高级特性</h1>
+<h2 id="使用双括号">使用双括号</h2>
+<pre><code>((expression))
+</code></pre>
+<p>通过使用双括号，可以在其中使用一些自增、自减等操作，详细的使用表格如下所示：<br>
+<img src=":/3eeec7880ae3414ba82203aef782816a" alt="94eeba20fbc47e05850e5076549db2f9.png" loading="lazy"></p>
+<p>在代码中的使用方法如下：</p>
+<pre><code>$ cat test23.sh
+#!/bin/bash
+# using double parenthesis
+#
+val1=10
+#
+if (( $val1 ** 2 &gt; 90 ))
+then
+   (( val2 = $val1 ** 2 ))
+   echo &quot;The square of $val1 is $val2&quot;
+fi
+$
+$ ./test23.sh
+The square of 10 is 100
+$
+</code></pre>
+<h2 id="使用双方括号">使用双方括号</h2>
+<p>双方括号可以用来匹配正则表达式，以后在双方括号中输入想要匹配的正则表达式。</p>
+<pre><code>[[]]
+</code></pre>
+<p>比如：</p>
+<pre><code>if [[$USER == r*]]
+then 
+	echo &quot;Hello $USER&quot;
+</code></pre>
+<h2 id="case语句">case语句</h2>
+<p>case语句可以使得代码看起来更加清晰明了，通过以下的两个对比例子进行相应的展示。<br>
+使用if：</p>
+<pre><code>$ cat test25.sh
+#!/bin/bash
+# looking for a possible value
+#
+if [ $USER = &quot;rich&quot; ]
+then
+   echo &quot;Welcome $USER&quot;
+   echo &quot;Please enjoy your visit&quot;
+elif [ $USER = &quot;barbara&quot; ]
+then
+   echo &quot;Welcome $USER&quot;
+   echo &quot;Please enjoy your visit&quot;
+elif [ $USER = &quot;testing&quot; ]
+then
+   echo &quot;Special testing account&quot;
+elif [ $USER = &quot;jessica&quot; ]
+then
+   echo &quot;Do not forget to logout when you're done&quot;
+else
+   echo &quot;Sorry, you are not allowed here&quot;
+fi
+$
+$ ./test25.sh
+Welcome rich
+Please enjoy your visit
+$
+</code></pre>
+<p>使用case：</p>
+<pre><code>$ cat test26.sh
+#!/bin/bash
+# using the case command
+#
+case $USER in
+rich | barbara)
+   echo &quot;Welcome, $USER&quot;
+   echo &quot;Please enjoy your visit&quot;;;
+testing)
+  echo &quot;Special testing account&quot;;;
+jessica)
+   echo &quot;Do not forget to log off when you're done&quot;;;
+*)
+   echo &quot;Sorry, you are not allowed here&quot;;;
+esac
+$
+$ ./test26.sh
+Welcome, rich
+Please enjoy your visit
+$
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[回溯法合集二]]></title>
+        <id>https://sugar940.github.io/post/hui-su-he-ji-er/</id>
+        <link href="https://sugar940.github.io/post/hui-su-he-ji-er/">
+        </link>
+        <updated>2022-01-26T12:03:12.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="216组合总和-iii">216.组合总和 III</h2>
+<p><a href="https://leetcode.com/problems/combination-sum-iii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/combination-sum-iii/description/">力扣</a></p>
+<pre><code>Input: k = 3, n = 9
+
+Output:
+
+[[1,2,6], [1,3,5], [2,3,4]]
+</code></pre>
+<p>从 1-9 数字中选出 k 个数不重复的数，使得它们的和为 n。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    
+    void backtrapping(int n,int k,vector&lt;int&gt; &amp;path,int sum,int begin){
+        if(sum &gt; n){
+            return;
+        }
+       if(sum == n &amp;&amp; path.size() == k){
+           result.push_back(path);
+           return;
+       }
+       //i &lt;= 9-(k-path.size())+1是精髓，k-path.size():还要放进去的数的个数
+       //如果for循环之后的元素个数不足我们需要的元素个数，那么停止搜索
+       for(int i = begin;i &lt;= 9-(k-path.size())+1 ;i++){
+           path.push_back(i);
+           sum += i;
+           backtrapping(n, k, path, sum,i+1);
+           path.pop_back();
+           sum -= i;
+       }
+    }
+    vector&lt;vector&lt;int&gt;&gt; combinationSum3(int k, int n) {
+        backtrapping(n, k,path,0,1);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>结束条件：总和为n并且子集合的长度和k相等，说明子集寻找完毕</li>
+<li>递归条件：从begin开始运行到9-(k-path.size())+1，保证元素不重合，同时当循环之后的元素个数不足我们需要的元素的个数时，停止搜索。因为不能有重复的所以从i+1开始。</li>
+<li>回溯：把加入的数组弹出去，开始新一轮</li>
+</ul>
+<h2 id="78子集">78.子集</h2>
+<p><a href="https://leetcode.com/problems/subsets/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/subsets/description/">力扣</a></p>
+<p>找出集合的所有子集，子集不能重复，[1, 2] 和 [2, 1] 这种子集算重复</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    void backtripping(vector&lt;int&gt;&amp; nums,vector&lt;int&gt; path,int begin){
+        if(path.size() &gt; nums.size()){
+            return;
+        }
+        result.push_back(path);
+        for(int i = begin;i &lt; nums.size();i++){
+            path.push_back(nums[i]);
+            backtripping(nums, path, i+1);
+            path.pop_back();
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; subsets(vector&lt;int&gt;&amp; nums) {
+        backtripping(nums, path, 0);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>每次遍历都把新情况存入数组中，每次递归都从新的数字开始。</li>
+</ul>
+<h2 id="90子集-ii">90.子集 II</h2>
+<p><a href="https://leetcode.com/problems/subsets-ii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/subsets-ii/description/">力扣</a></p>
+<pre><code>For example,
+If nums = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    void backtripping(vector&lt;int&gt;&amp; nums,int begin,vector&lt;bool&gt;used){
+        
+        result.push_back(path);
+        for(int i = begin;i &lt; nums.size();i++){
+            //常用的去重代码，几乎每一题要去重都是用这个来去重的
+            if(i&gt;0&amp;&amp;nums[i] == nums[i-1] &amp;&amp; used[i-1] == false){
+                continue;
+            }else{
+                used[i] = true;
+                path.push_back(nums[i]);
+                backtripping(nums, i+1,used);
+                path.pop_back();
+                used[i] = false;
+            }
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; subsetsWithDup(vector&lt;int&gt;&amp; nums) {
+        vector&lt;bool&gt; used(nums.size(),false);
+        sort(nums.begin(),nums.end());
+        backtripping(nums,0,used);
+        return result;
+    }
+};
+</code></pre>
+<p>used[i-1]==true说明在同一树枝上有相同的，可以继续。</p>
+<p>used[i-1]==false说明在同一树层上，但是同一树层上不允许有相同的，所以这个可以用来过滤不合理的成员。</p>
+<h2 id="131分割回文串">131.分割回文串</h2>
+<p><a href="https://leetcode.com/problems/palindrome-partitioning/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/palindrome-partitioning/description/">力扣</a></p>
+<pre><code>For example, given s = &quot;aab&quot;,
+Return
+
+[
+  [&quot;aa&quot;,&quot;b&quot;],
+  [&quot;a&quot;,&quot;a&quot;,&quot;b&quot;]
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+private:
+    vector&lt;vector&lt;string&gt;&gt; result;
+    vector&lt;string&gt; path; // 放已经回文的子串
+    void backtracking (const string&amp; s, int startIndex) {
+        // 如果起始位置已经大于s的大小，说明已经找到了一组分割方案了
+        if (startIndex &gt;= s.size()) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = startIndex; i &lt; s.size(); i++) {
+            if (isPalindrome(s, startIndex, i)) {   // 是回文子串
+                // 获取[startIndex,i]在s中的子串
+                string str = s.substr(startIndex, i - startIndex + 1);
+                path.push_back(str);
+            } else {                                // 不是回文，跳过
+                continue;
+            }
+            backtracking(s, i + 1); // 寻找i+1为起始位置的子串
+            path.pop_back(); // 回溯过程，弹出本次已经填在的子串
+        }
+    }
+    bool isPalindrome(const string&amp; s, int start, int end) {
+        for (int i = start, j = end; i &lt; j; i++, j--) {
+            if (s[i] != s[j]) {
+                return false;
+            }
+        }
+        return true;
+    }
+public:
+    vector&lt;vector&lt;string&gt;&gt; partition(string s) {
+        result.clear();
+        path.clear();
+        backtracking(s, 0);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>先写一个判定是否是回文的函数</li>
+<li>把判断回文作为循环判定条件，是回文就存入，不是就往下接着递归。注意这里取的是一整个串。</li>
+</ul>
+<h2 id="37解数独">37.解数独</h2>
+<p><a href="https://leetcode.com/problems/sudoku-solver/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/sudoku-solver/description/">力扣</a></p>
+<p>编写一个程序，通过填充空格来解决数独问题。</p>
+<p>数独的解法需 遵循如下规则：</p>
+<p>数字 1-9 在每一行只能出现一次。<br>
+数字 1-9 在每一列只能出现一次。<br>
+数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。（请参考示例图）<br>
+数独部分空格内已填入了数字，空白格用 '.' 表示。</p>
+<figure data-type="image" tabindex="1"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2021/04/12/250px-sudoku-by-l2g-20050714svg.png" alt="img" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+private:
+bool backtracking(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+    for (int i = 0; i &lt; board.size(); i++) {        // 遍历行
+        for (int j = 0; j &lt; board[0].size(); j++) { // 遍历列
+            if (board[i][j] != '.') continue;
+            for (char k = '1'; k &lt;= '9'; k++) {     // (i, j) 这个位置放k是否合适
+                if (isValid(i, j, k, board)) {
+                    board[i][j] = k;                // 放置k
+                    if (backtracking(board)) return true; // 如果找到合适一组立刻返回
+                    board[i][j] = '.';              // 回溯，撤销k
+                }
+            }
+            return false;                           // 9个数都试完了，都不行，那么就返回false
+        }
+    }
+    return true; // 遍历完没有返回false，说明找到了合适棋盘位置了
+}
+bool isValid(int row, int col, char val, vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+    for (int i = 0; i &lt; 9; i++) { // 判断行里是否重复
+        if (board[row][i] == val) {
+            return false;
+        }
+    }
+    for (int j = 0; j &lt; 9; j++) { // 判断列里是否重复
+        if (board[j][col] == val) {
+            return false;
+        }
+    }
+    //保证从九宫格的左上角到右下角
+    //这样就不会弄错九宫格的判断
+    int startRow = (row / 3) * 3;
+    int startCol = (col / 3) * 3;
+    for (int i = startRow; i &lt; startRow + 3; i++) { // 判断9方格里是否重复
+        for (int j = startCol; j &lt; startCol + 3; j++) {
+            if (board[i][j] == val ) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+public:
+    void solveSudoku(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        backtracking(board);
+    }
+};
+</code></pre>
+<ul>
+<li>判断：
+<ul>
+<li>是否同行</li>
+<li>是否同列</li>
+<li>是否同九宫格</li>
+</ul>
+</li>
+<li>判断通过
+<ul>
+<li>取新的数递归（注意是二维取数）</li>
+<li>回溯</li>
+</ul>
+</li>
+</ul>
+<h2 id="51n皇后">51.N皇后</h2>
+<p><a href="https://leetcode.com/problems/n-queens/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/n-queens/description/">力扣</a></p>
+<p>n 皇后问题 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。</p>
+<p>给你一个整数 n ，返回所有不同的 n 皇后问题 的解决方案。</p>
+<p>每一种解法包含一个不同的 n 皇后问题 的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。</p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/11/13/queens.jpg" alt="img" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+private:
+vector&lt;vector&lt;string&gt;&gt; result;
+// n 为输入的棋盘大小
+// row 是当前递归到***的第几行了
+void backtracking(int n, int row, vector&lt;string&gt;&amp; chessboard) {
+    if (row == n) {
+        result.push_back(chessboard);
+        return;
+    }
+    for (int col = 0; col &lt; n; col++) {
+        if (isValid(row, col, chessboard, n)) { // 验证合法就可以放
+            chessboard[row][col] = 'Q'; // 放置皇后
+            backtracking(n, row + 1, chessboard);
+            chessboard[row][col] = '.'; // 回溯，撤销皇后
+        }
+    }
+}
+bool isValid(int row, int col, vector&lt;string&gt;&amp; chessboard, int n) {
+    int count = 0;
+    // 检查列
+    for (int i = 0; i &lt; row; i++) { // 这是一个剪枝
+        if (chessboard[i][col] == 'Q') {
+            return false;
+        }
+    }
+    // 检查 45度角是否有皇后
+    for (int i = row - 1, j = col - 1; i &gt;=0 &amp;&amp; j &gt;= 0; i--, j--) {
+        if (chessboard[i][j] == 'Q') {
+            return false;
+        }
+    }
+    // 检查 135度角是否有皇后
+    for(int i = row - 1, j = col + 1; i &gt;= 0 &amp;&amp; j &lt; n; i--, j++) {
+        if (chessboard[i][j] == 'Q') {
+            return false;
+        }
+    }
+    return true;
+}
+public:
+    vector&lt;vector&lt;string&gt;&gt; solveNQueens(int n) {
+        result.clear();
+        std::vector&lt;std::string&gt; chessboard(n, std::string(n, '.'));
+        backtracking(n, 0, chessboard);
+        return result;
+    }
+};
+</code></pre>
+<ul>
+<li>判断45度是否有皇后</li>
+<li>判断135度是否有皇后</li>
+<li>符合判断需求则往后取新的数</li>
+<li>此题相当于对数独的其中一个九宫格简化求解。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[回溯法合集一]]></title>
+        <id>https://sugar940.github.io/post/hui-su-fa-he-ji-yi/</id>
+        <link href="https://sugar940.github.io/post/hui-su-fa-he-ji-yi/">
+        </link>
+        <updated>2022-01-26T03:52:59.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="17数字键盘组合">17.数字键盘组合</h2>
+<p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/description/">力扣</a></p>
+<figure data-type="image" tabindex="1"><a href="https://camo.githubusercontent.com/3774807b632f5c4869c8317dd1cb04532463dc1d94777fefc654e32d85eee2e6/68747470733a2f2f63732d6e6f7465732d313235363130393739362e636f732e61702d6775616e677a686f752e6d7971636c6f75642e636f6d2f39383233373638632d323132622d346231612d623639612d6233663539653037623937372e6a7067"><img src="https://camo.githubusercontent.com/3774807b632f5c4869c8317dd1cb04532463dc1d94777fefc654e32d85eee2e6/68747470733a2f2f63732d6e6f7465732d313235363130393739362e636f732e61702d6775616e677a686f752e6d7971636c6f75642e636f6d2f39383233373638632d323132622d346231612d623639612d6233663539653037623937372e6a7067" alt="img" loading="lazy"></a></figure>
+<pre><code>Input:Digit string &quot;23&quot;
+Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void dfs(string &amp;digits,int index,unordered_map&lt;char,string&gt; phone,vector&lt;string&gt; &amp;ans,string &amp;member){
+        if(index == digits.size()){
+            ans.push_back(member);
+            
+        }else{
+            //按钮
+            char map_index = digits[index];
+            //取出当前按钮的内容
+            string temp = phone.find(map_index)-&gt;second;
+            //遍历当前按钮的内容，和下一个按钮的内容拼凑到一起
+            for(int i = 0;i &lt; temp.size();i++){
+                //取出拼凑的字符
+                char a = temp[i];
+                //把当前字母拼凑到成员中
+                member.push_back(a);
+                //继续像下一层进发
+                dfs(digits,index+1,phone,ans,member);
+
+                //************注意要弹出刚刚插入的！！！因为这边要开始一个新的循环了！！**********
+                member.pop_back();
+            }
+        }
+        
+    }
+    vector&lt;string&gt; letterCombinations(string digits) {
+        vector&lt;string&gt; ans;
+        if(digits.size() == 0){
+            return ans;
+        }
+        string member;
+        //把键盘录入
+        unordered_map&lt;char,string&gt; phone = {
+            {'2',&quot;abc&quot;},
+            {'3',&quot;def&quot;},
+            {'4',&quot;ghi&quot;},
+            {'5',&quot;jkl&quot;},
+            {'6',&quot;mno&quot;},
+            {'7',&quot;pqrs&quot;},
+            {'8',&quot;tuv&quot;},
+            {'9',&quot;wxyz&quot;}
+        };
+        
+        dfs(digits,0,phone,ans,member);
+        return ans;
+    }
+};
+</code></pre>
+<p>思路:</p>
+<ul>
+<li>把每一个按键对应的字母先存入unordered_map中保存好</li>
+<li>设置终止条件：当子成员的长度和按键的数量相等，即一组组合已经生成，即可存入总数组中。</li>
+<li>设置递归条件：每次取一个字母，之后前往index+1，即下一个字母。</li>
+<li>设置回溯：让总数组把最后一个字母弹出来，然后重新循环。即开始一个新的组合。</li>
+</ul>
+<h2 id="93复原ip地址">93.复原ip地址</h2>
+<p><a href="https://leetcode.com/problems/restore-ip-addresses/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/restore-ip-addresses/description/">力扣</a></p>
+<pre><code>Given &quot;25525511135&quot;,
+return [&quot;255.255.11.135&quot;, &quot;255.255.111.35&quot;].
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;string&gt;ans;
+    void backtrace(string&amp; s,int cnt,int index,string&amp; str){
+        //标点符号超过3或者到达最后一位
+        if(cnt==4 || index==s.size() ){
+            //标点符号超过3并且到达最后一位则说明划分完成
+            if(cnt==4 &amp;&amp; index==s.size())
+                ans.push_back(str.substr(0,str.size()-1));
+            //若不是最后一位则不执行以上操作直接返回
+            return;
+        }
+        //打入三个小数点
+        for(int i=1;i&lt;=3;i++){
+            //如果越界则不执行
+            if(index+i&gt;s.size()) return;
+            //如果起点是0，那么它只能单独成块，后面不能跟别的数字（即不含有前导0）
+            if(s[index]=='0' &amp;&amp; i!=1) return;
+            //如果取了3位，并且它们加起来超过255则返回
+            if(i==3 &amp;&amp; s.substr(index,i)&gt;&quot;255&quot;) return;
+            //符合以上过滤规则则执行拼接
+            str+=s.substr(index,i);
+            //拼接完成后再后面加一个.
+            str.push_back('.');
+            //对后面的单词执行拼接
+            backtrace(s,cnt+1,index+i,str);
+            //还原为上述回溯步骤之前
+            str = str.substr(0,str.size()-i-1);
+        }
+    }
+    vector&lt;string&gt; restoreIpAddresses(string s) {
+        string str =&quot;&quot;;
+        backtrace(s,0,0,str);
+        return ans;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置结束条件：当标点数超过三或者标点位置在最后则可以结束，当标点位置超过3且位于最后一位则把这组ip地址插入总数组中。</li>
+<li>设置递归条件:
+<ul>
+<li>越界返回</li>
+<li>0不和其他数字组合返回</li>
+<li>3位合超过255返回</li>
+<li>以上情况都不发生就循环递归</li>
+<li>每次递归标点数+1，指针+1</li>
+</ul>
+</li>
+<li>设置回朔条件：
+<ul>
+<li>让str字符串最后以为消去，即只取字符串的0到长度str.size()-i-1位。（打点可能垮了几个字符所以要-i-1）</li>
+<li>打点数变成cnt-1</li>
+</ul>
+</li>
+</ul>
+<h2 id="79单词搜索">79.单词搜索</h2>
+<p><a href="https://leetcode.com/problems/word-search/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/word-search/description/">力扣</a></p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/11/04/word2.jpg" alt="img" loading="lazy"></figure>
+<pre><code>For example,
+Given board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+word = &quot;ABCCED&quot;, -&gt; returns true,
+word = &quot;SEE&quot;, -&gt; returns true,
+word = &quot;ABCB&quot;, -&gt; returns false.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    bool exist(vector&lt;vector&lt;char&gt;&gt;&amp; board, string word) {
+        for(int i = 0; i &lt; board.size(); i++)
+            for(int j = 0; j &lt; board[i].size(); j++)
+                if(dfs(board,word,0,i,j)) return true;
+        return false;        
+    }
+    int dx[4] = {-1,0,1,0}, dy[4] = {0,1,0,-1}; //方向数组
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board, string&amp; word,int u,int x,int y)
+    {
+        if(board[x][y] != word[u]) return false;
+        if(u == word.size() - 1)   return true;
+        char t = board[x][y];
+        board[x][y] = '.';
+        for(int i = 0; i &lt; 4; i++)
+        {
+            int a = x + dx[i], b = y + dy[i];
+            //出界或者走到已经搜索过的位置
+            if(a &lt; 0 || a &gt;= board.size() || b &lt; 0 || b &gt;= board[0].size() || board[a][b] == '.')  continue;
+            if(dfs(board,word,u+1,a,b)) return true;
+        }
+        board[x][y] = t;
+        return false;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置结束条件：
+<ul>
+<li>遍历的块和目标块不一样返回false</li>
+<li>遍历到最后一位，说明前面的都没有问题，返回true</li>
+<li>没有返回数组说整个区块没有正确的组合，返回false。</li>
+</ul>
+</li>
+<li>设置递归：
+<ul>
+<li>延四个方向递归</li>
+<li>出界返回或者遇到'.'返回false</li>
+<li>正常继续往下递归，u+1(u记录遍历长度)</li>
+<li>递归过的位置变成'.'</li>
+</ul>
+</li>
+</ul>
+<h2 id="257二叉树的所有路径">257.二叉树的所有路径</h2>
+<p><a href="https://leetcode.com/problems/binary-tree-paths/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/binary-tree-paths/description/">力扣</a></p>
+<pre><code>  1
+ /  \
+2    3
+ \
+  5
+[&quot;1-&gt;2-&gt;5&quot;, &quot;1-&gt;3&quot;]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void construct_paths(TreeNode* root, string path, vector&lt;string&gt;&amp; paths) {
+        //首先判断是否为空节点，因为是同时传的左右结点，都有为空的可能性,如果为空此处直接略过
+        if (root != nullptr) {
+            //如果不为空则往后添加值
+            path += to_string(root-&gt;val);
+            //判断是否为叶子结点，如果不是叶子结点则继续往下遍历
+            if (root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr) {  // 当前节点是叶子节点
+                paths.push_back(path);                              // 把路径加入到答案中
+            } else {
+                //不是叶子结点说明后面还有结点，最为加-&gt;并继续遍历
+                path += &quot;-&gt;&quot;;  // 当前节点不是叶子节点，继续递归遍历
+                construct_paths(root-&gt;left, path, paths);
+                construct_paths(root-&gt;right, path, paths);
+            }
+        }
+    }
+
+    vector&lt;string&gt; binaryTreePaths(TreeNode* root) {
+        vector&lt;string&gt; paths;
+        construct_paths(root, &quot;&quot;, paths);
+        return paths;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置递归条件
+<ul>
+<li>节点非空就递归</li>
+<li>每次递归往path后插入结点的值</li>
+<li>如果该结点非叶子结点，插入&quot;-&gt;&quot;，并且往左边和右边递归</li>
+<li>如果为叶子结点：插入路径到数组中。</li>
+</ul>
+</li>
+</ul>
+<h2 id="46全排列">46.全排列</h2>
+<p><a href="https://leetcode.com/problems/permutations/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/permutations/description/">力扣</a></p>
+<pre><code>[1,2,3] have the following permutations:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    void backtrpping(vector&lt;int&gt;&amp; nums,vector&lt;bool&gt;&amp; passed,vector&lt;int&gt;&amp; path){
+        //如果已存入数组的大小和待排序数组的大小相等，则说明这一组数据排序完成
+        if(path.size() == nums.size()){
+            ans.push_back(path);
+            return;
+        }
+        for(int i = 0;i &lt; nums.size();i++){
+            if(passed[i] == true){
+                continue;
+            }else{
+                //如果这个点没有去过就进行标记并记录下来
+                passed[i] = true;
+                path.push_back(nums[i]);
+                backtrpping(nums, passed, path);
+                //回溯
+                path.pop_back();
+                //这一步写的时候忽略了！
+                passed[i] = false;
+
+            }
+        }
+    }
+   
+    vector&lt;vector&lt;int&gt;&gt; permute(vector&lt;int&gt;&amp; nums) {
+       
+        //对vector数组进行赋值
+        vector&lt;bool&gt; passed(nums.size(),false);
+        vector&lt;int&gt; path;
+        backtrpping(nums, passed, path);
+        return ans;
+
+    }
+};
+</code></pre>
+<ul>
+<li>结束条件：当子成员的长度和数组的长度一样，子成员插入数组中去。</li>
+<li>递归条件：
+<ul>
+<li>没有去过这个点，则把这个点插入子成员，并且把这个点设置为true，传入下一层递归</li>
+<li>最后记得把刚刚改变的路径还原</li>
+</ul>
+</li>
+</ul>
+<h2 id="47含有相同元素的全排列">47.含有相同元素的全排列</h2>
+<p><a href="https://leetcode.com/problems/permutations-ii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/permutations-ii/description/">力扣</a></p>
+<pre><code>[1,1,2] have the following unique permutations:
+[[1,1,2], [1,2,1], [2,1,1]]
+</code></pre>
+<p>数组元素可能含有相同的元素，进行排列时就有可能出现重复的排列，要求重复的排列只返回一个。</p>
+<p>在实现上，和 Permutations 不同的是要先排序，然后在添加一个元素时，判断这个元素是否等于前一个元素，如果等于，并且前一个元素还未访问，那么就跳过这个元素。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    vector&lt;int&gt; path;
+    void backtrpping(vector&lt;int&gt;&amp; nums,vector&lt;bool&gt;&amp; passed){
+        //如果已存入数组的大小和待排序数组的大小相等，则说明这一组数据排序完成
+        if(path.size() == nums.size()){
+            ans.push_back(path);
+            return;
+        }
+        for(int i = 0;i &lt; nums.size();i++){
+            //此处的passed[i-1]为true或者false都可以
+            if(i&gt;0 &amp;&amp; nums[i] == nums[i-1] &amp;&amp; passed[i-1] == false){
+                continue;
+            }
+            //注意此处需要额外判断passed[i]是否为false，只有passed[i]为false时才执行以下步骤
+            if(passed[i] == false){
+                //如果这个点没有去过就进行标记并记录下来
+                passed[i] = true;
+                path.push_back(nums[i]);
+                
+                backtrpping(nums, passed);
+                //回溯
+                path.pop_back();
+              
+                //这一步写的时候忽略了！
+                passed[i] = false;
+            }
+           
+
+            
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; permuteUnique(vector&lt;int&gt;&amp; nums) {
+       
+        //对vector数组进行赋值
+        
+        sort(nums.begin(),nums.end());
+        vector&lt;bool&gt; passed(nums.size(),false);
+        backtrpping(nums, passed);
+        return ans;
+    }
+};
+</code></pre>
+<ul>
+<li>
+<p>结束条件：</p>
+<ul>
+<li>当子成员的大小和序列大小一样时把子成员存入数组中</li>
+</ul>
+</li>
+<li>
+<p>递归条件：</p>
+<ul>
+<li>
+<p><strong>首先要排除重复元素的干扰</strong></p>
+<ul>
+<li>
+<figure data-type="image" tabindex="3"><img src="https://pic.leetcode-cn.com/1631608102-VjiWOk-file_1631608102208" alt="47.全排列II1" loading="lazy"></figure>
+</li>
+<li>
+<pre><code class="language-C++">//只要符合如图所示条件就跳过此次循环
+//遇到相等的元素，并且
+if(i&gt;0 &amp;&amp; nums[i] == nums[i-1] &amp;&amp; passed[i-1] == false){
+                continue;
+ }
+</code></pre>
+</li>
+<li>
+<p>经过上述去重后判断该点是否之前经过，防止出现重复的数字，如果之前去过了跳过，没去过插入</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>回溯条件：</p>
+<ul>
+<li>路径回溯</li>
+<li>结果点回溯</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[深度优先遍历合集]]></title>
+        <id>https://sugar940.github.io/post/shen-du-you-xian-bian-li-he-ji/</id>
+        <link href="https://sugar940.github.io/post/shen-du-you-xian-bian-li-he-ji/">
+        </link>
+        <updated>2022-01-19T09:55:23.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="695查找最大连通面积">695.查找最大连通面积</h2>
+<p><a href="https://leetcode.com/problems/max-area-of-island/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/max-area-of-island/description/">力扣</a></p>
+<pre><code>[[0,0,1,0,0,0,0,1,0,0,0,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,1,1,0,1,0,0,0,0,0,0,0,0],
+ [0,1,0,0,1,1,0,0,1,0,1,0,0],
+ [0,1,0,0,1,1,0,0,1,1,1,0,0],
+ [0,0,0,0,0,0,0,0,0,0,1,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,0,0,0,0,0,0,1,1,0,0,0,0]]
+</code></pre>
+<p>示例 1：</p>
+<figure data-type="image" tabindex="1"><img src="https://assets.leetcode.com/uploads/2021/05/01/maxarea1-grid.jpg" alt="img" loading="lazy"></figure>
+<p>输入：grid = [[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]<br>
+输出：6<br>
+解释：答案不应该是 11 ，因为岛屿只能包含水平或垂直这四个方向上的 1 。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int dfs(vector&lt;vector&lt;int&gt;&gt;&amp; grid,int x,int y){
+        if(x &lt; 0 || y &lt; 0 ||  x == grid.size()  || y == grid[0].size() ||grid[x][y] == 0 ){
+            return 0;
+        }
+        int d_x[4] = {0,0,-1,1};
+        int d_y[4] = {1,-1,0,0};
+        int ans = 1;
+        grid[x][y] = 0;
+        for(int i =0;i &lt; 4;i++){
+            int new_x = x+d_x[i];
+            int new_y = y+d_y[i];
+            ans += dfs(grid,new_x,new_y);
+        }
+        return ans;
+    }
+    int maxAreaOfIsland(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int ans = 0;
+        for(int i = 0;i &lt; grid.size();i++){
+            for(int j = 0;j &lt; grid[0].size();j++){
+                ans = max(ans,dfs(grid,i,j));
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>使用深度优先遍历对每一个地图块进行深度优先遍历，同时记录每一次遍历的最大值，最终返回最大值就是可以得到的最大块数。</p>
+<h2 id="200岛屿数量">200.岛屿数量</h2>
+<p><a href="https://leetcode.com/problems/number-of-islands/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/number-of-islands/description/">力扣</a></p>
+<pre><code>Input:
+11000
+11000
+00100
+00011
+
+Output: 3
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; grid,int x,int y){
+        if(x &lt; 0 || y &lt; 0 || x == grid.size() || y == grid[0].size() || grid[x][y] == '0'){
+            return false;
+        }
+        int d_x[4] = {0,0,1,-1};
+        int d_y[4] = {1,-1,0,0};
+        grid[x][y] = '0';
+        for(int i = 0; i &lt; 4;i++){
+            int new_x = x+d_x[i];
+            int new_y = y+d_y[i];
+            dfs(grid,new_x,new_y);
+        }
+        return true;
+
+    }
+    int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        int ans = 0;
+        for(int i = 0;i &lt; grid.size();i++){
+            for(int j = 0; j &lt; grid[0].size();j++){
+                if(dfs(grid,i,j)){
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>对每一格进行深度遍历，把遍历过的岛屿都变成海，同时进行计数，没填一个岛屿就进行加一，最终返回计数的总数即可。</p>
+<h2 id="547省份数量">547.省份数量</h2>
+<p><a href="https://leetcode.com/problems/friend-circles/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/friend-circles/description/">力扣</a></p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/12/24/graph1.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input:
+[[1,1,0],
+ [1,1,0],
+ [0,0,1]]
+
+Output: 2
+
+Explanation:The 0th and 1st students are direct friends, so they are in a friend circle.
+The 2nd student himself is in a friend circle. So return 2.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected, vector&lt;int&gt;&amp; visited, int provinces, int i) {
+        for (int j = 0; j &lt; provinces; j++) {
+            if (isConnected[i][j] == 1 &amp;&amp; !visited[j]) {
+                visited[j] = 1;
+                dfs(isConnected, visited, provinces, j);
+            }
+        }
+    }
+
+    int findCircleNum(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected) {
+        int provinces = isConnected.size();
+        vector&lt;int&gt; visited(provinces);
+        int circles = 0;
+        for (int i = 0; i &lt; provinces; i++) {
+            if (!visited[i]) {
+                dfs(isConnected, visited, provinces, i);
+                circles++;
+            }
+        }
+        return circles;
+    }
+};
+</code></pre>
+<p>对省份进行深度优先遍历，使用visited数组来记录已经访问过的省份。</p>
+<h2 id="130被围绕的区域">130.被围绕的区域</h2>
+<p><a href="https://leetcode.com/problems/surrounded-regions/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/surrounded-regions/description/">力扣</a></p>
+<pre><code>For example,
+X X X X
+X O O X
+X X O X
+X O X X
+
+After running your function, the board should be:
+X X X X
+X X X X
+X X X X
+X O X X
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    int n, m;
+
+    void dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board, int x, int y) {
+        if (x &lt; 0 || x &gt;= n || y &lt; 0 || y &gt;= m || board[x][y] != 'O') {
+            return;
+        }
+        board[x][y] = 'A';
+        dfs(board, x + 1, y);
+        dfs(board, x - 1, y);
+        dfs(board, x, y + 1);
+        dfs(board, x, y - 1);
+    }
+
+    void solve(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        n = board.size();
+        if (n == 0) {
+            return;
+        }
+        m = board[0].size();
+        //遍历边界，把和边界相连的的O变为A
+        for (int i = 0; i &lt; n; i++) {
+            dfs(board, i, 0);
+            dfs(board, i, m - 1);
+        }
+        for (int i = 1; i &lt; m - 1; i++) {
+            dfs(board, 0, i);
+            dfs(board, n - 1, i);
+        }
+        //遍历数组，把边界的A还原为X，把正常的O变为X。
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; m; j++) {
+                if (board[i][j] == 'A') {
+                    board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+};
+
+
+</code></pre>
+<p>对于被围绕区域的筛查，首先可以把和边界相连的区域进行标记，之后再对剩余的区域进行深度优先遍历，使之变成x，之后再把之前标记过的元素还原为O即可。</p>
+<h2 id="417太平洋和大西洋水流问题">417.太平洋和大西洋水流问题</h2>
+<p><a href="https://leetcode.com/problems/pacific-atlantic-water-flow/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/pacific-atlantic-water-flow/description/">力扣</a></p>
+<pre><code>Given the following 5x5 matrix:
+
+  Pacific ~   ~   ~   ~   ~
+       ~  1   2   2   3  (5) *
+       ~  3   2   3  (4) (4) *
+       ~  2   4  (5)  3   1  *
+       ~ (6) (7)  1   4   5  *
+       ~ (5)  1   1   2   4  *
+          *   *   *   *   * Atlantic
+
+Return:
+[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+</code></pre>
+<p>左边和上边是太平洋，右边和下边是大西洋，内部的数字代表海拔，海拔高的地方的水能够流到低的地方，求解水能够流到太平洋和大西洋的所有位置。</p>
+<pre><code class="language-C++">class Solution {
+private:
+    vector&lt;int&gt; direction{-1, 0, 1, 0, -1};
+    void DFS(const vector&lt;vector&lt;int&gt;&gt;&amp; heights, vector&lt;vector&lt;bool&gt;&gt;&amp; canReach, int i, int j) {
+        if (canReach[i][j]) return;
+        canReach[i][j] = true;
+        for (int k = 0; k &lt; 4; k++) {
+            int p = i + direction[k];
+            int q = j + direction[k + 1];
+            if (p &gt;= 0 &amp;&amp; p &lt; heights.size() &amp;&amp; q &gt;= 0 &amp;&amp; q &lt; heights[0].size() &amp;&amp; heights[p][q] &gt;= heights[i][j]) {
+                DFS(heights, canReach, p, q);
+            }
+        }
+    }
+public:
+    vector&lt;vector&lt;int&gt;&gt; pacificAtlantic(vector&lt;vector&lt;int&gt;&gt;&amp; heights) {
+        // 采用 DFS 
+        if (heights.empty() || heights[0].empty()) {
+            return {};
+        }
+        int m = heights.size(), n = heights[0].size();
+        vector&lt;vector&lt;int&gt;&gt; res;
+        vector&lt;vector&lt;bool&gt;&gt; canReachA (m, vector&lt;bool&gt;(n, false));
+        vector&lt;vector&lt;bool&gt;&gt; canReachP (m, vector&lt;bool&gt;(n, false));
+        // can reach Atlantic
+        for (int i = 0; i &lt; m; i++) {
+            // 左边太平洋
+            DFS(heights, canReachA, i, 0);
+            // 右边大西洋
+            DFS(heights, canReachP, i, n - 1);
+        }
+        for (int j = 0; j &lt; heights[0].size(); j++) {
+            // 上边太平洋
+            DFS(heights, canReachA, 0, j);
+            // 下边大西洋
+            DFS(heights, canReachP, m - 1, j);
+        }
+        // 找到都能到达的坐标
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (canReachA[i][j] &amp;&amp; canReachP[i][j]) {
+                    res.push_back({i, j});
+                }
+            }
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>直接考虑从高处往低处流的情况比较难考虑，因为水流既要满足大西洋又要满足太平洋，很难写出同时满足的判断代码，所以此题换一个角度进行考虑，逆向思维，反过来求解水往高处流，分别从大西洋和太平洋出发进行深度优先遍历，把可以到达的点都进行记录，最后取两个记录数组的交集就是既可以到达大西洋又可以到达太平洋的点。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[BFS广度有限搜索合集]]></title>
+        <id>https://sugar940.github.io/post/bfs-guang-du-you-xian-sou-suo-he-ji/</id>
+        <link href="https://sugar940.github.io/post/bfs-guang-du-you-xian-sou-suo-he-ji/">
+        </link>
+        <updated>2022-01-19T04:49:36.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="1091计算在网格中从原点到特定点的最短路径长度">1091.计算在网格中从原点到特定点的最短路径长度</h2>
+<p><a href="https://leetcode.com/problems/shortest-path-in-binary-matrix/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/">力扣</a></p>
+<pre><code>[[1,1,0,1],
+ [1,0,1,0],
+ [1,1,1,1],
+ [1,0,1,1]]
+</code></pre>
+<p>题目描述：0 表示可以经过某个位置，求解从左上角到右下角的最短路径长度。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int shortestPathBinaryMatrix(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        //起点为1则无法继续行进
+        if(grid[0][0] == 1){
+            return -1;
+        }
+        int ans = 1;
+        //定义x和y对应的8个方向
+        int dirc[8][2] = {{0,1},{0,-1},{1,0},{-1,0},{1,1},{-1,1},{1,-1},{-1,-1}};
+        queue&lt;pair&lt;int,int&gt;&gt; q;
+        q.emplace(0,0);
+        //表示起点已经去过
+        grid[0][0] = 1;
+        int n = grid.size();
+        //BFS模板写法
+        while(!q.empty()){
+            //遍历8个方向，去过的地方记为1
+            int m = q.size();
+            //即只要队列中存在元素就一直遍历下去
+            while(m--){
+                //取出队首元素
+                auto [x,y] = q.front();
+                q.pop();
+                //如果走到了终点则直接返回次数，因为最先到达终点的一定是最优解
+                if(x == n-1 &amp;&amp; y == n-1){
+                    return ans;
+                } 
+                for(int i =0; i &lt; 8; i++){
+                    //x和y向八个方向分别移动
+                    int nx = x + dirc[i][0];
+                    int ny = y + dirc[i][1];
+                    //如果发生越界则返回
+                    if(nx &lt;0 || ny &lt; 0 || nx &gt;= n || ny &gt;= n) continue;
+                    if(grid[nx][ny] == 0){
+                        //如果八个方向中有为0的点则记录进队列中，继续往八个方向扩散
+                        q.emplace(nx,ny);
+                        //把访问过的点记为1
+                        grid[nx][ny] = 1;
+                    }
+                }
+            }
+            ans ++;
+        }
+        return -1;
+
+
+    }
+};
+</code></pre>
+<p>使用广度有限搜索同时遍历整个数组格子，最先到达终点的直接返回数值，返回的即是最短距离。</p>
+<p>广度优先遍历使用队列进行遍历，把遍历的点录入队列，之后便会通过队列的顺序进行广度优先遍历。</p>
+<h2 id="279组成整数的最小平方数">279.组成整数的最小平方数</h2>
+<p><a href="https://leetcode.com/problems/perfect-squares/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/perfect-squares/description/">力扣</a></p>
+<pre><code>For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+</code></pre>
+<p>可以将每个整数看成图中的一个节点，如果两个整数之差为一个平方数，那么这两个整数所在的节点就有一条边。</p>
+<p>要求解最小的平方数数量，就是求解从节点 n 到节点 0 的最短路径。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int numSquares(int n) {
+        unordered_set&lt;int&gt; visited;
+        queue&lt;int&gt; q{{0}};
+        int steps = 1;
+        while (!q.empty()) {
+            auto size = q.size();
+            while (size--) {
+                //从数列中取出来一个数进行比对
+                auto cur = q.front(); q.pop();
+                //只要和不超过目标值就一直平方数相加求和，并把新的结果记录下来。
+                for (int i = 1; i * i + cur &lt;= n; i++) {
+                    //对这一层的结果进行遍历
+                    auto newResult = i * i + cur;
+                    //发现符合题目要求的结果，返回层数
+                    if (newResult == n) {
+                        return steps;
+                    }
+                    //如果已存进去的数不包含这个数就把它存进去
+                    if (!visited.count(newResult)) {
+                        visited.insert(newResult);
+                        q.push(newResult);
+                    }
+                }
+            }
+            //每过完一层，层数加1
+            steps++;
+        }
+
+        return -1; // should never reach here.
+    }
+};
+</code></pre>
+<h2 id="127最短单词路径">127.最短单词路径</h2>
+<p><a href="https://leetcode.com/problems/word-ladder/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/word-ladder/description/">力扣</a></p>
+<pre><code>Input:
+beginWord = &quot;hit&quot;,
+endWord = &quot;cog&quot;,
+wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]
+
+Output: 5
+
+Explanation: As one shortest transformation is &quot;hit&quot; -&gt; &quot;hot&quot; -&gt; &quot;dot&quot; -&gt; &quot;dog&quot; -&gt; &quot;cog&quot;,
+return its length 5.
+Input:
+beginWord = &quot;hit&quot;
+endWord = &quot;cog&quot;
+wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;]
+
+Output: 0
+
+Explanation: The endWord &quot;cog&quot; is not in wordList, therefore no possible transformation.
+</code></pre>
+<p>题目描述：找出一条从 beginWord 到 endWord 的最短路径，每次移动规定为改变一个字符，并且改变之后的字符串必须在 wordList 中。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector&lt;string&gt;&amp; wordList) {
+        //定义一个纪录单词序列的set集合
+        unordered_set&lt;string&gt; wordSet(wordList.begin(),wordList.end());//注意此处不加等于号
+        //如果单词序列没有目标单词直接返回false
+        if(wordSet.find(endWord) == wordSet.end()){
+            return 0;
+        }
+        //定义一个记录已访问序列的集合
+        unordered_map&lt;string,int&gt; verifiedWord;
+        //定义一个队列用来进行BFS，并把第一个单词放进去
+        queue&lt;string&gt; q;
+        q.push(beginWord);
+        //往已记录序列放入第一个元素,步幅记录为1
+        verifiedWord.insert(pair&lt;string,int&gt;(beginWord,1));
+
+        //以下开始进行广度优先搜索
+        while(!q.empty()){
+            //只要队列里有元素就一直搜索
+            //把队列的第一个元素取出来
+            string word = q.front();
+            //弹出元素
+            q.pop();
+            //记录当前层次所需要的步数
+            int path = verifiedWord[word];
+            //以下根据本题需求定制化处理
+            for(int i = 0;i &lt; word.size();i++){
+                //依次替换取出来单词的位置
+                for(int j = 0;j &lt; 26;j++){
+                    string newWord = word;
+                    newWord[i] = j+'a';
+                    //如果这个单词和目标单词一样则返回
+                    if(newWord == endWord){
+                        return path+1;
+                    }
+                    //这个新替换的单词之前没有出现过并且队列里存在这个单词
+                    if(wordSet.find(newWord)!= wordSet.end()&amp;&amp;
+                        verifiedWord.find(newWord) == verifiedWord.end()){
+                        //把这个新单词加入已验证集合中
+                        verifiedWord.insert(pair&lt;string,int&gt;(newWord,path+1));
+                        //把这个新词加入队列中
+                        q.push(newWord);
+                    }
+
+                }
+            }
+
+        }
+        //如果走完了找不到目标，则返回0
+        return 0;
+    }
+};
+</code></pre>
+<p>每次从单词队列里面取出来一个单词，然后拼凑到一起，如果是新的单词并且出现在要求队列里面则把这个拼凑的单词放到数组中，如果拼凑的单词不属于目标队列则删除。遍历存入的队列的不同层次，最先遇到目标单词的必定是最短的路径。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[分治思想合集]]></title>
+        <id>https://sugar940.github.io/post/fen-zhi-si-xiang-he-ji/</id>
+        <link href="https://sugar940.github.io/post/fen-zhi-si-xiang-he-ji/">
+        </link>
+        <updated>2022-01-13T13:12:48.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="244为运算符设置优先级">244.为运算符设置优先级</h2>
+<p><a href="https://leetcode.com/problems/different-ways-to-add-parentheses/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/different-ways-to-add-parentheses/description/">力扣</a></p>
+<pre><code>Input: &quot;2-1-1&quot;.
+
+((2-1)-1) = 0
+(2-(1-1)) = 2
+
+Output : [0, 2]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;int&gt; diffWaysToCompute(string expression) {
+
+        vector&lt;int&gt;count;
+        //采用分治思想求解，把每一个段分为独立的小个体最终集合为大个体
+        for(int i = 0;i&lt;expression.size();i++){
+            char c = expression[i];
+            if(c == '+'||c == '-'|| c == '*'){
+                //分治
+                //将字符串划分为左右两部分
+                vector&lt;int&gt; left = diffWaysToCompute(expression.substr(0,i));
+                vector&lt;int&gt; right = diffWaysToCompute(expression.substr(i+1));
+                
+                for(int &amp;l:left){
+                    for(int &amp;r:right){
+                        switch(c){
+                            case '+':
+                                count.push_back(r+l);
+                                break;
+                            case '-':
+                                count.push_back(l-r);
+                                break;
+                            case '*':
+                                count.push_back(l*r);
+                                break;
+                        }
+                    }
+                }
+
+            }
+        }
+        if(count.size()==0){
+            //单个数字
+            count.push_back(stoi(expression));
+        }
+
+        return count;
+    }
+};
+</code></pre>
+<p>思想：</p>
+<p>采用分治法，本题其实就是要遍历讨论所有括号的情况，可以采用分治法，把一段才分成左右两部分。每次对这两部分进行符号运算，然后返回运算后的结果，同时每一个运算之中又把要运算的段分成两部分，一次不断拆分，直到划分为两个没有符号的数字，此处作为分治法的终点，然后以此不断返回断的值。由此得到正确答案。</p>
+<h2 id="95不同的二叉树">95.不同的二叉树</h2>
+<p><a href="https://leetcode.com/problems/unique-binary-search-trees-ii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/unique-binary-search-trees-ii/description/">力扣</a></p>
+<p>给定一个数字 n，要求生成所有值为 1...n 的二叉搜索树。</p>
+<pre><code>Input: 3
+Output:
+[
+  [1,null,3,2],
+  [3,2,null,1],
+  [3,1,null,null,2],
+  [2,1,3],
+  [1,null,2,null,3]
+]
+Explanation:
+The above output corresponds to the 5 unique BST's shown below:
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+</code></pre>
+<pre><code class="language-C++">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector&lt;TreeNode*&gt; generateTrees(int start,int end){
+        if(start &gt; end){
+            return {NULL};//注意这里要以数组的形式返回
+        }
+        vector&lt;TreeNode*&gt; allTrees;
+        for(int i = start;i &lt;= end;i++){
+            //分治
+            //把树划分成左右子树，分治运算
+            vector&lt;TreeNode*&gt; leftTree = generateTrees(start,i-1);
+            vector&lt;TreeNode*&gt; rightTree = generateTrees(i+1,end);
+            
+            for(auto &amp;left:leftTree){
+                for(auto &amp;right:rightTree){
+                    TreeNode* currTree = new TreeNode(i);
+                    currTree-&gt;left = left;
+                    currTree-&gt;right = right;
+                    allTrees.push_back(currTree);
+                }
+            }
+
+
+        }
+
+        return allTrees;
+
+    }
+
+    vector&lt;TreeNode*&gt; generateTrees(int n) {
+        if (!n) {
+            return {};
+        }
+        return generateTrees(1, n);
+    }
+};
+</code></pre>
+<p>思想：此题同样采用分治，把多种树的组合看成一个结点的左右分别安装不同的树的问题。采用分治法，把一颗树分为左右两个结点，而左右两个结点之中又包含它的左右两个结点，以此不停划分，直到需要划分的结点没有子结点时到达终点，并由此返回结点，最终把各种树的情况构建出来。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[二分查找合集]]></title>
+        <id>https://sugar940.github.io/post/er-fen-cha-zhao-he-ji/</id>
+        <link href="https://sugar940.github.io/post/er-fen-cha-zhao-he-ji/">
+        </link>
+        <updated>2022-01-13T02:56:42.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="69求开方">69.求开方</h2>
+<p><a href="https://leetcode.com/problems/sqrtx/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/sqrtx/description/">力扣</a></p>
+<pre><code>Input: 4
+Output: 2
+
+Input: 8
+Output: 2
+Explanation: The square root of 8 is 2.82842..., and since we want to return an integer, the decimal part will be truncated.
+</code></pre>
+<p>一个数 x 的开方 sqrt 一定在 0 ~ x 之间，并且满足 sqrt == x / sqrt。可以利用二分查找在 0 ~ x 之间查找 sqrt。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int mySqrt(int x) {
+        if(x&lt;=1){
+            return x;
+        }
+        int left = 1;
+        int right = x;//一个数的平方根不会超过它的一半
+        int mid;
+        while(left &lt;= right){
+            mid = left+(right-left)/2;
+            //如果中间值的平方比目标值大，说明范围应该缩小
+            //此处用除法避免乘法溢出
+            if(mid == x/mid){
+                return mid;
+            }else if(mid &gt; x/mid){
+                right = mid-1;
+            }else{
+                left = mid + 1;
+            }
+        }
+        return right;//循环结束时右边总是比左边小1，此题要求向下取整故取右边
+    }
+};
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1642042660647.png" alt="" loading="lazy"></figure>
+<h2 id="744大于给定元素的最小元素">744.大于给定元素的最小元素</h2>
+<p><a href="https://leetcode.com/problems/find-smallest-letter-greater-than-target/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/find-smallest-letter-greater-than-target/description/">力扣</a></p>
+<pre><code>Input:
+letters = [&quot;c&quot;, &quot;f&quot;, &quot;j&quot;]
+target = &quot;d&quot;
+Output: &quot;f&quot;
+
+Input:
+letters = [&quot;c&quot;, &quot;f&quot;, &quot;j&quot;]
+target = &quot;k&quot;
+Output: &quot;c&quot;
+</code></pre>
+<p>题目描述：给定一个有序的字符数组 letters 和一个字符 target，要求找出 letters 中大于 target 的最小字符，如果找不到就返回第 1 个字符。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    char nextGreatestLetter(vector&lt;char&gt;&amp; letters, char target) {
+        
+        int left = 0;
+        int right = letters.size()-1;
+        int mid;
+        while(left &lt;= right){
+            mid = left+(right-left)/2;
+            //值大了，需要缩小区域
+            if(letters[mid] &gt; target){//此处要注意是&gt;，不是&gt;=。因为小于等于在本题中都是要被抛弃的，要放在一起。
+                right = mid-1;
+            }else{
+                left = mid+1;
+            }
+        }
+        return left&lt;letters.size()?letters[left]:letters[0];
+        
+    }
+};
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://sugar940.github.io//post-images/1642042718356.png" alt="" loading="lazy"></figure>
+<h2 id="540有叙述组的single-element">540.有叙述组的Single Element</h2>
+<p><a href="https://leetcode.com/problems/single-element-in-a-sorted-array/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/single-element-in-a-sorted-array/description/">力扣</a></p>
+<pre><code>Input: [1, 1, 2, 3, 3, 4, 4, 8, 8]
+Output: 2
+</code></pre>
+<p>题目描述：一个有序数组只有一个数不出现两次，找出这个数。</p>
+<p>要求以 O(logN) 时间复杂度进行求解，因此不能遍历数组并进行异或操作来求解，这么做的时间复杂度为 O(N)。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int singleNonDuplicate(vector&lt;int&gt;&amp; nums) {
+        //观察数组可知唯一的数会改变数组成双成对的状态。
+        //目标点的前半段nums[m] == nums[m+1],目标点范围[m+2,h]
+        //目标点多后半段nums[m] != nums[m+1],目标点范围[l,m]
+        //注意此处把m的坐标统一为分组的第一个数，即数组中的偶数坐标。
+        int l = 0;
+        int h = nums.size()-1;
+        int m;
+        while(l &lt; h){
+            m = l + (h-l)/2;
+            //统一为偶数
+            if(m % 2 == 1){
+                m = m-1;
+            }
+            if(nums[m] == nums[m+1]){
+                //在前半段中
+                //故往后缩小范围
+                l = m+2;
+            }else if(nums[m] != nums[m+1]){
+                //在后半段中
+                //往前缩小范围
+                h = m;
+            }
+        }
+        return nums[l];
+    }
+};
+</code></pre>
+<p>解题思路</p>
+<p>由题目知该数组必定是奇数的数组，该题目可以转换成寻找非双胞胎的组合，即目标值之前的数组两两成对，目标值之后的数组两两不成对（起始坐标为偶数坐标0，2....)。</p>
+<p>所以可以分解为以下步骤：</p>
+<p>1、中间值取偶数位</p>
+<p>2、中间值和后面的数两两成对：目标值在后面</p>
+<p>3、中间值和后面的数两两不成对：目标值在前面</p>
+<p>4、由于数组中必定存在目标值，所以此处不需要讨论l&lt;h的情况。</p>
+<h2 id="278第一个错误版本">278.第一个错误版本</h2>
+<p><a href="https://leetcode.com/problems/first-bad-version/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/first-bad-version/description/">力扣</a></p>
+<p>题目描述：给定一个元素 n 代表有 [1, 2, ..., n] 版本，在第 x 位置开始出现错误版本，导致后面的版本都错误。可以调用 isBadVersion(int x) 知道某个版本是否错误，要求找到第一个错误的版本。</p>
+<p>如果第 m 个版本出错，则表示第一个错误的版本在 [l, m] 之间，令 h = m；否则第一个错误的版本在 [m + 1, h] 之间，令 l = m + 1。</p>
+<p>因为 h 的赋值表达式为 h = m，因此循环条件为 l &lt; h。</p>
+<pre><code>public int firstBadVersion(int n) {
+    int l = 1, h = n;
+    while (l &lt; h) {
+        int mid = l + (h - l) / 2;
+        if (isBadVersion(mid)) {
+            h = mid;
+        } else {
+            l = mid + 1;
+        }
+    }
+    return l;
+}
+</code></pre>
+<pre><code class="language-C++">// The API isBadVersion is defined for you.
+// bool isBadVersion(int version);
+
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        int left = 0;
+        int right = n;
+        while(left &lt; right){
+            int mid = left + (right-left)/2;
+            if(isBadVersion(mid)){
+                //错误版本在左边
+                right = mid;
+            }else{
+                //错误版本在右边
+                left = mid+1;
+            }
+        }
+
+        return left;
+
+    }
+};
+</code></pre>
+<p>思路：</p>
+<p>1、mid指向的数不是错误版本：错误版本在后面</p>
+<p>2、mid指向的数是错误版本：错误版本在前面</p>
+<p>3、本题中必有错误版本：left&lt;right即可</p>
+<p>4、right指向的有可能是错误版本的根源也可能不是根源，所以mid应该等于right，而left指向的必定不是错误版本，所以left=mid+1.</p>
+<h2 id="153寻找旋转排序的最小值">153.寻找旋转排序的最小值</h2>
+<p><a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/description/">力扣</a></p>
+<pre><code>Input: [3,4,5,1,2],
+Output: 1
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    int findMin(vector&lt;int&gt;&amp; nums) {
+        
+        int left = 0;
+        int right = nums.size()-1;
+        int mid;
+        while(left &lt; right){
+            mid = left+(right-left)/2;
+            
+            if(nums[mid] &lt; nums[right]){
+                //说明目标值在左侧
+                right = mid;
+            }else{
+                //说明目标值在右侧
+                left = mid+1;
+            }
+        }
+        return nums[left];
+    }
+};
+</code></pre>
+<p>思路：</p>
+<p>观察数组可以知道，经过旋转的数组，旋转点之后的数总是比旋转点之前的数要小，所以只要判断最右边的数和中间值的数的大小情况就可以知道旋转点的位置。</p>
+<p>1、最右边的数比中间值小或相等：旋转点一定在中间值后面。</p>
+<p>2、最右边的数比中间值大：旋转点在中间值前面或者中间值就是旋转点。</p>
+<h2 id="34在排序数组中查找元素的第一个和最后一个位置">34.在排序数组中查找元素的第一个和最后一个位置</h2>
+<p><a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/">力扣</a></p>
+<pre><code>Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+
+Input: nums = [5,7,7,8,8,10], target = 6
+Output: [-1,-1]
+</code></pre>
+<p>题目描述：给定一个有序数组 nums 和一个目标 target，要求找到 target 在 nums 中的第一个位置和最后一个位置。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;int&gt; searchRange(vector&lt;int&gt;&amp; nums, int target) {
+        int left = 0;
+        int right = nums.size()-1;
+        vector&lt;int&gt;ans;
+        //返回最左侧的目标值
+        while(left &lt; right){
+            int mid = left + (right-left)/2;
+            if(nums[mid] &lt; target){
+                //目标值在右侧
+                left = mid+1;
+            }else if(nums[mid] &gt;= target){
+                //目标值在左侧
+                right = mid;
+            }
+        }
+        int start = left;
+        //从最左侧开始遍历
+        while(left &lt; nums.size() &amp;&amp; nums[left] == target){
+            left++;
+        }
+        if(start &gt; left-1){
+            ans.push_back(-1);
+            ans.push_back(-1);
+            return ans;
+        }else{
+            ans.push_back(start);
+            ans.push_back(left-1);
+            return ans;
+        }
+        
+    }
+};
+</code></pre>
+<p>思路：先找到最左侧的数值，再从该数值开始往后遍历看看最后一个数在哪里。</p>
+<p>1、中间值比目标值要小：目标值一定在中间值右侧</p>
+<p>2、中间值不比目标值小：目标值就是中间值或者目标值在中价值左侧</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[贪心算法合集]]></title>
+        <id>https://sugar940.github.io/post/tan-xin-suan-fa-he-ji/</id>
+        <link href="https://sugar940.github.io/post/tan-xin-suan-fa-he-ji/">
+        </link>
+        <updated>2022-01-09T11:39:43.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="452射气球最少飞镖">452.射气球最少飞镖</h2>
+<p><a href="https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/minimum-number-of-arrows-to-burst-balloons/description/">力扣</a></p>
+<pre><code>Input:
+[[10,16], [2,8], [1,6], [7,12]]
+
+Output:
+2
+</code></pre>
+<p>题目描述：气球在一个水平数轴上摆放，可以重叠，飞镖垂直投向坐标轴，使得路径上的气球都被刺破。求解最小的投飞镖次数使所有气球都被刺破。</p>
+<p>也是计算不重叠的区间个数，不过和 Non-overlapping Intervals 的区别在于，[1, 2] 和 [2, 3] 在本题中算是重叠区间。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    static bool cmp(vector&lt;int&gt; &amp;a,vector&lt;int&gt;&amp;b){
+        return a[1] &lt; b[1];
+    }
+    int findMinArrowShots(vector&lt;vector&lt;int&gt;&gt;&amp; points) {
+        //如果有n个不重叠的区间，那么就至少需要n个箭头去刺穿
+        //该问题等价于求不重叠区间的个数的问题,唯一的区别在于此处应该是大于，因为边界也包括在内。
+        if(points.size() == 0){
+            return 0;
+        }
+        sort(points.begin(),points.end(),cmp);
+        int right_Max = points[0][1];
+        int counts = 1;
+        for(int i = 0; i &lt; points.size();i++){
+            if(points[i][0] &gt; right_Max){
+                ++counts;
+                right_Max = points[i][1];
+
+            }
+        }
+        return counts;
+    }
+
+};
+</code></pre>
+<h2 id="406根据身高按要求排队">406.根据身高按要求排队</h2>
+<p><a href="https://leetcode.com/problems/queue-reconstruction-by-height/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/queue-reconstruction-by-height/description/">力扣</a></p>
+<pre><code>Input:
+[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+
+Output:
+[[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+</code></pre>
+<p>题目描述：一个学生用两个分量 (h, k) 描述，h 表示身高，k 表示排在前面的有 k 个学生的身高比他高或者和他一样高。</p>
+<p>为了使插入操作不影响后续的操作，身高较高的学生应该先做插入操作，否则身高较小的学生原先正确插入的第 k 个位置可能会变成第 k+1 个位置。</p>
+<p>身高 h 降序、个数 k 值升序，然后将某个学生插入队列的第 k 个位置中。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    static bool cmp(vector &lt;int&gt; &amp;a,vector&lt;int&gt; &amp;b){
+        if(a[0] == b[0]) return a[1] &lt; b[1];//身高相同的情况下k小的在前面，因为大的只可能是前面包括和自己一样的数
+        return a[0]&gt;b[0];
+    }
+    vector&lt;vector&lt;int&gt;&gt; reconstructQueue(vector&lt;vector&lt;int&gt;&gt;&amp; people) {
+        vector&lt;vector&lt;int&gt;&gt; ans;
+        if(people.size() == 0){
+            return ans;
+        }
+        sort(people.begin(),people.end(),cmp);
+        int pos;
+        for(int i = 0;i &lt; people.size();i++){
+            pos = people[i][1];
+            ans.insert(ans.begin()+pos,people[i]);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>先将学生按照身高由高到低排序好，之后按照该顺序将学生插入队列就可以得到题目要求的结果。</p>
+<p>因为高个子看不到矮个子，所以高个子先插入再处理矮个子（即先无视矮个子）</p>
+<p>矮个子会受到高个子影响，所以矮个子应该在高个子后面插入。</p>
+<h2 id="121炒股票收益1">121.炒股票收益1</h2>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/description/">力扣</a></p>
+<p>题目描述：一次股票交易包含买入和卖出，只进行一次交易，求最大收益。</p>
+<p>只要记录前面的最小价格，将这个最小价格作为买入价格，然后将当前的价格作为售出价格，查看当前收益是不是最大收益。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices) {
+        int maxBenifit = 0;
+        int sofarMin = prices[0];
+        for(int i = 1;i &lt; prices.size();i++){
+            if(sofarMin &gt; prices[i]) sofarMin = prices[i];
+            else maxBenifit = max(maxBenifit,prices[i] - sofarMin);
+        }
+
+        return maxBenifit;
+    }
+};
+</code></pre>
+<p>要算最大差价，实际上就是在每一个新段之中更新最大值，也就是要找出底和顶，要是遇到新的底就更新，否则就计算差价，实时更新最大的差价。之后一定可以得到最大的差价。</p>
+<h2 id="122炒股票收益2">122.炒股票收益2</h2>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/description/">力扣</a></p>
+<p>题目描述：可以进行多次交易，多次交易之间不能交叉进行，可以进行多次交易。</p>
+<p>对于 [a, b, c, d]，如果有 a &lt;= b &lt;= c &lt;= d ，那么最大收益为 d - a。而 d - a = (d - c) + (c - b) + (b - a) ，因此当访问到一个 prices[i] 且 prices[i] - prices[i-1] &gt; 0，那么就把 prices[i] - prices[i-1] 添加到收益中。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices) {   
+        int ans = 0;
+        int n = prices.size();
+        for (int i = 1; i &lt; n; ++i) {
+            ans += max(0, prices[i] - prices[i - 1]);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>换一个角度看，要实现总收益的最大值，实际上就是把所有正收益区间的值相加。</p>
+<h2 id="605种花问题">605.种花问题</h2>
+<p><a href="https://leetcode.com/problems/can-place-flowers/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/can-place-flowers/description/">力扣</a></p>
+<pre><code>Input: flowerbed = [1,0,0,0,1], n = 1
+Output: True
+</code></pre>
+<p>题目描述：flowerbed 数组中 1 表示已经种下了花朵。花朵之间至少需要一个单位的间隔，求解是否能种下 n 朵花。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    bool canPlaceFlowers(vector&lt;int&gt;&amp; flowerbed, int n) {
+        int count = 0;
+        for(int i = 0;i &lt; flowerbed.size();){
+            if(flowerbed[i] == 1){
+                i += 2;
+            }else if( i == flowerbed.size()-1||flowerbed[i+1] == 0 ){//此处要注意最后一格的情况
+                count++;
+                i += 2;
+            }else{
+                i += 3;
+            }
+        }
+        return count &gt;= n;
+    }
+};
+</code></pre>
+<p>此题的意思就是花不能连在一起种，所以我们可以从头开始模拟种花的流程，每种下一朵花就记录一下。</p>
+<p>当一开始有花的时候，那么下一朵花只能在这一个的后面第二格种。</p>
+<p>当后面两个没有花且此格的下一格也没有花那么此格可以种花。（它的前一个必定没有花，不然就违背了题目的规则）</p>
+<p>若此格是最后一格，则此格必定可以种花，并且该判断条件要放在上面的判断条件之前，不然会有溢出可能。</p>
+<p>最后如果此格的下一格有花，那么我们就往后挪三格，因为要跨过下一格。</p>
+<h2 id="392-判断是否为子序列">392. 判断是否为子序列</h2>
+<p><a href="https://leetcode.com/problems/is-subsequence/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/is-subsequence/description/">力扣</a></p>
+<pre><code>s = &quot;abc&quot;, t = &quot;ahbgdc&quot;
+Return true.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int st = 0;
+        int tt = 0;
+        while(st != s.size() &amp;&amp; tt!= t.size()){
+            if(s[st] == t[tt]){
+                st++;
+                tt++;
+            }else{
+                tt++;
+            }
+        }
+        if(st == s.size()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+};
+</code></pre>
+<p>可以转换为双指针问题求解。</p>
+<h2 id="665把一个数组改为非递减数组">665.把一个数组改为非递减数组</h2>
+<p><a href="https://leetcode.com/problems/non-decreasing-array/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/non-decreasing-array/description/">力扣</a></p>
+<pre><code>Input: [4,2,3]
+Output: True
+Explanation: You could modify the first 4 to 1 to get a non-decreasing array.
+</code></pre>
+<p>题目描述：判断一个数组是否能只修改一个数就成为非递减数组。</p>
+<p>在出现 nums[i] &lt; nums[i - 1] 时，需要考虑的是应该修改数组的哪个数，使得本次修改能使 i 之前的数组成为非递减数组，并且 <strong>不影响后续的操作</strong> 。优先考虑令 nums[i - 1] = nums[i]，因为如果修改 nums[i] = nums[i - 1] 的话，那么 nums[i] 这个数会变大，就有可能比 nums[i + 1] 大，从而影响了后续操作。还有一个比较特别的情况就是 nums[i] &lt; nums[i - 2]，修改 nums[i - 1] = nums[i] 不能使数组成为非递减数组，只能修改 nums[i] = nums[i - 1]。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    bool checkPossibility(vector&lt;int&gt; &amp;nums) {
+        int n = nums.size(), cnt = 0;
+        for (int i = 0; i &lt; n - 1; ++i) {
+            int x = nums[i], y = nums[i + 1];
+            if (x &gt; y) {
+                cnt++;
+                if (cnt &gt; 1) {
+                    return false;
+                }
+                if (i &gt; 0 &amp;&amp; y &lt; nums[i - 1]) {
+                    nums[i + 1] = x;
+                }
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+<p>这一题折磨了我很久，因为之前想的是找出出错的情况，当出错的时候返回false，否则返回true，但是出错的情况实在是太多了。</p>
+<p>所以应该正着想，就顺着数组走，遇到递减的就去把它改掉，改完了继续往前走，如果还出问题就返回false。</p>
+<h2 id="53子数组的最大和">53.子数组的最大和</h2>
+<p><a href="https://leetcode.com/problems/maximum-subarray/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/maximum-subarray/description/">力扣</a></p>
+<pre><code>For example, given the array [-2,1,-3,4,-1,2,1,-5,4],
+the contiguous subarray [4,-1,2,1] has the largest sum = 6.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+  
+    int maxSubArray(vector&lt;int&gt;&amp; nums) {
+        int preSum = nums[0];
+        int maxNum = preSum;
+        
+        for(int i = 1;i &lt; nums.size();i++){
+            preSum = preSum &gt; 0 ? preSum + nums[i] : nums[i];
+            maxNum = max(preSum,maxNum);
+        }
+        return maxNum;
+    }
+};
+</code></pre>
+<p>这一题和炒股票有点像，实际上就是收集尽可能多的正数保证和是最大的，也就是说只要加起来不是负数就有继续加下去的可能，但是要不停地去保留最大的值。但是如果加起来是负数就可以抛弃，因为这个数无论如何都会把下一个结果缩小。</p>
+<h2 id="763分割字符串使得同一种字符串只在一段中出现">763.分割字符串使得同一种字符串只在一段中出现</h2>
+<p><a href="https://leetcode.com/problems/partition-labels/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/partition-labels/description/">力扣</a></p>
+<pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
+Output: [9,7,8]
+Explanation:
+The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
+This is a partition so that each letter appears in at most one part.
+A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;int&gt; partitionLabels(string S) {
+        //先用map记录下每一个字母的最后位置
+        unordered_map&lt;int,int&gt; endPosition;
+        for(int i = 0;i &lt; S.size();i++){
+            //实时更新最后位置
+            endPosition[S[i]] = i;
+        }
+        vector&lt;int&gt; ans;
+        int begin = 0;
+        int end = 0;
+        //遍历数组，看对应的位置是不是最后的位置
+        for(int i = 0;i&lt;S.size();i++){
+            //始终保留段中的最后位置
+            end = max(end,endPosition[S[i]]);
+            if(i == end){
+                ans.push_back(i-begin+1);
+                begin = i+1;
+            }
+        }
+
+        return ans;
+    }
+};
+</code></pre>
+<p>此题考分割字符串，同时也考察map的应用，我们要分割字符串，那么首先要知道每一段的结尾字母是谁，所以我们首先遍历数组把每一个字母最后的位置都记录下来。</p>
+<p>之后再遍历数组，同时把每一段的最后的位置作end，每遍历一个字母就更新一次，那么最后当遍历到与end所指向位置相同的字母，它一定是这一段的末尾字母。</p>
+<p>之后我们把这一段的长度记录下来，然后在下一段重新开始遍历。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[荷兰国旗问题（75）]]></title>
+        <id>https://sugar940.github.io/post/he-lan-guo-qi-wen-ti-75/</id>
+        <link href="https://sugar940.github.io/post/he-lan-guo-qi-wen-ti-75/">
+        </link>
+        <updated>2022-01-05T02:56:51.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<h2 id="三指针解法">三指针解法</h2>
+<p>一个指针指向头，一个指针指向尾，一个指针代表进度。</p>
+<p>进度指针每次移动判断它的值</p>
+<p>为0的时候把对应的数值和左指针换，进度+1，左指针+1</p>
+<p>为1的时候进度+1，即不动数组</p>
+<p>为2的时候和右指针换，进度不变（因为还过来的可能是1也可能是0，所以进度无法准确推进，但是和左指针换的时候可以保证换过来的数只可能是1或0，因为2走过去之后2不可能在左边。所以和左指针换的时候可以进度和左指针同时+1）</p>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    void sortColors(vector&lt;int&gt;&amp; nums) {
+        int left = 0,right = nums.size()-1;
+        int index = 0;
+        while(index &lt;= right){
+            if(nums[index] == 0){
+                swap(nums[left++],nums[index++]);//此处index往前走
+            }
+            else if(nums[index] == 1){
+                index++;
+            }
+            else if(nums[index] == 2){
+                swap(nums[right--],nums[index]);//注意此处index不往前走，因为换过来的数字可能是1也可能是0需要再次判断
+            }
+        }
+        
+    }
+};
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[无重叠区间（435) +分发饼干（455）]]></title>
+        <id>https://sugar940.github.io/post/wu-chong-die-qu-jian-435-fen-fa-bing-gan-455/</id>
+        <link href="https://sugar940.github.io/post/wu-chong-die-qu-jian-435-fen-fa-bing-gan-455/">
+        </link>
+        <updated>2022-01-05T02:52:46.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641351217414.png" alt="" loading="lazy"></figure>
+<h2 id="贪心算法">贪心算法</h2>
+<figure data-type="image" tabindex="2"><img src="https://sugar940.github.io//post-images/1641351317446.png" alt="" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+public:
+    int eraseOverlapIntervals(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+        if (intervals.empty()) {
+            return 0;
+        }
+        
+        sort(intervals.begin(), intervals.end(), [](const auto&amp; u, const auto&amp; v) {
+            return u[1] &lt; v[1];
+        });
+
+        int n = intervals.size();
+        int right = intervals[0][1];
+        int ans = 1;
+        for (int i = 1; i &lt; n; ++i) {
+            if (intervals[i][0] &gt;= right) {
+                ++ans;
+                right = intervals[i][1];
+            }
+        }
+        return n - ans;
+    }
+};
+
+</code></pre>
+<h2 id="题目-2">题目</h2>
+<figure data-type="image" tabindex="3"><img src="https://sugar940.github.io//post-images/1641351324990.png" alt="" loading="lazy"></figure>
+<h2 id="贪心算法-2">贪心算法</h2>
+<pre><code class="language-C++">class Solution {
+public:
+    int findContentChildren(vector&lt;int&gt;&amp; g, vector&lt;int&gt;&amp; s) {
+        int result = 0;
+        sort(g.begin(),g.end());
+        sort(s.begin(),s.end());
+        int gt = 0, st = 0;
+        while(st &lt; s.size() &amp;&amp; gt &lt; g.size()){
+            if(g[gt] &lt;= s[st]){
+                ++gt;
+                ++st;
+            }else if(g[gt] &gt; s[st]){
+                st++;
+            }
+        }
+        return gt;
+    }
+};
+</code></pre>
+]]></content>
+    </entry>
+</feed>

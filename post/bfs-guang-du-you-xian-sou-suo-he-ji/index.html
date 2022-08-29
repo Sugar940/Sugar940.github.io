@@ -1,0 +1,389 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>BFS广度有限搜索合集 | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1661763873600">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1661763873600"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    BFS广度有限搜索合集
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-01-19 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/QWeiq8cA6/" class="post-tags">
+                            # BFS
+                        </a>
+                    
+                        <a href="https://sugar940.github.io/tag/EbIJlgK9q/" class="post-tags">
+                            # leetcode刷题记录
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="1091计算在网格中从原点到特定点的最短路径长度">1091.计算在网格中从原点到特定点的最短路径长度</h2>
+<p><a href="https://leetcode.com/problems/shortest-path-in-binary-matrix/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/">力扣</a></p>
+<pre><code>[[1,1,0,1],
+ [1,0,1,0],
+ [1,1,1,1],
+ [1,0,1,1]]
+</code></pre>
+<p>题目描述：0 表示可以经过某个位置，求解从左上角到右下角的最短路径长度。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int shortestPathBinaryMatrix(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        //起点为1则无法继续行进
+        if(grid[0][0] == 1){
+            return -1;
+        }
+        int ans = 1;
+        //定义x和y对应的8个方向
+        int dirc[8][2] = {{0,1},{0,-1},{1,0},{-1,0},{1,1},{-1,1},{1,-1},{-1,-1}};
+        queue&lt;pair&lt;int,int&gt;&gt; q;
+        q.emplace(0,0);
+        //表示起点已经去过
+        grid[0][0] = 1;
+        int n = grid.size();
+        //BFS模板写法
+        while(!q.empty()){
+            //遍历8个方向，去过的地方记为1
+            int m = q.size();
+            //即只要队列中存在元素就一直遍历下去
+            while(m--){
+                //取出队首元素
+                auto [x,y] = q.front();
+                q.pop();
+                //如果走到了终点则直接返回次数，因为最先到达终点的一定是最优解
+                if(x == n-1 &amp;&amp; y == n-1){
+                    return ans;
+                } 
+                for(int i =0; i &lt; 8; i++){
+                    //x和y向八个方向分别移动
+                    int nx = x + dirc[i][0];
+                    int ny = y + dirc[i][1];
+                    //如果发生越界则返回
+                    if(nx &lt;0 || ny &lt; 0 || nx &gt;= n || ny &gt;= n) continue;
+                    if(grid[nx][ny] == 0){
+                        //如果八个方向中有为0的点则记录进队列中，继续往八个方向扩散
+                        q.emplace(nx,ny);
+                        //把访问过的点记为1
+                        grid[nx][ny] = 1;
+                    }
+                }
+            }
+            ans ++;
+        }
+        return -1;
+
+
+    }
+};
+</code></pre>
+<p>使用广度有限搜索同时遍历整个数组格子，最先到达终点的直接返回数值，返回的即是最短距离。</p>
+<p>广度优先遍历使用队列进行遍历，把遍历的点录入队列，之后便会通过队列的顺序进行广度优先遍历。</p>
+<h2 id="279组成整数的最小平方数">279.组成整数的最小平方数</h2>
+<p><a href="https://leetcode.com/problems/perfect-squares/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/perfect-squares/description/">力扣</a></p>
+<pre><code>For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+</code></pre>
+<p>可以将每个整数看成图中的一个节点，如果两个整数之差为一个平方数，那么这两个整数所在的节点就有一条边。</p>
+<p>要求解最小的平方数数量，就是求解从节点 n 到节点 0 的最短路径。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int numSquares(int n) {
+        unordered_set&lt;int&gt; visited;
+        queue&lt;int&gt; q{{0}};
+        int steps = 1;
+        while (!q.empty()) {
+            auto size = q.size();
+            while (size--) {
+                //从数列中取出来一个数进行比对
+                auto cur = q.front(); q.pop();
+                //只要和不超过目标值就一直平方数相加求和，并把新的结果记录下来。
+                for (int i = 1; i * i + cur &lt;= n; i++) {
+                    //对这一层的结果进行遍历
+                    auto newResult = i * i + cur;
+                    //发现符合题目要求的结果，返回层数
+                    if (newResult == n) {
+                        return steps;
+                    }
+                    //如果已存进去的数不包含这个数就把它存进去
+                    if (!visited.count(newResult)) {
+                        visited.insert(newResult);
+                        q.push(newResult);
+                    }
+                }
+            }
+            //每过完一层，层数加1
+            steps++;
+        }
+
+        return -1; // should never reach here.
+    }
+};
+</code></pre>
+<h2 id="127最短单词路径">127.最短单词路径</h2>
+<p><a href="https://leetcode.com/problems/word-ladder/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/word-ladder/description/">力扣</a></p>
+<pre><code>Input:
+beginWord = &quot;hit&quot;,
+endWord = &quot;cog&quot;,
+wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]
+
+Output: 5
+
+Explanation: As one shortest transformation is &quot;hit&quot; -&gt; &quot;hot&quot; -&gt; &quot;dot&quot; -&gt; &quot;dog&quot; -&gt; &quot;cog&quot;,
+return its length 5.
+Input:
+beginWord = &quot;hit&quot;
+endWord = &quot;cog&quot;
+wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;]
+
+Output: 0
+
+Explanation: The endWord &quot;cog&quot; is not in wordList, therefore no possible transformation.
+</code></pre>
+<p>题目描述：找出一条从 beginWord 到 endWord 的最短路径，每次移动规定为改变一个字符，并且改变之后的字符串必须在 wordList 中。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector&lt;string&gt;&amp; wordList) {
+        //定义一个纪录单词序列的set集合
+        unordered_set&lt;string&gt; wordSet(wordList.begin(),wordList.end());//注意此处不加等于号
+        //如果单词序列没有目标单词直接返回false
+        if(wordSet.find(endWord) == wordSet.end()){
+            return 0;
+        }
+        //定义一个记录已访问序列的集合
+        unordered_map&lt;string,int&gt; verifiedWord;
+        //定义一个队列用来进行BFS，并把第一个单词放进去
+        queue&lt;string&gt; q;
+        q.push(beginWord);
+        //往已记录序列放入第一个元素,步幅记录为1
+        verifiedWord.insert(pair&lt;string,int&gt;(beginWord,1));
+
+        //以下开始进行广度优先搜索
+        while(!q.empty()){
+            //只要队列里有元素就一直搜索
+            //把队列的第一个元素取出来
+            string word = q.front();
+            //弹出元素
+            q.pop();
+            //记录当前层次所需要的步数
+            int path = verifiedWord[word];
+            //以下根据本题需求定制化处理
+            for(int i = 0;i &lt; word.size();i++){
+                //依次替换取出来单词的位置
+                for(int j = 0;j &lt; 26;j++){
+                    string newWord = word;
+                    newWord[i] = j+'a';
+                    //如果这个单词和目标单词一样则返回
+                    if(newWord == endWord){
+                        return path+1;
+                    }
+                    //这个新替换的单词之前没有出现过并且队列里存在这个单词
+                    if(wordSet.find(newWord)!= wordSet.end()&amp;&amp;
+                        verifiedWord.find(newWord) == verifiedWord.end()){
+                        //把这个新单词加入已验证集合中
+                        verifiedWord.insert(pair&lt;string,int&gt;(newWord,path+1));
+                        //把这个新词加入队列中
+                        q.push(newWord);
+                    }
+
+                }
+            }
+
+        }
+        //如果走完了找不到目标，则返回0
+        return 0;
+    }
+};
+</code></pre>
+<p>每次从单词队列里面取出来一个单词，然后拼凑到一起，如果是新的单词并且出现在要求队列里面则把这个拼凑的单词放到数组中，如果拼凑的单词不属于目标队列则删除。遍历存入的队列的不同层次，最先遇到目标单词的必定是最短的路径。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/fen-zhi-si-xiang-he-ji/" class="post-title gt-a-link">
+                    分治思想合集
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/bfs-guang-du-you-xian-sou-suo-he-ji/" class="leancloud_visitors" data-flag-title="BFS广度有限搜索合集">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

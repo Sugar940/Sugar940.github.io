@@ -1,0 +1,294 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>算法刷题日记-两数之和(167) | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1661763873600">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1661763873600"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    算法刷题日记-两数之和(167)
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-12-30 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/EbIJlgK9q/" class="post-tags">
+                            # leetcode刷题记录
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641111981063.png" alt="" loading="lazy"></figure>
+<h2 id="暴力解法">暴力解法</h2>
+<p>算法时间复杂度为O(n^2)，空间复杂度O(1)</p>
+<p>两次遍历循环整个数组即可。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        vector&lt;int&gt; result;
+        for(int i = 0; i &lt; nums.size();i++){
+            for(int j = 0;j &lt; nums.size();j++){
+                if(nums[i] + nums[j] == target &amp;&amp; i != j){
+                    
+                    result.push_back(i);
+                    result.push_back(j);
+                    return result;
+                }
+            }
+        }
+
+        return result;
+
+    }
+};
+</code></pre>
+<h2 id="map解法">map解法</h2>
+<p>时间复杂度O(nlog2n)</p>
+<p>注：map.find()的时间复杂度是log2n。是基于红黑树进行查找。</p>
+<p>利用map的映射求解，将值记录在map中，直接查询map是否有符合要求的值，有则直接返回。</p>
+<p>思路：遍历整个数组，每次都看map中是否有对应需求的差值，有则返回，没有则添加。</p>
+<p>注：用目标值减去数组的值得到差值，显然差值与目标值之和符合题目要求。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        vector&lt;int&gt; result;
+        map&lt;int,int&gt; mp;
+        int mTarget;
+        for(int i = 0; i &lt; nums.size();i++){
+            mTarget = target - nums[i];
+            map&lt;int,int&gt;::iterator it = mp.find(mTarget);
+            if(it == mp.end()){
+                mp[nums[i]] = i;
+            }else{
+                result.push_back(mp[mTarget]);
+                result.push_back(i);
+                
+                return result;
+            }
+            
+        }
+        return result;
+    }
+};
+</code></pre>
+<h2 id="函数使用问题">函数使用问题</h2>
+<p>map.find(type value)若找不到指定的值，会返回end，所以如果it == map.end()则说明数组中没有这个值。</p>
+<h2 id="双指针解法">双指针解法</h2>
+<p>用两个指针分别指向数组的头和尾，和为sum，当sum&gt;target时，大指针往小的移动。当sum&lt;target时，小指针往大的移动。</p>
+<p>但是有一个前提：要求这个数组应该是一个有序的数组！在此题中此解法并不适用。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        vector&lt;int&gt; result;
+        int head = 0;
+        int rear = nums.size()-1;
+        int sum = 0;
+        int i = 0;
+        while(i &lt; nums.size()){
+            sum = nums[head]+nums[rear];
+            if(sum &lt; target){
+                head++;
+            }
+            if(sum &gt; target){
+                rear--;
+            }
+            if(sum == target){
+                result.push_back(head);
+                result.push_back(rear);
+                return result;
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/pai-xu-zong-jie/" class="post-title gt-a-link">
+                    排序总结
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/suan-fa-shua-ti-ri-ji-liang-shu-zhi-he/" class="leancloud_visitors" data-flag-title="算法刷题日记-两数之和(167)">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>
