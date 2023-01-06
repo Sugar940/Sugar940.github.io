@@ -1,0 +1,395 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Shell-&gt;遍历操作 | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1672988930160">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1672988930160"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Shell-&gt;遍历操作
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-08-30 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/34NggMkCP/" class="post-tags">
+                            # shell
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h1 id="7遍历操作">7.遍历操作</h1>
+<p>以下介绍shell中常用的遍历操作，比如for、while和until命令。</p>
+<h2 id="for命令">for命令</h2>
+<p>for的遍历方式见如下代码所示：</p>
+<pre><code>$ cat test1b
+#!/bin/bash
+# testing the for variable after the looping
+
+for test in Alabama Alaska Arizona Arkansas California Colorado
+do
+   echo &quot;The next state is $test&quot;
+done
+echo &quot;The last state we visited was $test&quot;
+test=Connecticut
+echo &quot;Wait, now we're visiting $test&quot;
+$ ./test1b
+The next state is Alabama
+The next state is Alaska
+The next state is Arizona
+The next state is Arkansas
+The next state is California
+The next state is Colorado
+The last state we visited was Colorado
+Wait, now we're visiting Connecticut
+$
+</code></pre>
+<p>如上可见，for是会遍历in后面的多个单词，每一个单词都会被遍历一遍，do代表每一次执行的操作，done表示整个for循环执行完成后的操作。</p>
+<h2 id="for命令的误判">for命令的误判</h2>
+<p>如果只读取没有特殊符号的列表是不会存在问题的，但是如果读取的列表中多了一些含义符号，那么for循环将会误判，例子如下：</p>
+<pre><code>$ cat badtest1
+#!/bin/bash
+# another example of how not to use the for command
+
+for test in I don't know if this'll work
+do
+    echo &quot;word:$test&quot;
+done
+$ ./badtest1
+word:I
+word:dont know if thisll
+word:work
+$
+</code></pre>
+<p>如上，for并没有完全按照空格进行分割来输出列表，而是将'dont know if this'作为一个整体，衔接了前后的语句进行整体输出。<br>
+为了避免这类问题出现，我们需要使用转义字符将会引号转义，方式shell认为我们要将其作为一个整体。</p>
+<ul>
+<li>使用\</li>
+<li>使用&quot; &quot;</li>
+</ul>
+<pre><code>for test in I don\'t know if &quot;this'll&quot; work
+</code></pre>
+<p>PS：此处我们是为了避免空格被划分，但是如果我需要将空格也包含进来，就可以使用上诉的方法，使用单引号把空格包含进来即可。</p>
+<h2 id="从变量或命令读取列表">从变量或命令读取列表</h2>
+<p>列表除了可以手动输出之外，shell也可以从含有列表的变量或者会输出列表的命令中读取列表。<br>
+从变量中读取：</p>
+<pre><code>$ cat test4
+#!/bin/bash
+# using a variable to hold the list
+
+list=&quot;Alabama Alaska Arizona Arkansas Colorado&quot;
+list=$list&quot; Connecticut&quot;
+
+for state in $list
+do
+    echo &quot;Have you ever visited $state?&quot;
+done
+$ ./test4
+Have you ever visited Alabama?
+Have you ever visited Alaska?
+Have you ever visited Arizona?
+Have you ever visited Arkansas?
+Have you ever visited Colorado?
+Have you ever visited Connecticut?
+$
+</code></pre>
+<p>从命令中读取：</p>
+<pre><code>$ cat test5
+#!/bin/bash
+# reading values from a file
+
+file=&quot;states&quot;
+
+for state in $(cat $file)
+do
+    echo &quot;Visit beautiful $state&quot;
+done
+$ cat states
+Alabama
+Alaska
+Arizona
+Arkansas
+Colorado
+Connecticut
+Delaware
+Florida
+Georgia
+$ ./test5
+Visit beautiful Alabama
+Visit beautiful Alaska
+Visit beautiful Arizona
+Visit beautiful Arkansas
+Visit beautiful Colorado
+Visit beautiful Connecticut
+Visit beautiful Delaware
+Visit beautiful Florida
+Visit beautiful Georgia
+$
+</code></pre>
+<h2 id="for命令遍历文件">for命令遍历文件</h2>
+<p>for命令除了可以遍历列表外，还可以用来遍历文件使用方法如下：</p>
+<pre><code>$ cat test6
+#!/bin/bash
+# iterate through all the files in a directory
+
+for file in /home/rich/test/*
+do
+
+    if [ -d &quot;$file&quot; ]
+    then
+       echo &quot;$file is a directory&quot;
+    elif [ -f &quot;$file&quot; ]
+    then
+       echo &quot;$file is a file&quot;
+    fi
+done
+$ ./test6
+/home/rich/test/dir1 is a directory
+/home/rich/test/myprog.c is a file
+/home/rich/test/myprog is a file
+/home/rich/test/myscript is a file
+/home/rich/test/newdir is a directory
+/home/rich/test/newfile is a file
+/home/rich/test/newfile2 is a file
+/home/rich/test/testdir is a directory
+/home/rich/test/testing is a file
+/home/rich/test/testprog is a file
+/home/rich/test/testprog.c is a file
+$
+</code></pre>
+<p>如上遍历了/home/rich/test文件夹下的所有文件，并且进行了文件类型的判断和进行相关输出。</p>
+<p>PS：在遍历文件名的时候，由于在Linux中包含空格的文件名是合法的，所以要使用双引号将文件名括起来，避免因为空格导致shell误判。</p>
+<pre><code>if [ -d &quot;$file&quot; ]
+</code></pre>
+<h2 id="while命令">while命令</h2>
+<p>while命令的基本格式如下：</p>
+<pre><code># while command test
+
+var1=10
+while [ $var1 -gt 0 ]
+do
+    echo $var1
+    var1=$[ $var1 - 1 ]
+done
+$ ./test10
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+$
+</code></pre>
+<h2 id="until命令">until命令</h2>
+<p>until可以认为是while的逆向思维，但是用法是类似的。</p>
+<pre><code>$ cat test12
+#!/bin/bash
+# using the until command
+
+var1=100
+until [ $var1 -eq 0 ]
+do
+    echo $var1
+    var1=$[ $var1 - 25 ]
+done
+$ ./test12
+100
+75
+50
+25
+$
+</code></pre>
+<p>知道var1符合某个条件时，until命令才会停止。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/shell-xue-xi-ji-lu/" class="post-title gt-a-link">
+                    Shell-&gt;[入门][变量][重定向][数学运算][test命令]
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/shell-greaterbian-li-cao-zuo/" class="leancloud_visitors" data-flag-title="Shell-&gt;遍历操作">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

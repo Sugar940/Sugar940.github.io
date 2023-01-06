@@ -1,0 +1,439 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Shell-&gt;Sed编辑器 | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1672988930160">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1672988930160"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Shell-&gt;Sed编辑器
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-09-01 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/34NggMkCP/" class="post-tags">
+                            # shell
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h1 id="10sed-编辑器">10.Sed 编辑器</h1>
+<p>Sed编辑器可以帮助我们快速地进行文本替换后输出，简单高效。</p>
+<h2 id="快速上手">快速上手</h2>
+<p>以下通过简短的例子快速了解sed的使用</p>
+<h3 id="使用-sed-替换句子中的字符">使用 sed 替换句子中的字符</h3>
+<pre><code>$ echo &quot;This is a test&quot; | sed 's/test/big test/'
+This is a big test
+$
+</code></pre>
+<p>如上，使用 sed 中的s命令，可以使用斜杆来将后面的词和前面的词进行替换，最后是的echo语句的输出内容发生了改变。</p>
+<h3 id="使用-sed-替换输出文件内容">使用 sed 替换输出文件内容</h3>
+<pre><code>$ cat data1.txt
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+$
+$ sed 's/dog/cat/' data1.txt
+The quick brown fox jumps over the lazy cat.
+The quick brown fox jumps over the lazy cat.
+The quick brown fox jumps over the lazy cat.
+The quick brown fox jumps over the lazy cat.
+$
+</code></pre>
+<p>如上使用sed将所有的dog都替换成cat并应用到datal文件中</p>
+<p>但是此处的修改是不会应用到文件中的，因为sed只会修改输出的内容，对源文件的内容不会修改</p>
+<pre><code>$ cat data1.txt
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+$
+</code></pre>
+<h3 id="使用sed一次性执行多个指令">使用sed一次性执行多个指令</h3>
+<pre><code>$ sed -e 's/brown/green/; s/dog/cat/' data1.txt
+The quick green fox jumps over the lazy cat.
+The quick green fox jumps over the lazy cat.
+The quick green fox jumps over the lazy cat.
+The quick green fox jumps over the lazy cat.
+$
+</code></pre>
+<p>如上，只需要添加-e指令，就可以在单引号中通过分号来间隔多个命令，达到一次性执行多条指令的效果<br>
+注意：分号和引号首位不能有空格<br>
+除了用分号分割，还可以在输入第一个单引号并输入完一条命令后直接回车，这样子会跳到新的一行继续输入新的命令，最后再用引号结尾即可。</p>
+<pre><code>$ sed -e '
+&gt; s/brown/green/
+&gt; s/fox/elephant/
+&gt; s/dog/cat/' data1.txt
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+$
+</code></pre>
+<h3 id="从文件中读取-sed-命令">从文件中读取 sed 命令</h3>
+<p>如果每一次都要输入新的 sed 命令太过麻烦，执行sed命令也可以通过读取先前编写好的文件的方式来一次性执行</p>
+<pre><code>$ cat script1.sed
+s/brown/green/
+s/fox/elephant/
+s/dog/cat/
+$
+$ sed -f script1.sed data1.txt
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+$
+</code></pre>
+<p>在这种情况下，不用在每条命令后面放一个分号。sed 编辑器知道每行都是一条单独的命令。跟在命令行输入命令一样，sed 编辑器会从指定文件中读取命令，并将它们应用到数据文件中的每一行上。</p>
+<p>PS：我们很容易就会把sed编辑器脚本文件与 bash shell 脚本文件搞混。为了避免这种情况，可以使用.sed作为 sed 脚本文件的扩展名。</p>
+<h2 id="进阶">进阶</h2>
+<p>此处将介绍更为详尽的sed用法</p>
+<h3 id="替换标记">替换标记</h3>
+<p>在使用 sed 进行文本替换时，如果不添加任何标记只会替换出现的第一个词，如果想要对句子中所有相同的替换词都替换，那么需要使用替换标记。<br>
+不使用替换标记：</p>
+<pre><code>$ cat data4.txt
+This is a test of the test script.
+This is the second test of the test script.
+$
+$ sed 's/test/trial/' data4.txt
+This is a trial of the test script.
+This is the second trial of the test script.
+$
+</code></pre>
+<p>可见其中的第二个test没有被替换为trial</p>
+<p>使用替换标记：</p>
+<pre><code>$ sed 's/test/trial/g' data4.txt
+This is a trial of the trial script.
+This is the second trial of the trial script.
+$
+</code></pre>
+<p>如上 g 就是一个替换标记，他会将所有的需要替换的目标都替换掉</p>
+<h4 id="替换标记符">替换标记符</h4>
+<p>此处为一些常用的替换标记符：</p>
+<ul>
+<li>数字，表明新文本将替换第几处模式匹配的地方</li>
+<li>g ，表明新文本将会替换所有匹配的文本；</li>
+<li>p ，表明原先行的内容要打印出来；</li>
+<li>w file ，将替换的结果写到文件中。</li>
+</ul>
+<h3 id="替换字符">替换字符</h3>
+<p>如果使用现有的sed命令来替换路径的话，需要对路径中包含的斜杆频繁转义，过程复杂</p>
+<pre><code>$ sed 's/\/bin\/bash/\/bin\/csh/' /etc/passwd
+</code></pre>
+<p>所以 sed 允许使用其他的字符来代替/，以简化输入</p>
+<pre><code>$ sed 's!/bin/bash!/bin/csh!' /etc/passwd
+</code></pre>
+<p>如上，使用!来替换/，简化了输入也使得代码可读性更高</p>
+<h3 id="替换指定行的内容">替换指定行的内容</h3>
+<p>只需要在s字符前面添加要替换的行就可以只替换那一行的内容<br>
+替换第二行的内容：</p>
+<pre><code>$ sed '2s/dog/cat/' data1.txt
+The quick brown fox jumps over the lazy dog
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy dog
+The quick brown fox jumps over the lazy dog
+$
+</code></pre>
+<p>替换二、三行的内容：</p>
+<pre><code>$ sed '2,3s/dog/cat/' data1.txt
+The quick brown fox jumps over the lazy dog
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy dog
+$
+</code></pre>
+<p>替换第二行开始的内容：</p>
+<pre><code>$ sed '2,$s/dog/cat/' data1.txt
+The quick brown fox jumps over the lazy dog
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy cat
+$
+</code></pre>
+<p>如上：要替换从第二行开始之后的内容只需要在2后面添加一个$符号并用逗号间隔开即可</p>
+<h3 id="命令组合">命令组合</h3>
+<p>除了使用-e，sed还可以使用花括号来组合多个命令</p>
+<pre><code>$ sed '2{
+&gt; s/fox/elephant/
+&gt; s/dog/cat/
+&gt; }' data1.txt
+The quick brown fox jumps over the lazy dog.
+The quick brown elephant jumps over the lazy cat.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+$
+</code></pre>
+<p>如上使用花括号将多条命令括起来，一起执行</p>
+<h3 id="删除行">删除行</h3>
+<p>d指令可以删除指定行或内容</p>
+<pre><code>$ cat data6.txt
+This is line number 1.
+This is line number 2.
+This is line number 3.
+This is line number 4.
+$
+$ sed '3d' data6.txt
+This is line number 1.
+This is line number 2.
+This is line number 4.
+$
+</code></pre>
+<pre><code>$ sed '2,3d' data6.txt
+This is line number 1.
+This is line number 4.
+$
+</code></pre>
+<pre><code>$ sed '3,$d' data6.txt
+This is line number 1.
+This is line number 2.
+$
+</code></pre>
+<h4 id="注意">注意</h4>
+<p>sed并不会对源文件进行任何的修改，所以此处的删除仅在输出的时候才有效果，在源文件中起不到任何的效果</p>
+<h3 id="增加数据">增加数据</h3>
+<pre><code>$ echo &quot;Test Line 2&quot; | sed 'i\Test Line 1'
+Test Line 1
+Test Line 2
+$
+</code></pre>
+<p>如上使用i命令向echo中插入了一行新的文本</p>
+<pre><code>$ echo &quot;Test Line 2&quot; | sed 'a\Test Line 1'
+Test Line 2
+Test Line 1
+$
+</code></pre>
+<p>如上使用附加命令会直接添加到文本的末端</p>
+<pre><code>$ sed '3a\
+&gt; This is an appended line.' data6.txt
+This is line number 1.
+This is line number 2.
+This is line number 3.
+This is an appended line.
+This is line number 4.
+$
+</code></pre>
+<p>如上将数据添加到文本的后三行</p>
+<h3 id="修改文本">修改文本</h3>
+<pre><code>$ sed '3c\
+&gt; This is a changed line of text.' data6.txt
+This is line number 1.
+This is line number 2.
+This is a changed line of text.
+This is line number 4.
+$
+</code></pre>
+<p>如上，使用命令c可以对指定的行信息进行修改</p>
+<h3 id="使用文本匹配来修改">使用文本匹配来修改</h3>
+<pre><code>$ sed '/number 3/c\
+&gt; This is a changed line of text.' data6.txt
+This is line number 1.
+This is line number 2.
+This is a changed line of text.
+This is line number 4.
+$
+</code></pre>
+<p>可以使用双斜杆来匹配目标文本</p>
+<h3 id="转换字符">转换字符</h3>
+<p>当修改多个单字符时可以使用转换字符</p>
+<pre><code>$ sed 'y/123/789/' data8.txt
+This is line number 7.
+This is line number 8.
+This is line number 9.
+This is line number 4.
+This is line number 7 again.
+This is yet another line.
+This is the last line in the file.
+$
+</code></pre>
+<p>如上述例子，将123换成789，使用指令y则会依次对其中的123进行置换</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/flamegraph-shi-yong-zhi-nan/" class="post-title gt-a-link">
+                    FlameGraph 使用指南
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/shell-greatersed-bian-ji-qi/" class="leancloud_visitors" data-flag-title="Shell-&gt;Sed编辑器">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

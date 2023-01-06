@@ -1,0 +1,590 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>回溯法合集一 | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1672988930160">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1672988930160"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    回溯法合集一
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-01-26 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/Fco1qpMKn/" class="post-tags">
+                            # 回溯
+                        </a>
+                    
+                        <a href="https://sugar940.github.io/tag/EbIJlgK9q/" class="post-tags">
+                            # leetcode刷题记录
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="17数字键盘组合">17.数字键盘组合</h2>
+<p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/description/">力扣</a></p>
+<figure data-type="image" tabindex="1"><a href="https://camo.githubusercontent.com/3774807b632f5c4869c8317dd1cb04532463dc1d94777fefc654e32d85eee2e6/68747470733a2f2f63732d6e6f7465732d313235363130393739362e636f732e61702d6775616e677a686f752e6d7971636c6f75642e636f6d2f39383233373638632d323132622d346231612d623639612d6233663539653037623937372e6a7067"><img src="https://camo.githubusercontent.com/3774807b632f5c4869c8317dd1cb04532463dc1d94777fefc654e32d85eee2e6/68747470733a2f2f63732d6e6f7465732d313235363130393739362e636f732e61702d6775616e677a686f752e6d7971636c6f75642e636f6d2f39383233373638632d323132622d346231612d623639612d6233663539653037623937372e6a7067" alt="img" loading="lazy"></a></figure>
+<pre><code>Input:Digit string &quot;23&quot;
+Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void dfs(string &amp;digits,int index,unordered_map&lt;char,string&gt; phone,vector&lt;string&gt; &amp;ans,string &amp;member){
+        if(index == digits.size()){
+            ans.push_back(member);
+            
+        }else{
+            //按钮
+            char map_index = digits[index];
+            //取出当前按钮的内容
+            string temp = phone.find(map_index)-&gt;second;
+            //遍历当前按钮的内容，和下一个按钮的内容拼凑到一起
+            for(int i = 0;i &lt; temp.size();i++){
+                //取出拼凑的字符
+                char a = temp[i];
+                //把当前字母拼凑到成员中
+                member.push_back(a);
+                //继续像下一层进发
+                dfs(digits,index+1,phone,ans,member);
+
+                //************注意要弹出刚刚插入的！！！因为这边要开始一个新的循环了！！**********
+                member.pop_back();
+            }
+        }
+        
+    }
+    vector&lt;string&gt; letterCombinations(string digits) {
+        vector&lt;string&gt; ans;
+        if(digits.size() == 0){
+            return ans;
+        }
+        string member;
+        //把键盘录入
+        unordered_map&lt;char,string&gt; phone = {
+            {'2',&quot;abc&quot;},
+            {'3',&quot;def&quot;},
+            {'4',&quot;ghi&quot;},
+            {'5',&quot;jkl&quot;},
+            {'6',&quot;mno&quot;},
+            {'7',&quot;pqrs&quot;},
+            {'8',&quot;tuv&quot;},
+            {'9',&quot;wxyz&quot;}
+        };
+        
+        dfs(digits,0,phone,ans,member);
+        return ans;
+    }
+};
+</code></pre>
+<p>思路:</p>
+<ul>
+<li>把每一个按键对应的字母先存入unordered_map中保存好</li>
+<li>设置终止条件：当子成员的长度和按键的数量相等，即一组组合已经生成，即可存入总数组中。</li>
+<li>设置递归条件：每次取一个字母，之后前往index+1，即下一个字母。</li>
+<li>设置回溯：让总数组把最后一个字母弹出来，然后重新循环。即开始一个新的组合。</li>
+</ul>
+<h2 id="93复原ip地址">93.复原ip地址</h2>
+<p><a href="https://leetcode.com/problems/restore-ip-addresses/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/restore-ip-addresses/description/">力扣</a></p>
+<pre><code>Given &quot;25525511135&quot;,
+return [&quot;255.255.11.135&quot;, &quot;255.255.111.35&quot;].
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;string&gt;ans;
+    void backtrace(string&amp; s,int cnt,int index,string&amp; str){
+        //标点符号超过3或者到达最后一位
+        if(cnt==4 || index==s.size() ){
+            //标点符号超过3并且到达最后一位则说明划分完成
+            if(cnt==4 &amp;&amp; index==s.size())
+                ans.push_back(str.substr(0,str.size()-1));
+            //若不是最后一位则不执行以上操作直接返回
+            return;
+        }
+        //打入三个小数点
+        for(int i=1;i&lt;=3;i++){
+            //如果越界则不执行
+            if(index+i&gt;s.size()) return;
+            //如果起点是0，那么它只能单独成块，后面不能跟别的数字（即不含有前导0）
+            if(s[index]=='0' &amp;&amp; i!=1) return;
+            //如果取了3位，并且它们加起来超过255则返回
+            if(i==3 &amp;&amp; s.substr(index,i)&gt;&quot;255&quot;) return;
+            //符合以上过滤规则则执行拼接
+            str+=s.substr(index,i);
+            //拼接完成后再后面加一个.
+            str.push_back('.');
+            //对后面的单词执行拼接
+            backtrace(s,cnt+1,index+i,str);
+            //还原为上述回溯步骤之前
+            str = str.substr(0,str.size()-i-1);
+        }
+    }
+    vector&lt;string&gt; restoreIpAddresses(string s) {
+        string str =&quot;&quot;;
+        backtrace(s,0,0,str);
+        return ans;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置结束条件：当标点数超过三或者标点位置在最后则可以结束，当标点位置超过3且位于最后一位则把这组ip地址插入总数组中。</li>
+<li>设置递归条件:
+<ul>
+<li>越界返回</li>
+<li>0不和其他数字组合返回</li>
+<li>3位合超过255返回</li>
+<li>以上情况都不发生就循环递归</li>
+<li>每次递归标点数+1，指针+1</li>
+</ul>
+</li>
+<li>设置回朔条件：
+<ul>
+<li>让str字符串最后以为消去，即只取字符串的0到长度str.size()-i-1位。（打点可能垮了几个字符所以要-i-1）</li>
+<li>打点数变成cnt-1</li>
+</ul>
+</li>
+</ul>
+<h2 id="79单词搜索">79.单词搜索</h2>
+<p><a href="https://leetcode.com/problems/word-search/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/word-search/description/">力扣</a></p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/11/04/word2.jpg" alt="img" loading="lazy"></figure>
+<pre><code>For example,
+Given board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+word = &quot;ABCCED&quot;, -&gt; returns true,
+word = &quot;SEE&quot;, -&gt; returns true,
+word = &quot;ABCB&quot;, -&gt; returns false.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    bool exist(vector&lt;vector&lt;char&gt;&gt;&amp; board, string word) {
+        for(int i = 0; i &lt; board.size(); i++)
+            for(int j = 0; j &lt; board[i].size(); j++)
+                if(dfs(board,word,0,i,j)) return true;
+        return false;        
+    }
+    int dx[4] = {-1,0,1,0}, dy[4] = {0,1,0,-1}; //方向数组
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board, string&amp; word,int u,int x,int y)
+    {
+        if(board[x][y] != word[u]) return false;
+        if(u == word.size() - 1)   return true;
+        char t = board[x][y];
+        board[x][y] = '.';
+        for(int i = 0; i &lt; 4; i++)
+        {
+            int a = x + dx[i], b = y + dy[i];
+            //出界或者走到已经搜索过的位置
+            if(a &lt; 0 || a &gt;= board.size() || b &lt; 0 || b &gt;= board[0].size() || board[a][b] == '.')  continue;
+            if(dfs(board,word,u+1,a,b)) return true;
+        }
+        board[x][y] = t;
+        return false;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置结束条件：
+<ul>
+<li>遍历的块和目标块不一样返回false</li>
+<li>遍历到最后一位，说明前面的都没有问题，返回true</li>
+<li>没有返回数组说整个区块没有正确的组合，返回false。</li>
+</ul>
+</li>
+<li>设置递归：
+<ul>
+<li>延四个方向递归</li>
+<li>出界返回或者遇到'.'返回false</li>
+<li>正常继续往下递归，u+1(u记录遍历长度)</li>
+<li>递归过的位置变成'.'</li>
+</ul>
+</li>
+</ul>
+<h2 id="257二叉树的所有路径">257.二叉树的所有路径</h2>
+<p><a href="https://leetcode.com/problems/binary-tree-paths/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/binary-tree-paths/description/">力扣</a></p>
+<pre><code>  1
+ /  \
+2    3
+ \
+  5
+[&quot;1-&gt;2-&gt;5&quot;, &quot;1-&gt;3&quot;]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void construct_paths(TreeNode* root, string path, vector&lt;string&gt;&amp; paths) {
+        //首先判断是否为空节点，因为是同时传的左右结点，都有为空的可能性,如果为空此处直接略过
+        if (root != nullptr) {
+            //如果不为空则往后添加值
+            path += to_string(root-&gt;val);
+            //判断是否为叶子结点，如果不是叶子结点则继续往下遍历
+            if (root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr) {  // 当前节点是叶子节点
+                paths.push_back(path);                              // 把路径加入到答案中
+            } else {
+                //不是叶子结点说明后面还有结点，最为加-&gt;并继续遍历
+                path += &quot;-&gt;&quot;;  // 当前节点不是叶子节点，继续递归遍历
+                construct_paths(root-&gt;left, path, paths);
+                construct_paths(root-&gt;right, path, paths);
+            }
+        }
+    }
+
+    vector&lt;string&gt; binaryTreePaths(TreeNode* root) {
+        vector&lt;string&gt; paths;
+        construct_paths(root, &quot;&quot;, paths);
+        return paths;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置递归条件
+<ul>
+<li>节点非空就递归</li>
+<li>每次递归往path后插入结点的值</li>
+<li>如果该结点非叶子结点，插入&quot;-&gt;&quot;，并且往左边和右边递归</li>
+<li>如果为叶子结点：插入路径到数组中。</li>
+</ul>
+</li>
+</ul>
+<h2 id="46全排列">46.全排列</h2>
+<p><a href="https://leetcode.com/problems/permutations/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/permutations/description/">力扣</a></p>
+<pre><code>[1,2,3] have the following permutations:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    void backtrpping(vector&lt;int&gt;&amp; nums,vector&lt;bool&gt;&amp; passed,vector&lt;int&gt;&amp; path){
+        //如果已存入数组的大小和待排序数组的大小相等，则说明这一组数据排序完成
+        if(path.size() == nums.size()){
+            ans.push_back(path);
+            return;
+        }
+        for(int i = 0;i &lt; nums.size();i++){
+            if(passed[i] == true){
+                continue;
+            }else{
+                //如果这个点没有去过就进行标记并记录下来
+                passed[i] = true;
+                path.push_back(nums[i]);
+                backtrpping(nums, passed, path);
+                //回溯
+                path.pop_back();
+                //这一步写的时候忽略了！
+                passed[i] = false;
+
+            }
+        }
+    }
+   
+    vector&lt;vector&lt;int&gt;&gt; permute(vector&lt;int&gt;&amp; nums) {
+       
+        //对vector数组进行赋值
+        vector&lt;bool&gt; passed(nums.size(),false);
+        vector&lt;int&gt; path;
+        backtrpping(nums, passed, path);
+        return ans;
+
+    }
+};
+</code></pre>
+<ul>
+<li>结束条件：当子成员的长度和数组的长度一样，子成员插入数组中去。</li>
+<li>递归条件：
+<ul>
+<li>没有去过这个点，则把这个点插入子成员，并且把这个点设置为true，传入下一层递归</li>
+<li>最后记得把刚刚改变的路径还原</li>
+</ul>
+</li>
+</ul>
+<h2 id="47含有相同元素的全排列">47.含有相同元素的全排列</h2>
+<p><a href="https://leetcode.com/problems/permutations-ii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/permutations-ii/description/">力扣</a></p>
+<pre><code>[1,1,2] have the following unique permutations:
+[[1,1,2], [1,2,1], [2,1,1]]
+</code></pre>
+<p>数组元素可能含有相同的元素，进行排列时就有可能出现重复的排列，要求重复的排列只返回一个。</p>
+<p>在实现上，和 Permutations 不同的是要先排序，然后在添加一个元素时，判断这个元素是否等于前一个元素，如果等于，并且前一个元素还未访问，那么就跳过这个元素。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    vector&lt;int&gt; path;
+    void backtrpping(vector&lt;int&gt;&amp; nums,vector&lt;bool&gt;&amp; passed){
+        //如果已存入数组的大小和待排序数组的大小相等，则说明这一组数据排序完成
+        if(path.size() == nums.size()){
+            ans.push_back(path);
+            return;
+        }
+        for(int i = 0;i &lt; nums.size();i++){
+            //此处的passed[i-1]为true或者false都可以
+            if(i&gt;0 &amp;&amp; nums[i] == nums[i-1] &amp;&amp; passed[i-1] == false){
+                continue;
+            }
+            //注意此处需要额外判断passed[i]是否为false，只有passed[i]为false时才执行以下步骤
+            if(passed[i] == false){
+                //如果这个点没有去过就进行标记并记录下来
+                passed[i] = true;
+                path.push_back(nums[i]);
+                
+                backtrpping(nums, passed);
+                //回溯
+                path.pop_back();
+              
+                //这一步写的时候忽略了！
+                passed[i] = false;
+            }
+           
+
+            
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; permuteUnique(vector&lt;int&gt;&amp; nums) {
+       
+        //对vector数组进行赋值
+        
+        sort(nums.begin(),nums.end());
+        vector&lt;bool&gt; passed(nums.size(),false);
+        backtrpping(nums, passed);
+        return ans;
+    }
+};
+</code></pre>
+<ul>
+<li>
+<p>结束条件：</p>
+<ul>
+<li>当子成员的大小和序列大小一样时把子成员存入数组中</li>
+</ul>
+</li>
+<li>
+<p>递归条件：</p>
+<ul>
+<li>
+<p><strong>首先要排除重复元素的干扰</strong></p>
+<ul>
+<li>
+<figure data-type="image" tabindex="3"><img src="https://pic.leetcode-cn.com/1631608102-VjiWOk-file_1631608102208" alt="47.全排列II1" loading="lazy"></figure>
+</li>
+<li>
+<pre><code class="language-C++">//只要符合如图所示条件就跳过此次循环
+//遇到相等的元素，并且
+if(i&gt;0 &amp;&amp; nums[i] == nums[i-1] &amp;&amp; passed[i-1] == false){
+                continue;
+ }
+</code></pre>
+</li>
+<li>
+<p>经过上述去重后判断该点是否之前经过，防止出现重复的数字，如果之前去过了跳过，没去过插入</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>回溯条件：</p>
+<ul>
+<li>路径回溯</li>
+<li>结果点回溯</li>
+</ul>
+</li>
+</ul>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/shen-du-you-xian-bian-li-he-ji/" class="post-title gt-a-link">
+                    深度优先遍历合集
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/hui-su-fa-he-ji-yi/" class="leancloud_visitors" data-flag-title="回溯法合集一">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Shell-&gt;文件描述符 | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1672988930160">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1672988930160"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Shell-&gt;文件描述符
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-08-30 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/34NggMkCP/" class="post-tags">
+                            # shell
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h1 id="8文件描述符">8.文件描述符</h1>
+<p>文件描述符在linux中有三种，分别是标准输入、标准输出和标准错误。这三种描述符又拥有不同的编号，分别是0、1、2。<br>
+<img src="https://sugar940.github.io//post-images/1661839422154.png" alt="" loading="lazy"></p>
+<h2 id="描述符介绍">描述符介绍</h2>
+<p>STDIN代表标准输入，也可以用&lt;表示。<br>
+STDOUT表示输出，可以用&gt;表示。<br>
+STDERR表示错误输出，一般会记录错误信息，也可以将自定义的错误信息添加到其中。</p>
+<h2 id="重定向正确和错误信息">重定向正确和错误信息</h2>
+<p>有时候输出的信息中正确信息与错误信息相互交织，想要从中寻找合适的信息非常麻烦，那么能否将正确信息和错误信息分隔开来输出呢？<br>
+使用两个特定的符号可以实现这个需求。</p>
+<pre><code>$ ls -al test test2 test3 badtest 2&gt; test6 1&gt; test7
+$ cat test6
+ls: cannot access test: No such file or directory
+ls: cannot access badtest: No such file or directory
+$ cat test7
+-rw-rw-r-- 1 rich rich 158 2014-10-16 11:32 test2
+-rw-rw-r-- 1 rich rich   0 2014-10-16 11:33 test3
+$
+</code></pre>
+<p>以上代码中，2&gt;只会提取输出列表中的错误信息，将ls -al中的错误信息输出到test6中，而1&gt;只会提取其中的正确信息，将正确的信息输出到test7文件中，这样就实现了正确信息和错误信息的划分，使得查看日志更为方便。</p>
+<h2 id="将报错信息重定向到stderr">将报错信息重定向到STDERR</h2>
+<p>有时候为了将一些自定义的错误信息通过错误描述符同时输出到指定的日志文件中，我们会将一些自定义的错误信息先添加到错误描述符中，之后再统一将错误的信息分隔出来，可以使用&amp;2来表示错误描述符，&gt;&amp;2来将一些自定义的错误信息输入到错误描述符中之后再统一输出。例子如下：</p>
+<pre><code>$ cat test8
+#!/bin/bash
+# testing STDERR messages
+
+echo &quot;This is an error&quot; &gt;&amp;2
+echo &quot;This is normal output&quot;
+$
+</code></pre>
+<pre><code>$ ./test8
+This is an error
+This is normal output
+$
+</code></pre>
+<pre><code>$ ./test8 2&gt; test9
+This is normal output
+$ cat test9
+This is an error
+$
+</code></pre>
+<p>以上的三个例子，首先将自定义的错误信息存到了&amp;2即错误符中，之后调用脚本发现没有什么特别之处，但是在最后一段代码中，将test8脚本的错误信息保存到test9后，再进入test9中可以发现已经有了自定义的错误信息，可见将自定义错误信息保存到&amp;2中，可以实现自定义错误信息的及时记录。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/shell-greaterbian-li-cao-zuo/" class="post-title gt-a-link">
+                    Shell-&gt;遍历操作
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/shell-greaterwen-jian-miao-shu-fu/" class="leancloud_visitors" data-flag-title="Shell-&gt;文件描述符">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

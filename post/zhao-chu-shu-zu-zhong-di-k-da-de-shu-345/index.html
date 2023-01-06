@@ -1,0 +1,300 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>找出数组中第k大的数（345） | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1672988930160">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1672988930160"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    找出数组中第k大的数（345）
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-01-01 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/Boh11eVWb/" class="post-tags">
+                            # 快速排序
+                        </a>
+                    
+                        <a href="https://sugar940.github.io/tag/EbIJlgK9q/" class="post-tags">
+                            # leetcode刷题记录
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1641111934202.png" alt="" loading="lazy"></figure>
+<h2 id="快速排序解法">快速排序解法</h2>
+<p>第27组数据发生超时！！！问题严重</p>
+<p>即使使用随机快速排序算法进行优化仍然无法解决问题</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int findKthLargest(vector&lt;int&gt;&amp; nums, int k) {
+        quickSort(0,nums.size()-1,nums);
+        return nums[nums.size()-k];
+    }
+    void quickSort(int left,int right,vector&lt;int&gt;&amp; nums){//这一块没有写好，注意理解一下快排的思路
+        
+        if(left &lt; right){
+            int pos = Randpartition(left,right,nums);//接收返回的基准值
+            quickSort(left,pos-1,nums);
+            quickSort(pos+1,nums.size()-1,nums);//注意这里是pos-1和pos+1
+        }
+        
+        
+    }
+
+    int Randpartition(int left,int right,vector&lt;int&gt;&amp; nums){
+        int p = round(1.0*rand()/RAND_MAX*(right-left)+left);//在0-1间取一个随机数，用它来乘区间得到(0,区间),对这个区间+left得到(left,right)之间的随机数
+        swap(p,left,nums);
+        int temp = nums[left];
+        while(left &lt; right){
+            while(left &lt; right &amp;&amp; temp &lt;= nums[right]) right--;
+            nums[left] = nums[right];
+            while(left &lt; right &amp;&amp; nums[left] &lt;= temp) left++;//注意这里是小于等于，不是小于，为什么呢？因为如果遇到一个一样的数就卡住的话
+            nums[right] = nums[left];
+        }
+        nums[left] = temp;
+        return left;
+    }
+
+    void swap(int p,int left,vector&lt;int&gt; nums){
+        int temp = nums[left];
+        nums[left] = nums[p];
+        nums[p] = temp;
+    }
+
+    
+};
+</code></pre>
+<p>后面经过排查是quickSort写错了，应该传入的数据是left和right，而不是left和nums.size()-1</p>
+<h2 id="快速排序解决方案">快速排序解决方案</h2>
+<pre><code class="language-C++">class Solution {
+public:
+    int findKthLargest(vector&lt;int&gt;&amp; nums, int k) {
+        quickSort(0,nums.size()-1,nums);
+        return nums[nums.size()-k];
+    }
+    void quickSort(int left,int right,vector&lt;int&gt;&amp; nums){//这一块没有写好，注意理解一下快排的思路
+        
+        if(left &lt; right){
+            int pos = Randpartition(left,right,nums);//接收返回的基准值
+            quickSort(left,pos-1,nums);
+            quickSort(pos+1,right,nums);//注意这里是pos-1和pos+1
+        }
+    }
+
+    int Randpartition(int left,int right,vector&lt;int&gt;&amp; nums){
+        
+        //int p = round(1.0*rand()/RAND_MAX*(right-left)+left);//在0-1间取一个随机数，用它来乘区间得到(0,区间),对这个区间+left得到(left,right)之间的随机数
+        int p = left + (right-left)/2;//这样写可以代替取随机数的写法。
+        swap(nums[p],nums[left]);
+        int temp = nums[left];
+        while(left &lt; right){
+            while(left &lt; right &amp;&amp; temp &lt;= nums[right]) --right;
+            nums[left] = nums[right];
+            
+            while(left &lt; right &amp;&amp; nums[left] &lt;= temp) ++left;//注意这里是小于等于，不是小于，为什么呢？因为如果遇到一个一样的数就卡住的话
+            nums[right] = nums[left];
+            
+        }
+        nums[left] = temp;
+        return left;
+    }
+
+
+    
+};
+</code></pre>
+<h2 id="堆排序解决方案">堆排序解决方案</h2>
+<pre><code class="language-C++">
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/ping-fang-shu-zhi-he-633/" class="post-title gt-a-link">
+                    平方数之和（633）
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/zhao-chu-shu-zu-zhong-di-k-da-de-shu-345/" class="leancloud_visitors" data-flag-title="找出数组中第k大的数（345）">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Shell-&gt;[入门][变量][重定向][数学运算][test命令] | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1672988930160">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1672988930160"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Shell-&gt;[入门][变量][重定向][数学运算][test命令]
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-08-29 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/34NggMkCP/" class="post-tags">
+                            # shell
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h1 id="1-shell入门">1. Shell入门</h1>
+<p>以下介绍shell的基本入门</p>
+<h2 id="创建shell文件">创建shell文件</h2>
+<p>使用文本编辑器来创建一个shell文件，注意在第一行指定使用的编辑器。</p>
+<pre><code>#!/bin/bash
+</code></pre>
+<p>一般#代表注释，但是在第一行#!代表指定编辑器。</p>
+<h2 id="执行shell">执行shell</h2>
+<p>执行shell有两种方式，一种是添加到path目录中，一种是sh指定路径下的shell文件。当shell文件的权限不足时，应该使用chmod来修改对应的权限。</p>
+<h2 id="使用shell输出语句">使用shell输出语句</h2>
+<p>正常情况下直接在shell里面使用echo命令即可，但是如果有时候要输出引号，则需要在外面再用一层引号将其包围，不然可能会导致误判。</p>
+<h1 id="2shell中的变量">2.shell中的变量</h1>
+<p>以下将介绍shell常用变量的核心用法。</p>
+<h2 id="注意事项">注意事项</h2>
+<p>shell的赋值语句中，=两边是不允许有空格的！一定要注意！</p>
+<h2 id="自定义变量">自定义变量</h2>
+<p>直接变量名=变量值即可</p>
+<pre><code>var1=10
+</code></pre>
+<h2 id="调用变量">调用变量</h2>
+<p>调用变量要使用$变量，否则shell不知道你是要输出名字还是变量。</p>
+<pre><code>echo $var1 #10
+var2=$var1
+echo $var2 #10
+echo var2 #var2
+echo &quot;var1 is&quot;$var1
+</code></pre>
+<h2 id="输出命令">输出命令</h2>
+<p>有时候需要将命令获取的内容输出，比如需要获取date的内容，此时只需要使用反引号字符(`)或者$()格式即可<br>
+一般情况下都将命令赋予变量，最后再输出变量即可。</p>
+<pre><code>echo `date` #输出date命令的内容
+date=`date`
+echo date #同上效果
+date2=$(date +%y%m%d%)
+echo date2 #同上效果
+</code></pre>
+<h1 id="3内容重定向">3.内容重定向</h1>
+<p>内容重定向即将内容转到其他的地方，可以是文件也可以是一个方法。</p>
+<h2 id="文件覆盖">文件覆盖</h2>
+<p>shell中可以直接使用&gt;来覆盖文件</p>
+<pre><code>command &gt; outputfile
+</code></pre>
+<p>如上使用一定的命令就可以将内容覆盖到outputfile中。</p>
+<p>PS:此处有一个小技巧，可以直接使用&gt;来创建文件</p>
+<pre><code>&gt; newfile
+</code></pre>
+<p>因为没有内容重定向，所以此处会创建一个空的新文件newfile</p>
+<h2 id="文件追加">文件追加</h2>
+<p>文件追加命令使用&gt;&gt;来实现，其用法类似&gt;，只是效果是在文件的最后一行添加内容而不是覆盖内容。</p>
+<pre><code>added &gt;&gt; oldfile
+</code></pre>
+<h2 id="命令内容追加">命令内容追加</h2>
+<p>命令内容追加可以理解为把文件里面的内容添加给命令，此处使用和文件夹方向相反的符号，即&lt;。</p>
+<pre><code>wc &lt; test
+</code></pre>
+<p>如上，将test文件的内容传给wc，wc会将文本的行数、词数和字节数进行输出。</p>
+<h2 id="管道">管道</h2>
+<p>如上文所说的重定向都是需要借助文件实现的重定向，但是有时候若想要将命令的内容传递给命令，使用上文的方式只能将命令获取的内容传递到文件中去，然后再从文件中获取输出给下一个命令，这样的过程则较为繁琐，有没有一种方式能够直接将命令的内容传递给命令呢？<br>
+这正是管道。</p>
+<pre><code>command1 | command2
+</code></pre>
+<p>如上诉代码，可以将command1获取的命令传递给command2<br>
+管道是打通两个命令之间的符号，是的多个命令可以组合起来灵活使用。</p>
+<pre><code>rpm -qa | sort &gt; rpm.list
+</code></pre>
+<h1 id="4数学运算">4.数学运算</h1>
+<p>由于expr命令使用较为繁杂，此处只介绍使用方括号的方式来进行数学运算的方法。</p>
+<h2 id="中括号">中括号</h2>
+<p>如下，因为linux中直接使用运算符有时候会出现各种各样的问题，所以我们直接用中括号包起来，可以避免所有奇怪的问题。</p>
+<pre><code>var1=$[1+5]
+echo $var1 #6
+var2=$[$var1 * 2]
+echo $var2 #12
+</code></pre>
+<h2 id="浮点问题的处理">浮点问题的处理</h2>
+<p>虽然中括号解决了数学运算符的识别问题，但是这种计算只适用于非浮点的运算，如果运算存在浮点是无法准确地计算出来的。</p>
+<pre><code>var1=100
+var2=45
+var3=$[var1/$var2]
+echo var3 #2
+</code></pre>
+<p>为了解决浮点运算的问题我们使用bc方法。如下所示：</p>
+<pre><code>bc
+12 * 5.4
+64.8
+</code></pre>
+<p>使用bc相对于进入到一个计算器的页面，在里面输入需要计算的数学运算式子即可。<br>
+可是我不可能说每一次都进入到bc的运算界面进行运算，所以此处可以使用管道将内容传递给bc计算器。</p>
+<h3 id="使用管道传递给bc">使用管道传递给bc</h3>
+<pre><code>var1=$(echo &quot;scale=4; 3.44/5&quot; | bc)
+echo var1 #.6880
+</code></pre>
+<p>如上式子的意思是将指定的内容传递给bc同时设置结果的小数位为4，神奇的就是要通过echo的方式将内容传递给bc，同时在echo中知道你scale的值，用；进行分割刻度与式子。</p>
+<h3 id="使用注释传递给bc">使用注释传递给bc</h3>
+<p>虽然使用管道也可以实现浮点的运算，但是如果有时候式子比较多，再使用管道进行数据的传输则会较为麻烦。所以此处还有另外一种方法来进行内容的传递</p>
+<pre><code>$ cat test12
+#!/bin/bash
+
+var1=10.46
+var2=43.67
+var3=33.2
+var4=71
+
+var5=$(bc &lt;&lt; EOF
+scale = 4
+a1 = ( $var1 * $var2)
+b1 = ($var3 * $var4)
+a1 + b1
+EOF
+)
+
+echo The final answer for this mess is $var5
+$
+</code></pre>
+<p>此处可以发现，我们还可以通过bc赋值给变量。</p>
+<h1 id="5test命令">5.test命令</h1>
+<p>有时候比如要判断文件是否可读，需要使用命令进行判断，这时候就需要用到test指令了。<br>
+一帮使用中括号将需要test的内容围起来进行判断即可，无需每次都使用test指令。</p>
+<pre><code>if [$value -gt 5]
+then ...
+</code></pre>
+<h2 id="三种比较">三种比较</h2>
+<h3 id="数字比较">数字比较</h3>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1661823094286.png" alt="" loading="lazy"></figure>
+<h3 id="字符串比较">字符串比较</h3>
+<p><img src="https://sugar940.github.io//post-images/1661823112912.png" alt="" loading="lazy"><br>
+使用字符串要注意字符的转义，比如&gt;会被识别为文件重定向，需要在前面添加转移斜杆即\&gt;</p>
+<h3 id="文件比较">文件比较</h3>
+<figure data-type="image" tabindex="2"><img src="https://sugar940.github.io//post-images/1661823155134.png" alt="" loading="lazy"></figure>
+<h2 id="复合条件">复合条件</h2>
+<p>可以使用符合条件来结合多个条件进行联合比较。格式如下：<br>
+[condition1] &amp;&amp; [condition2] 两个条件同时满足<br>
+[condition1] || [condition2] 满足其中一个条件</p>
+<h1 id="6if-else的高级特性">6.if-else的高级特性</h1>
+<p>if else的高级特性其实就是多了使用java中常用的自增以及正则表达式和case等操作。</p>
+<h2 id="使用双括号">使用双括号</h2>
+<pre><code>((expression))
+</code></pre>
+<p>通过使用双括号，可以在其中使用一些自增、自减等操作，详细的使用表格如下所示：<br>
+<img src="https://sugar940.github.io//post-images/1661822971217.png" alt="" loading="lazy"><br>
+在代码中的使用方法如下：</p>
+<pre><code>$ cat test23.sh
+#!/bin/bash
+# using double parenthesis
+#
+val1=10
+#
+if (( $val1 ** 2 &gt; 90 ))
+then
+   (( val2 = $val1 ** 2 ))
+   echo &quot;The square of $val1 is $val2&quot;
+fi
+$
+$ ./test23.sh
+The square of 10 is 100
+$
+</code></pre>
+<h2 id="使用双方括号">使用双方括号</h2>
+<p>双方括号可以用来匹配正则表达式，以后在双方括号中输入想要匹配的正则表达式。</p>
+<pre><code>[[]]
+</code></pre>
+<p>比如：</p>
+<pre><code>if [[$USER == r*]]
+then 
+	echo &quot;Hello $USER&quot;
+</code></pre>
+<h2 id="case语句">case语句</h2>
+<p>case语句可以使得代码看起来更加清晰明了，通过以下的两个对比例子进行相应的展示。<br>
+使用if：</p>
+<pre><code>$ cat test25.sh
+#!/bin/bash
+# looking for a possible value
+#
+if [ $USER = &quot;rich&quot; ]
+then
+   echo &quot;Welcome $USER&quot;
+   echo &quot;Please enjoy your visit&quot;
+elif [ $USER = &quot;barbara&quot; ]
+then
+   echo &quot;Welcome $USER&quot;
+   echo &quot;Please enjoy your visit&quot;
+elif [ $USER = &quot;testing&quot; ]
+then
+   echo &quot;Special testing account&quot;
+elif [ $USER = &quot;jessica&quot; ]
+then
+   echo &quot;Do not forget to logout when you're done&quot;
+else
+   echo &quot;Sorry, you are not allowed here&quot;
+fi
+$
+$ ./test25.sh
+Welcome rich
+Please enjoy your visit
+$
+</code></pre>
+<p>使用case：</p>
+<pre><code>$ cat test26.sh
+#!/bin/bash
+# using the case command
+#
+case $USER in
+rich | barbara)
+   echo &quot;Welcome, $USER&quot;
+   echo &quot;Please enjoy your visit&quot;;;
+testing)
+  echo &quot;Special testing account&quot;;;
+jessica)
+   echo &quot;Do not forget to log off when you're done&quot;;;
+*)
+   echo &quot;Sorry, you are not allowed here&quot;;;
+esac
+$
+$ ./test26.sh
+Welcome, rich
+Please enjoy your visit
+$
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/hui-su-he-ji-er/" class="post-title gt-a-link">
+                    回溯法合集二
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/shell-xue-xi-ji-lu/" class="leancloud_visitors" data-flag-title="Shell-&gt;[入门][变量][重定向][数学运算][test命令]">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

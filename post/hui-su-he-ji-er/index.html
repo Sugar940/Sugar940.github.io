@@ -1,0 +1,517 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>回溯法合集二 | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1672988930160">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1672988930160"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    回溯法合集二
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-01-26 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/Fco1qpMKn/" class="post-tags">
+                            # 回溯
+                        </a>
+                    
+                        <a href="https://sugar940.github.io/tag/EbIJlgK9q/" class="post-tags">
+                            # leetcode刷题记录
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h2 id="216组合总和-iii">216.组合总和 III</h2>
+<p><a href="https://leetcode.com/problems/combination-sum-iii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/combination-sum-iii/description/">力扣</a></p>
+<pre><code>Input: k = 3, n = 9
+
+Output:
+
+[[1,2,6], [1,3,5], [2,3,4]]
+</code></pre>
+<p>从 1-9 数字中选出 k 个数不重复的数，使得它们的和为 n。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    
+    void backtrapping(int n,int k,vector&lt;int&gt; &amp;path,int sum,int begin){
+        if(sum &gt; n){
+            return;
+        }
+       if(sum == n &amp;&amp; path.size() == k){
+           result.push_back(path);
+           return;
+       }
+       //i &lt;= 9-(k-path.size())+1是精髓，k-path.size():还要放进去的数的个数
+       //如果for循环之后的元素个数不足我们需要的元素个数，那么停止搜索
+       for(int i = begin;i &lt;= 9-(k-path.size())+1 ;i++){
+           path.push_back(i);
+           sum += i;
+           backtrapping(n, k, path, sum,i+1);
+           path.pop_back();
+           sum -= i;
+       }
+    }
+    vector&lt;vector&lt;int&gt;&gt; combinationSum3(int k, int n) {
+        backtrapping(n, k,path,0,1);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>结束条件：总和为n并且子集合的长度和k相等，说明子集寻找完毕</li>
+<li>递归条件：从begin开始运行到9-(k-path.size())+1，保证元素不重合，同时当循环之后的元素个数不足我们需要的元素的个数时，停止搜索。因为不能有重复的所以从i+1开始。</li>
+<li>回溯：把加入的数组弹出去，开始新一轮</li>
+</ul>
+<h2 id="78子集">78.子集</h2>
+<p><a href="https://leetcode.com/problems/subsets/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/subsets/description/">力扣</a></p>
+<p>找出集合的所有子集，子集不能重复，[1, 2] 和 [2, 1] 这种子集算重复</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    void backtripping(vector&lt;int&gt;&amp; nums,vector&lt;int&gt; path,int begin){
+        if(path.size() &gt; nums.size()){
+            return;
+        }
+        result.push_back(path);
+        for(int i = begin;i &lt; nums.size();i++){
+            path.push_back(nums[i]);
+            backtripping(nums, path, i+1);
+            path.pop_back();
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; subsets(vector&lt;int&gt;&amp; nums) {
+        backtripping(nums, path, 0);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>每次遍历都把新情况存入数组中，每次递归都从新的数字开始。</li>
+</ul>
+<h2 id="90子集-ii">90.子集 II</h2>
+<p><a href="https://leetcode.com/problems/subsets-ii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/subsets-ii/description/">力扣</a></p>
+<pre><code>For example,
+If nums = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    void backtripping(vector&lt;int&gt;&amp; nums,int begin,vector&lt;bool&gt;used){
+        
+        result.push_back(path);
+        for(int i = begin;i &lt; nums.size();i++){
+            //常用的去重代码，几乎每一题要去重都是用这个来去重的
+            if(i&gt;0&amp;&amp;nums[i] == nums[i-1] &amp;&amp; used[i-1] == false){
+                continue;
+            }else{
+                used[i] = true;
+                path.push_back(nums[i]);
+                backtripping(nums, i+1,used);
+                path.pop_back();
+                used[i] = false;
+            }
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; subsetsWithDup(vector&lt;int&gt;&amp; nums) {
+        vector&lt;bool&gt; used(nums.size(),false);
+        sort(nums.begin(),nums.end());
+        backtripping(nums,0,used);
+        return result;
+    }
+};
+</code></pre>
+<p>used[i-1]==true说明在同一树枝上有相同的，可以继续。</p>
+<p>used[i-1]==false说明在同一树层上，但是同一树层上不允许有相同的，所以这个可以用来过滤不合理的成员。</p>
+<h2 id="131分割回文串">131.分割回文串</h2>
+<p><a href="https://leetcode.com/problems/palindrome-partitioning/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/palindrome-partitioning/description/">力扣</a></p>
+<pre><code>For example, given s = &quot;aab&quot;,
+Return
+
+[
+  [&quot;aa&quot;,&quot;b&quot;],
+  [&quot;a&quot;,&quot;a&quot;,&quot;b&quot;]
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+private:
+    vector&lt;vector&lt;string&gt;&gt; result;
+    vector&lt;string&gt; path; // 放已经回文的子串
+    void backtracking (const string&amp; s, int startIndex) {
+        // 如果起始位置已经大于s的大小，说明已经找到了一组分割方案了
+        if (startIndex &gt;= s.size()) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = startIndex; i &lt; s.size(); i++) {
+            if (isPalindrome(s, startIndex, i)) {   // 是回文子串
+                // 获取[startIndex,i]在s中的子串
+                string str = s.substr(startIndex, i - startIndex + 1);
+                path.push_back(str);
+            } else {                                // 不是回文，跳过
+                continue;
+            }
+            backtracking(s, i + 1); // 寻找i+1为起始位置的子串
+            path.pop_back(); // 回溯过程，弹出本次已经填在的子串
+        }
+    }
+    bool isPalindrome(const string&amp; s, int start, int end) {
+        for (int i = start, j = end; i &lt; j; i++, j--) {
+            if (s[i] != s[j]) {
+                return false;
+            }
+        }
+        return true;
+    }
+public:
+    vector&lt;vector&lt;string&gt;&gt; partition(string s) {
+        result.clear();
+        path.clear();
+        backtracking(s, 0);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>先写一个判定是否是回文的函数</li>
+<li>把判断回文作为循环判定条件，是回文就存入，不是就往下接着递归。注意这里取的是一整个串。</li>
+</ul>
+<h2 id="37解数独">37.解数独</h2>
+<p><a href="https://leetcode.com/problems/sudoku-solver/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/sudoku-solver/description/">力扣</a></p>
+<p>编写一个程序，通过填充空格来解决数独问题。</p>
+<p>数独的解法需 遵循如下规则：</p>
+<p>数字 1-9 在每一行只能出现一次。<br>
+数字 1-9 在每一列只能出现一次。<br>
+数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。（请参考示例图）<br>
+数独部分空格内已填入了数字，空白格用 '.' 表示。</p>
+<figure data-type="image" tabindex="1"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2021/04/12/250px-sudoku-by-l2g-20050714svg.png" alt="img" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+private:
+bool backtracking(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+    for (int i = 0; i &lt; board.size(); i++) {        // 遍历行
+        for (int j = 0; j &lt; board[0].size(); j++) { // 遍历列
+            if (board[i][j] != '.') continue;
+            for (char k = '1'; k &lt;= '9'; k++) {     // (i, j) 这个位置放k是否合适
+                if (isValid(i, j, k, board)) {
+                    board[i][j] = k;                // 放置k
+                    if (backtracking(board)) return true; // 如果找到合适一组立刻返回
+                    board[i][j] = '.';              // 回溯，撤销k
+                }
+            }
+            return false;                           // 9个数都试完了，都不行，那么就返回false
+        }
+    }
+    return true; // 遍历完没有返回false，说明找到了合适棋盘位置了
+}
+bool isValid(int row, int col, char val, vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+    for (int i = 0; i &lt; 9; i++) { // 判断行里是否重复
+        if (board[row][i] == val) {
+            return false;
+        }
+    }
+    for (int j = 0; j &lt; 9; j++) { // 判断列里是否重复
+        if (board[j][col] == val) {
+            return false;
+        }
+    }
+    //保证从九宫格的左上角到右下角
+    //这样就不会弄错九宫格的判断
+    int startRow = (row / 3) * 3;
+    int startCol = (col / 3) * 3;
+    for (int i = startRow; i &lt; startRow + 3; i++) { // 判断9方格里是否重复
+        for (int j = startCol; j &lt; startCol + 3; j++) {
+            if (board[i][j] == val ) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+public:
+    void solveSudoku(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        backtracking(board);
+    }
+};
+</code></pre>
+<ul>
+<li>判断：
+<ul>
+<li>是否同行</li>
+<li>是否同列</li>
+<li>是否同九宫格</li>
+</ul>
+</li>
+<li>判断通过
+<ul>
+<li>取新的数递归（注意是二维取数）</li>
+<li>回溯</li>
+</ul>
+</li>
+</ul>
+<h2 id="51n皇后">51.N皇后</h2>
+<p><a href="https://leetcode.com/problems/n-queens/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/n-queens/description/">力扣</a></p>
+<p>n 皇后问题 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。</p>
+<p>给你一个整数 n ，返回所有不同的 n 皇后问题 的解决方案。</p>
+<p>每一种解法包含一个不同的 n 皇后问题 的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。</p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/11/13/queens.jpg" alt="img" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+private:
+vector&lt;vector&lt;string&gt;&gt; result;
+// n 为输入的棋盘大小
+// row 是当前递归到***的第几行了
+void backtracking(int n, int row, vector&lt;string&gt;&amp; chessboard) {
+    if (row == n) {
+        result.push_back(chessboard);
+        return;
+    }
+    for (int col = 0; col &lt; n; col++) {
+        if (isValid(row, col, chessboard, n)) { // 验证合法就可以放
+            chessboard[row][col] = 'Q'; // 放置皇后
+            backtracking(n, row + 1, chessboard);
+            chessboard[row][col] = '.'; // 回溯，撤销皇后
+        }
+    }
+}
+bool isValid(int row, int col, vector&lt;string&gt;&amp; chessboard, int n) {
+    int count = 0;
+    // 检查列
+    for (int i = 0; i &lt; row; i++) { // 这是一个剪枝
+        if (chessboard[i][col] == 'Q') {
+            return false;
+        }
+    }
+    // 检查 45度角是否有皇后
+    for (int i = row - 1, j = col - 1; i &gt;=0 &amp;&amp; j &gt;= 0; i--, j--) {
+        if (chessboard[i][j] == 'Q') {
+            return false;
+        }
+    }
+    // 检查 135度角是否有皇后
+    for(int i = row - 1, j = col + 1; i &gt;= 0 &amp;&amp; j &lt; n; i--, j++) {
+        if (chessboard[i][j] == 'Q') {
+            return false;
+        }
+    }
+    return true;
+}
+public:
+    vector&lt;vector&lt;string&gt;&gt; solveNQueens(int n) {
+        result.clear();
+        std::vector&lt;std::string&gt; chessboard(n, std::string(n, '.'));
+        backtracking(n, 0, chessboard);
+        return result;
+    }
+};
+</code></pre>
+<ul>
+<li>判断45度是否有皇后</li>
+<li>判断135度是否有皇后</li>
+<li>符合判断需求则往后取新的数</li>
+<li>此题相当于对数独的其中一个九宫格简化求解。</li>
+</ul>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/hui-su-fa-he-ji-yi/" class="post-title gt-a-link">
+                    回溯法合集一
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/hui-su-he-ji-er/" class="leancloud_visitors" data-flag-title="回溯法合集二">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

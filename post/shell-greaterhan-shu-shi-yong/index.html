@@ -1,0 +1,442 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Shell-&gt;函数使用 | Sugar&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://sugar940.github.io//favicon.ico?v=1672988930160">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://sugar940.github.io//styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Sugar&#39;s Blog
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1672988930160"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Shell-&gt;函数使用
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-08-30 ·
+                    </time>
+                    
+                        <a href="https://sugar940.github.io/tag/34NggMkCP/" class="post-tags">
+                            # shell
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <h1 id="9shell的函数使用">9.Shell的函数使用</h1>
+<p>shell的函数写法主要是要注意其中的变量作用范围，在shell中变量无论是在函数中还是在函数外定义，都是全局变量，同时注意shell中函数传入参数的方式，以及函数的返回值使用。</p>
+<h2 id="局部变量的使用">局部变量的使用</h2>
+<p>由于shell中的变量默认是全局的，导致有时候因为传入函数会改变之前定义的全局变量，所以要使用局部变量来进行规避，只需要在函数中的变量之前添加local字段既可以将变量在函数中设置为局部变量。</p>
+<pre><code>$ cat test9
+#!/bin/bash
+# demonstrating the local keyword
+
+function func1 {
+   local temp=$[ $value + 5 ]
+   result=$[ $temp * 2 ]
+}
+
+temp=4
+value=6
+
+func1
+echo &quot;The result is $result&quot;
+if [ $temp -gt $value ]
+then
+   echo &quot;temp is larger&quot;
+else
+   echo &quot;temp is smaller&quot;
+fi
+$
+$ ./test9
+The result is 22
+temp is smaller
+$
+</code></pre>
+<p>上述例子使用local声明temp，保证最后temp的值没有改变，如果不将temp设置为局部变量，那么最终的输出结果是temp is larger而不是smaller。</p>
+<h2 id="函数的参数传递">函数的参数传递</h2>
+<p>函数的参数传递类似于shell脚本的参数传递，也是使用$num的方式进行函数的入参传递，比如：</p>
+<pre><code>$ cat test6
+#!/bin/bash
+# passing parameters to a function
+
+function addem {
+   if [ $# -eq 0 ] || [ $# -gt 2 ]
+   then
+      echo -1
+   elif [ $# -eq 1 ]
+   then
+      echo $[ $1 + $1 ]
+   else
+      echo $[ $1 + $2 ]
+   fi
+}
+
+echo -n &quot;Adding 10 and 15: &quot;
+value=$(addem 10 15)
+echo $value
+echo -n &quot;Let's try adding just one number: &quot;
+value=$(addem 10)
+echo $value
+echo -n &quot;Now trying adding no numbers: &quot;
+value=$(addem)
+echo $value
+echo -n &quot;Finally, try adding three numbers: &quot;
+value=$(addem 10 15 20)
+echo $value
+$
+$ ./test6
+Adding 10 and 15: 25
+Let's try adding just one number: 20
+Now trying adding no numbers: -1
+Finally, try adding three numbers: -1
+$
+</code></pre>
+<p>如上，在脚本中像addem传递了3个参数，就像在linux控制台像脚本传递参数一样。<br>
+但是此处要注意函数的声明顺序，函数一定要在使用之前先声明，否则会报错。</p>
+<h2 id="像函数传递数组">像函数传递数组</h2>
+<p>如果要像函数传递数组，需要使用规定的格式，如果直接将数组传递给函数，那么函数最后只会读取数组的第一个数作为入参来使用。<br>
+具体的传递规则应该将传递的数组变量放到大括号里面，比如：</p>
+<pre><code>function testit {
+   local newarray
+   newarray=(;'echo &quot;$@&quot;')
+   echo &quot;The new array value is: ${newarray[*]}&quot;
+}
+myarray=(1 2 3 4 5)
+testit ${myarray[*]}
+</code></pre>
+<p>此处将myarray传递给testit函数的过程中，将myarray中的所有数字取出来再封装为一个新的函数，这样才可以成功地进行传递，否则会失败。</p>
+<h2 id="函数返回数据">函数返回数据</h2>
+<p>shell中要返回数据一般是在函数结尾使用echo进行输出，之后再取echo出来的语句作为函数输出的值。比如：</p>
+<pre><code>function arraydblr {
+   local origarray
+   local newarray
+   local elements
+   local i
+   origarray=($(echo &quot;$@&quot;))
+   newarray=($(echo &quot;$@&quot;))
+   elements=$[ $# - 1 ]
+   for (( i = 0; i &lt;= $elements; i++ ))
+   {
+      newarray[$i]=$[ ${origarray[$i]} * 2 ]
+   }
+   echo ${newarray[*]}
+}
+myarray=(1 2 3 4 5)
+echo &quot;The original array is: ${myarray[*]}&quot;
+arg1=$(echo ${myarray[*]})
+result=($(arraydblr $arg1))
+</code></pre>
+<p>此处arraydblr函数最后会echo一个由newarray重新封装的变量，之后我们将echo的值在后面的脚本语句中重新封装，即result=($(araydblr &amp;arg1))，将函数的结果封装到了result中，而此时的result中正记录了经过arraydblr计算的新数组。同时，如果要输出其他的变量，也是相同的道理。</p>
+<h2 id="创建库文件工具类">创建库文件（工具类）</h2>
+<p>此处库文件可以理解为抽取代码的公共部分，为了提高代码的可重用性，将重复的代码单独抽取出来。<br>
+具体操作方法如下：</p>
+<pre><code>$ cat myfuncs
+# my script functions
+
+function addem {
+   echo $[ $1 + $2 ]
+}
+function multem {
+   echo $[ $1 * $2 ]
+}
+
+function divem {
+   if [ $2 -ne 0 ]
+   then
+      echo $[ $1 / $2 ]
+   else
+      echo -1
+   fi
+}
+$
+</code></pre>
+<p>以下是错误的引入方法：</p>
+<pre><code>$ cat badtest4
+#!/bin/bash
+# using a library file the wrong way
+./myfuncs #导入库
+
+result=$(addem 10 15)
+echo &quot;The result is $result&quot;
+$
+</code></pre>
+<p>执行脚本：</p>
+<pre><code>
+$ ./badtest4
+./badtest4: addem: command not found
+The result is
+$
+</code></pre>
+<p>上述方法错以为将库文件运行就可以直接调用其中的函数，但是这样子是不可以的，使用库函数的关键在于使用source函数，这样才可以在shell脚本中使用库文件中的函数，而使用source有一个快捷方法，即使用点操作符。使用方法如下：</p>
+<pre><code>../myfuncs
+</code></pre>
+<p>以下是正确的引入方法：</p>
+<pre><code>$ cat test14
+#!/bin/bash
+# using functions defined in a library file
+. ./myfuncs
+
+value1=10
+value2=5
+result1=$(addem $value1 $value2)
+result2=$(multem $value1 $value2)
+result3=$(divem $value1 $value2)
+echo &quot;The result of adding them is: $result1&quot;
+echo &quot;The result of multiplying them is: $result2&quot;
+echo &quot;The result of dividing them is: $result3&quot;
+$
+</code></pre>
+<p>执行脚本：</p>
+<pre><code>$ ./test14
+The result of adding them is: 15
+The result of multiplying them is: 50
+The result of dividing them is: 2
+$
+</code></pre>
+<h2 id="在命令行中使用函数">在命令行中使用函数</h2>
+<p>函数不一定要在脚本中定义才可以使用，在命令行中同样可以定义一个函数。<br>
+在命令行中定义函数的方式有两种，例子如下：<br>
+使用单行的方式定义函数：</p>
+<pre><code>$ function divem { echo $[ $1 / $2 ];  }
+$ divem 100 5
+20
+$
+</code></pre>
+<pre><code>$ function doubleit { read -p &quot;Enter value: &quot; value; echo $[
+ $value * 2 ]; }
+$
+$ doubleit
+Enter value: 20
+40
+$
+
+</code></pre>
+<p>注意多个语句之间用分号隔开。</p>
+<p>使用多行的方式定义函数有如下两种方法：</p>
+<ul>
+<li>在bashrc中自定义函数</li>
+</ul>
+<pre><code>$ cat .bashrc
+# .bashrc
+
+# Source global definitions
+if [ -r /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+function addem {
+   echo $[ $1 + $2 ]
+}
+$
+</code></pre>
+<p>如上述代码所示，要使用多行的方式定义函数，一帮在bashrc的末尾补上自己需要的函数即可，该函数会在下一次启动bash shell的时候生效，这样我们就可以直接调用该函数而需要重新定义一个新的函数。</p>
+<ul>
+<li>将写好的库引入到bashrc中</li>
+</ul>
+<pre><code>$ cat .bashrc
+# .bashrc
+
+# Source global definitions
+if [ -r /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+. /home/rich/libraries/myfuncs
+$
+</code></pre>
+<p>注意此处一定要保证库文件的路径正确，这样子下次才可以正常地载入。</p>
+<pre><code>$ addem 10 5
+15
+$ multem 10 5
+50
+$ divem 10 5
+2
+$
+</code></pre>
+<h2 id="引入库">引入库</h2>
+<p>可以引入shtool库来使用其中的多种方便的函数，提高工作的效率。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://sugar940.github.io/post/shell-greaterwen-jian-miao-shu-fu/" class="post-title gt-a-link">
+                    Shell-&gt;文件描述符
+                </a>
+            </div>
+        
+
+        
+            <span id="/post/shell-greaterhan-shu-shi-yong/" class="leancloud_visitors" data-flag-title="Shell-&gt;函数使用">
+                <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count">0</i>
+            </span>
+        
+
+        
+
+        
+            <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script>
+
+<style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style>
+
+
+	<div id="vcomments"></div>
+
+<script>
+	new Valine({
+		el: '#vcomments',
+		appId: 'vnUHoSFyqhnMIQ4W57nm5vgf-gzGzoHsz',
+		appKey: '5NQPRa7gdsA3w6b3imvc3RgJ',
+		avatar: '',
+		pageSize: 5,
+		recordIp: false,
+		placeholder: 'Just Go Go',
+		visitor: true,
+	});
+</script>
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">舒格小栈</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://sugar940.github.io//atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

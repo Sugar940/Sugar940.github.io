@@ -1,0 +1,2027 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://sugar940.github.io/</id>
+    <title>Sugar&apos;s Blog</title>
+    <updated>2023-01-06T07:08:55.192Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://sugar940.github.io/"/>
+    <link rel="self" href="https://sugar940.github.io/atom.xml"/>
+    <subtitle>舒格小栈</subtitle>
+    <logo>https://sugar940.github.io/images/avatar.png</logo>
+    <icon>https://sugar940.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, Sugar&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Mysqlsalp的使用]]></title>
+        <id>https://sugar940.github.io/post/mysqlsalp-de-shi-yong/</id>
+        <link href="https://sugar940.github.io/post/mysqlsalp-de-shi-yong/">
+        </link>
+        <updated>2023-01-06T06:59:28.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="使用mysqlslap模拟多线程测试">使用mysqlslap模拟多线程测试</h1>
+<p>mysqlslap是mysql自带的一个压力测试根据，通过使用mysqlslap可以模拟多线程对数据库进行压力测试。<br>
+本文使用mysqlslap是为了模拟高并发下，主备同步开启MTS时，是否会造成主备存储差异不一致的情况。</p>
+<h2 id="mysqlslap参数">mysqlslap参数</h2>
+<p>mysqlslap使用时只需要给各种参数赋值即可，常用的参数列表如下：</p>
+<ol>
+<li>--concurrency代表并发数量，多个可以用逗号隔开,例如：concurrency=10,50,100, 并发连接线程数分别是10、50、100个并发。</li>
+<li>--engines代表要测试的引擎，可以有多个，用分隔符隔开。</li>
+<li>--iterations代表要运行这些测试多少次。</li>
+<li>--auto-generate-sql 代表用系统自己生成的SQL脚本来测试。<br>
+5）--auto-generate-sql-load-type 代表要测试的是读还是写还是两者混合的（read,write,update,mixed）</li>
+<li>--number-of-queries 代表总共要运行多少次查询。每个客户端运行的查询数量可以用查询总数/并发数来计算。</li>
+<li>--debug-info 代表要额外输出CPU以及内存的相关信息。</li>
+<li>--number-int-cols ：创建测试表的 int 型字段数量</li>
+<li>--auto-generate-sql-add-autoincrement : 代表对生成的表自动添加auto_increment列，从5.1.18版本开始</li>
+<li>--number-char-cols 创建测试表的 char 型字段数量。</li>
+<li>--create-schema 测试的schema，MySQL中schema也就是database。</li>
+<li>--query  使用自定义脚本执行测试，例如可以调用自定义的一个存储过程或者sql语句来执行测试。</li>
+<li>--only-print 如果只想打印看看SQL语句是什么，可以用这个选项。</li>
+</ol>
+<h2 id="实际使用">实际使用</h2>
+<pre><code>mysqlslap --concurrency=200 --iterations=10000 --create-schema=test 
+--query=&quot;/sugar/production_issues/mysqlslapSql.sql&quot; engine=innodb
+-uroot -proot
+</code></pre>
+<p>上述代码的含义即为：<br>
+使用200个并发线程，对数据库test执行query中的mysqlslapSql.sql文件10000次，数据库引擎位innodb，账户密码均为root。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Shell->Sed编辑器]]></title>
+        <id>https://sugar940.github.io/post/shell-greatersed-bian-ji-qi/</id>
+        <link href="https://sugar940.github.io/post/shell-greatersed-bian-ji-qi/">
+        </link>
+        <updated>2022-09-01T09:17:44.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="10sed-编辑器">10.Sed 编辑器</h1>
+<p>Sed编辑器可以帮助我们快速地进行文本替换后输出，简单高效。</p>
+<h2 id="快速上手">快速上手</h2>
+<p>以下通过简短的例子快速了解sed的使用</p>
+<h3 id="使用-sed-替换句子中的字符">使用 sed 替换句子中的字符</h3>
+<pre><code>$ echo &quot;This is a test&quot; | sed 's/test/big test/'
+This is a big test
+$
+</code></pre>
+<p>如上，使用 sed 中的s命令，可以使用斜杆来将后面的词和前面的词进行替换，最后是的echo语句的输出内容发生了改变。</p>
+<h3 id="使用-sed-替换输出文件内容">使用 sed 替换输出文件内容</h3>
+<pre><code>$ cat data1.txt
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+$
+$ sed 's/dog/cat/' data1.txt
+The quick brown fox jumps over the lazy cat.
+The quick brown fox jumps over the lazy cat.
+The quick brown fox jumps over the lazy cat.
+The quick brown fox jumps over the lazy cat.
+$
+</code></pre>
+<p>如上使用sed将所有的dog都替换成cat并应用到datal文件中</p>
+<p>但是此处的修改是不会应用到文件中的，因为sed只会修改输出的内容，对源文件的内容不会修改</p>
+<pre><code>$ cat data1.txt
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+$
+</code></pre>
+<h3 id="使用sed一次性执行多个指令">使用sed一次性执行多个指令</h3>
+<pre><code>$ sed -e 's/brown/green/; s/dog/cat/' data1.txt
+The quick green fox jumps over the lazy cat.
+The quick green fox jumps over the lazy cat.
+The quick green fox jumps over the lazy cat.
+The quick green fox jumps over the lazy cat.
+$
+</code></pre>
+<p>如上，只需要添加-e指令，就可以在单引号中通过分号来间隔多个命令，达到一次性执行多条指令的效果<br>
+注意：分号和引号首位不能有空格<br>
+除了用分号分割，还可以在输入第一个单引号并输入完一条命令后直接回车，这样子会跳到新的一行继续输入新的命令，最后再用引号结尾即可。</p>
+<pre><code>$ sed -e '
+&gt; s/brown/green/
+&gt; s/fox/elephant/
+&gt; s/dog/cat/' data1.txt
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+$
+</code></pre>
+<h3 id="从文件中读取-sed-命令">从文件中读取 sed 命令</h3>
+<p>如果每一次都要输入新的 sed 命令太过麻烦，执行sed命令也可以通过读取先前编写好的文件的方式来一次性执行</p>
+<pre><code>$ cat script1.sed
+s/brown/green/
+s/fox/elephant/
+s/dog/cat/
+$
+$ sed -f script1.sed data1.txt
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+The quick green elephant jumps over the lazy cat.
+$
+</code></pre>
+<p>在这种情况下，不用在每条命令后面放一个分号。sed 编辑器知道每行都是一条单独的命令。跟在命令行输入命令一样，sed 编辑器会从指定文件中读取命令，并将它们应用到数据文件中的每一行上。</p>
+<p>PS：我们很容易就会把sed编辑器脚本文件与 bash shell 脚本文件搞混。为了避免这种情况，可以使用.sed作为 sed 脚本文件的扩展名。</p>
+<h2 id="进阶">进阶</h2>
+<p>此处将介绍更为详尽的sed用法</p>
+<h3 id="替换标记">替换标记</h3>
+<p>在使用 sed 进行文本替换时，如果不添加任何标记只会替换出现的第一个词，如果想要对句子中所有相同的替换词都替换，那么需要使用替换标记。<br>
+不使用替换标记：</p>
+<pre><code>$ cat data4.txt
+This is a test of the test script.
+This is the second test of the test script.
+$
+$ sed 's/test/trial/' data4.txt
+This is a trial of the test script.
+This is the second trial of the test script.
+$
+</code></pre>
+<p>可见其中的第二个test没有被替换为trial</p>
+<p>使用替换标记：</p>
+<pre><code>$ sed 's/test/trial/g' data4.txt
+This is a trial of the trial script.
+This is the second trial of the trial script.
+$
+</code></pre>
+<p>如上 g 就是一个替换标记，他会将所有的需要替换的目标都替换掉</p>
+<h4 id="替换标记符">替换标记符</h4>
+<p>此处为一些常用的替换标记符：</p>
+<ul>
+<li>数字，表明新文本将替换第几处模式匹配的地方</li>
+<li>g ，表明新文本将会替换所有匹配的文本；</li>
+<li>p ，表明原先行的内容要打印出来；</li>
+<li>w file ，将替换的结果写到文件中。</li>
+</ul>
+<h3 id="替换字符">替换字符</h3>
+<p>如果使用现有的sed命令来替换路径的话，需要对路径中包含的斜杆频繁转义，过程复杂</p>
+<pre><code>$ sed 's/\/bin\/bash/\/bin\/csh/' /etc/passwd
+</code></pre>
+<p>所以 sed 允许使用其他的字符来代替/，以简化输入</p>
+<pre><code>$ sed 's!/bin/bash!/bin/csh!' /etc/passwd
+</code></pre>
+<p>如上，使用!来替换/，简化了输入也使得代码可读性更高</p>
+<h3 id="替换指定行的内容">替换指定行的内容</h3>
+<p>只需要在s字符前面添加要替换的行就可以只替换那一行的内容<br>
+替换第二行的内容：</p>
+<pre><code>$ sed '2s/dog/cat/' data1.txt
+The quick brown fox jumps over the lazy dog
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy dog
+The quick brown fox jumps over the lazy dog
+$
+</code></pre>
+<p>替换二、三行的内容：</p>
+<pre><code>$ sed '2,3s/dog/cat/' data1.txt
+The quick brown fox jumps over the lazy dog
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy dog
+$
+</code></pre>
+<p>替换第二行开始的内容：</p>
+<pre><code>$ sed '2,$s/dog/cat/' data1.txt
+The quick brown fox jumps over the lazy dog
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy cat
+The quick brown fox jumps over the lazy cat
+$
+</code></pre>
+<p>如上：要替换从第二行开始之后的内容只需要在2后面添加一个$符号并用逗号间隔开即可</p>
+<h3 id="命令组合">命令组合</h3>
+<p>除了使用-e，sed还可以使用花括号来组合多个命令</p>
+<pre><code>$ sed '2{
+&gt; s/fox/elephant/
+&gt; s/dog/cat/
+&gt; }' data1.txt
+The quick brown fox jumps over the lazy dog.
+The quick brown elephant jumps over the lazy cat.
+The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+$
+</code></pre>
+<p>如上使用花括号将多条命令括起来，一起执行</p>
+<h3 id="删除行">删除行</h3>
+<p>d指令可以删除指定行或内容</p>
+<pre><code>$ cat data6.txt
+This is line number 1.
+This is line number 2.
+This is line number 3.
+This is line number 4.
+$
+$ sed '3d' data6.txt
+This is line number 1.
+This is line number 2.
+This is line number 4.
+$
+</code></pre>
+<pre><code>$ sed '2,3d' data6.txt
+This is line number 1.
+This is line number 4.
+$
+</code></pre>
+<pre><code>$ sed '3,$d' data6.txt
+This is line number 1.
+This is line number 2.
+$
+</code></pre>
+<h4 id="注意">注意</h4>
+<p>sed并不会对源文件进行任何的修改，所以此处的删除仅在输出的时候才有效果，在源文件中起不到任何的效果</p>
+<h3 id="增加数据">增加数据</h3>
+<pre><code>$ echo &quot;Test Line 2&quot; | sed 'i\Test Line 1'
+Test Line 1
+Test Line 2
+$
+</code></pre>
+<p>如上使用i命令向echo中插入了一行新的文本</p>
+<pre><code>$ echo &quot;Test Line 2&quot; | sed 'a\Test Line 1'
+Test Line 2
+Test Line 1
+$
+</code></pre>
+<p>如上使用附加命令会直接添加到文本的末端</p>
+<pre><code>$ sed '3a\
+&gt; This is an appended line.' data6.txt
+This is line number 1.
+This is line number 2.
+This is line number 3.
+This is an appended line.
+This is line number 4.
+$
+</code></pre>
+<p>如上将数据添加到文本的后三行</p>
+<h3 id="修改文本">修改文本</h3>
+<pre><code>$ sed '3c\
+&gt; This is a changed line of text.' data6.txt
+This is line number 1.
+This is line number 2.
+This is a changed line of text.
+This is line number 4.
+$
+</code></pre>
+<p>如上，使用命令c可以对指定的行信息进行修改</p>
+<h3 id="使用文本匹配来修改">使用文本匹配来修改</h3>
+<pre><code>$ sed '/number 3/c\
+&gt; This is a changed line of text.' data6.txt
+This is line number 1.
+This is line number 2.
+This is a changed line of text.
+This is line number 4.
+$
+</code></pre>
+<p>可以使用双斜杆来匹配目标文本</p>
+<h3 id="转换字符">转换字符</h3>
+<p>当修改多个单字符时可以使用转换字符</p>
+<pre><code>$ sed 'y/123/789/' data8.txt
+This is line number 7.
+This is line number 8.
+This is line number 9.
+This is line number 4.
+This is line number 7 again.
+This is yet another line.
+This is the last line in the file.
+$
+</code></pre>
+<p>如上述例子，将123换成789，使用指令y则会依次对其中的123进行置换</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[FlameGraph 使用指南]]></title>
+        <id>https://sugar940.github.io/post/flamegraph-shi-yong-zhi-nan/</id>
+        <link href="https://sugar940.github.io/post/flamegraph-shi-yong-zhi-nan/">
+        </link>
+        <updated>2022-08-31T02:44:32.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="flamegraph-使用指南">FlameGraph 使用指南</h1>
+<p>本文档对 FlameGraph 进行了简单的介绍，同时附带了基础的入门指南，当然更推荐直接阅读官方的英文文档，其中的介绍详细全面。</p>
+<h2 id="简介">简介</h2>
+<p>FlameGraph 是一个用来展示所有进程在压力测试下性能信息的一个工具，可以将底层至顶层的性能占用直观地显示出来，对于性能分析时地问题定位能够提供极大的帮助。<br>
+<a href="http://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg"><img src="http://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg" alt="Example" loading="lazy"></a></p>
+<h3 id="为什么用-flamegraph">为什么用 FlameGraph</h3>
+<p>FlameGraph 可以将原本复杂长乱的性能分析报告通过图片的方式直观地展现出来，极大地提升性能分析的效率，使得关键问题更加容易找出，可以说 FlameGraph 是一个将复杂报告极大简化地性能报告优化软件。</p>
+<h2 id="入门">入门</h2>
+<p>以下将对 FlameGraph 的环境、安装和使用进行简要介绍</p>
+<h3 id="环境准备">环境准备</h3>
+<ul>
+<li>操作系统： Linux 系统（行内使用 SuseOs 操作系统）、Windows 操作系统</li>
+<li>网络环境：要可以上 GitHub</li>
+<li>所需软件：Perf（通过 rpm 仓库安装)、Xshell、FTP</li>
+</ul>
+<h3 id="安装">安装</h3>
+<h4 id="perf-安装">Perf 安装</h4>
+<p>由于服务器无法链接外网，需要使用 rpc 仓库进行安装<br>
+根据对应的 linux 操作系统挂载对应的 rpc 仓库，此处以 SuseOs12 为例<br>
+挂载 rpm 仓库：</p>
+<pre><code>zypper ar -t yast2 -n 'sles12sp3' -fc http://122.28.13.93:8080/file-station/repositories/sles12sp3/ sles12sp3'
+</code></pre>
+<p>通过仓库安装 perf：</p>
+<pre><code>zypper install perf
+</code></pre>
+<h4 id="flamegraph-安装">FlameGraph 安装</h4>
+<p>通过 Github 仓库获取zip包直接解压即可<br>
+<a href="https://github.com/brendangregg/FlameGraph">FlameGraph的Github 仓库</a><br>
+获取后使用ftp工具传送到服务器上即可（注意是发送到正在运行需压测软件的服务器上）</p>
+<h3 id="软件设置">软件设置</h3>
+<p>将 FlameGraph 压缩包解压到统一的软件安装位置，保证整体统一整洁。</p>
+<h2 id="快速上手">快速上手</h2>
+<p>FlameGraph 依赖于性能测试软件，我们需要先获取性能报告才可以进行后续的流程。</p>
+<h3 id="获取测试数据">获取测试数据</h3>
+<p>使用perf进行测试和数据采集<br>
+对所有线程：</p>
+<pre><code>perf record -F 99 -a -g -- sleep 60
+perf script &gt; out.perf
+</code></pre>
+<p>对指定线程：</p>
+<pre><code># perf record -F 99 -p 181 -g -- sleep 60
+# perf script &gt; out.perf
+</code></pre>
+<h3 id="压缩测试数据">压缩测试数据</h3>
+<p>使用 FLameGraph 优化数据前，必须将对应的数据压缩成 fold 格式<br>
+所以进入存放 out.perf 的目录，将out.perf转换为out.fold文件，由于我们使用perf得来的数据，所以转换过程需要用到 FlameGraph 目录中的 stackcollapse-perf 工具<br>
+例子如下：</p>
+<pre><code>$ ./stackcollapse-perf.pl out.perf &gt; out.folded
+</code></pre>
+<h3 id="使用-flamegraph-进行数据分析">使用 FlameGraph 进行数据分析</h3>
+<p>获取压测数据后，使用 FlameGraph 中的工具将数据转换为可视化的svg图片即可</p>
+<pre><code>$ ./flamegraph.pl out.folded &gt; kernel.svg
+</code></pre>
+<p>之后将可视化图片发送到可视化操作系统中进行性能分析即可</p>
+<h3 id="可视化图片简介">可视化图片简介</h3>
+<p>性能数据可视化图片中，由上到下表示由表层到底层，由左到右表示每一个进程的执行时间，不同颜色仅代表不同线程，没有其他含义。可以使用快捷搜索查找相关进程(Ctrl + F)</p>
+<h2 id="进阶">进阶</h2>
+<p>可以参考以下英文文档，对FLameGraph进行更为深入的使用</p>
+<ul>
+<li><a href="http://queue.acm.org/detail.cfm?id=2927301">The Flame Graph article in ACMQ</a></li>
+<li><a href="http://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html">CPU profiling using Linux perf_events, DTrace, SystemTap, or ktap</a></li>
+<li><a href="http://schani.wordpress.com/2012/11/16/flame-graphs-for-instruments/">CPU profiling using XCode Instruments</a></li>
+<li><a href="http://randomascii.wordpress.com/2013/03/26/summarizing-xperf-cpu-usage-with-flame-graphs/">CPU profiling using Xperf.exe</a></li>
+<li><a href="http://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html">Memory profiling</a></li>
+<li><a href="http://www.brendangregg.com/flamegraphs.html#Updates">Other examples, updates, and news</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Shell->函数使用]]></title>
+        <id>https://sugar940.github.io/post/shell-greaterhan-shu-shi-yong/</id>
+        <link href="https://sugar940.github.io/post/shell-greaterhan-shu-shi-yong/">
+        </link>
+        <updated>2022-08-30T09:02:10.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="9shell的函数使用">9.Shell的函数使用</h1>
+<p>shell的函数写法主要是要注意其中的变量作用范围，在shell中变量无论是在函数中还是在函数外定义，都是全局变量，同时注意shell中函数传入参数的方式，以及函数的返回值使用。</p>
+<h2 id="局部变量的使用">局部变量的使用</h2>
+<p>由于shell中的变量默认是全局的，导致有时候因为传入函数会改变之前定义的全局变量，所以要使用局部变量来进行规避，只需要在函数中的变量之前添加local字段既可以将变量在函数中设置为局部变量。</p>
+<pre><code>$ cat test9
+#!/bin/bash
+# demonstrating the local keyword
+
+function func1 {
+   local temp=$[ $value + 5 ]
+   result=$[ $temp * 2 ]
+}
+
+temp=4
+value=6
+
+func1
+echo &quot;The result is $result&quot;
+if [ $temp -gt $value ]
+then
+   echo &quot;temp is larger&quot;
+else
+   echo &quot;temp is smaller&quot;
+fi
+$
+$ ./test9
+The result is 22
+temp is smaller
+$
+</code></pre>
+<p>上述例子使用local声明temp，保证最后temp的值没有改变，如果不将temp设置为局部变量，那么最终的输出结果是temp is larger而不是smaller。</p>
+<h2 id="函数的参数传递">函数的参数传递</h2>
+<p>函数的参数传递类似于shell脚本的参数传递，也是使用$num的方式进行函数的入参传递，比如：</p>
+<pre><code>$ cat test6
+#!/bin/bash
+# passing parameters to a function
+
+function addem {
+   if [ $# -eq 0 ] || [ $# -gt 2 ]
+   then
+      echo -1
+   elif [ $# -eq 1 ]
+   then
+      echo $[ $1 + $1 ]
+   else
+      echo $[ $1 + $2 ]
+   fi
+}
+
+echo -n &quot;Adding 10 and 15: &quot;
+value=$(addem 10 15)
+echo $value
+echo -n &quot;Let's try adding just one number: &quot;
+value=$(addem 10)
+echo $value
+echo -n &quot;Now trying adding no numbers: &quot;
+value=$(addem)
+echo $value
+echo -n &quot;Finally, try adding three numbers: &quot;
+value=$(addem 10 15 20)
+echo $value
+$
+$ ./test6
+Adding 10 and 15: 25
+Let's try adding just one number: 20
+Now trying adding no numbers: -1
+Finally, try adding three numbers: -1
+$
+</code></pre>
+<p>如上，在脚本中像addem传递了3个参数，就像在linux控制台像脚本传递参数一样。<br>
+但是此处要注意函数的声明顺序，函数一定要在使用之前先声明，否则会报错。</p>
+<h2 id="像函数传递数组">像函数传递数组</h2>
+<p>如果要像函数传递数组，需要使用规定的格式，如果直接将数组传递给函数，那么函数最后只会读取数组的第一个数作为入参来使用。<br>
+具体的传递规则应该将传递的数组变量放到大括号里面，比如：</p>
+<pre><code>function testit {
+   local newarray
+   newarray=(;'echo &quot;$@&quot;')
+   echo &quot;The new array value is: ${newarray[*]}&quot;
+}
+myarray=(1 2 3 4 5)
+testit ${myarray[*]}
+</code></pre>
+<p>此处将myarray传递给testit函数的过程中，将myarray中的所有数字取出来再封装为一个新的函数，这样才可以成功地进行传递，否则会失败。</p>
+<h2 id="函数返回数据">函数返回数据</h2>
+<p>shell中要返回数据一般是在函数结尾使用echo进行输出，之后再取echo出来的语句作为函数输出的值。比如：</p>
+<pre><code>function arraydblr {
+   local origarray
+   local newarray
+   local elements
+   local i
+   origarray=($(echo &quot;$@&quot;))
+   newarray=($(echo &quot;$@&quot;))
+   elements=$[ $# - 1 ]
+   for (( i = 0; i &lt;= $elements; i++ ))
+   {
+      newarray[$i]=$[ ${origarray[$i]} * 2 ]
+   }
+   echo ${newarray[*]}
+}
+myarray=(1 2 3 4 5)
+echo &quot;The original array is: ${myarray[*]}&quot;
+arg1=$(echo ${myarray[*]})
+result=($(arraydblr $arg1))
+</code></pre>
+<p>此处arraydblr函数最后会echo一个由newarray重新封装的变量，之后我们将echo的值在后面的脚本语句中重新封装，即result=($(araydblr &amp;arg1))，将函数的结果封装到了result中，而此时的result中正记录了经过arraydblr计算的新数组。同时，如果要输出其他的变量，也是相同的道理。</p>
+<h2 id="创建库文件工具类">创建库文件（工具类）</h2>
+<p>此处库文件可以理解为抽取代码的公共部分，为了提高代码的可重用性，将重复的代码单独抽取出来。<br>
+具体操作方法如下：</p>
+<pre><code>$ cat myfuncs
+# my script functions
+
+function addem {
+   echo $[ $1 + $2 ]
+}
+function multem {
+   echo $[ $1 * $2 ]
+}
+
+function divem {
+   if [ $2 -ne 0 ]
+   then
+      echo $[ $1 / $2 ]
+   else
+      echo -1
+   fi
+}
+$
+</code></pre>
+<p>以下是错误的引入方法：</p>
+<pre><code>$ cat badtest4
+#!/bin/bash
+# using a library file the wrong way
+./myfuncs #导入库
+
+result=$(addem 10 15)
+echo &quot;The result is $result&quot;
+$
+</code></pre>
+<p>执行脚本：</p>
+<pre><code>
+$ ./badtest4
+./badtest4: addem: command not found
+The result is
+$
+</code></pre>
+<p>上述方法错以为将库文件运行就可以直接调用其中的函数，但是这样子是不可以的，使用库函数的关键在于使用source函数，这样才可以在shell脚本中使用库文件中的函数，而使用source有一个快捷方法，即使用点操作符。使用方法如下：</p>
+<pre><code>../myfuncs
+</code></pre>
+<p>以下是正确的引入方法：</p>
+<pre><code>$ cat test14
+#!/bin/bash
+# using functions defined in a library file
+. ./myfuncs
+
+value1=10
+value2=5
+result1=$(addem $value1 $value2)
+result2=$(multem $value1 $value2)
+result3=$(divem $value1 $value2)
+echo &quot;The result of adding them is: $result1&quot;
+echo &quot;The result of multiplying them is: $result2&quot;
+echo &quot;The result of dividing them is: $result3&quot;
+$
+</code></pre>
+<p>执行脚本：</p>
+<pre><code>$ ./test14
+The result of adding them is: 15
+The result of multiplying them is: 50
+The result of dividing them is: 2
+$
+</code></pre>
+<h2 id="在命令行中使用函数">在命令行中使用函数</h2>
+<p>函数不一定要在脚本中定义才可以使用，在命令行中同样可以定义一个函数。<br>
+在命令行中定义函数的方式有两种，例子如下：<br>
+使用单行的方式定义函数：</p>
+<pre><code>$ function divem { echo $[ $1 / $2 ];  }
+$ divem 100 5
+20
+$
+</code></pre>
+<pre><code>$ function doubleit { read -p &quot;Enter value: &quot; value; echo $[
+ $value * 2 ]; }
+$
+$ doubleit
+Enter value: 20
+40
+$
+
+</code></pre>
+<p>注意多个语句之间用分号隔开。</p>
+<p>使用多行的方式定义函数有如下两种方法：</p>
+<ul>
+<li>在bashrc中自定义函数</li>
+</ul>
+<pre><code>$ cat .bashrc
+# .bashrc
+
+# Source global definitions
+if [ -r /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+function addem {
+   echo $[ $1 + $2 ]
+}
+$
+</code></pre>
+<p>如上述代码所示，要使用多行的方式定义函数，一帮在bashrc的末尾补上自己需要的函数即可，该函数会在下一次启动bash shell的时候生效，这样我们就可以直接调用该函数而需要重新定义一个新的函数。</p>
+<ul>
+<li>将写好的库引入到bashrc中</li>
+</ul>
+<pre><code>$ cat .bashrc
+# .bashrc
+
+# Source global definitions
+if [ -r /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+. /home/rich/libraries/myfuncs
+$
+</code></pre>
+<p>注意此处一定要保证库文件的路径正确，这样子下次才可以正常地载入。</p>
+<pre><code>$ addem 10 5
+15
+$ multem 10 5
+50
+$ divem 10 5
+2
+$
+</code></pre>
+<h2 id="引入库">引入库</h2>
+<p>可以引入shtool库来使用其中的多种方便的函数，提高工作的效率。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Shell->文件描述符]]></title>
+        <id>https://sugar940.github.io/post/shell-greaterwen-jian-miao-shu-fu/</id>
+        <link href="https://sugar940.github.io/post/shell-greaterwen-jian-miao-shu-fu/">
+        </link>
+        <updated>2022-08-30T06:02:33.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="8文件描述符">8.文件描述符</h1>
+<p>文件描述符在linux中有三种，分别是标准输入、标准输出和标准错误。这三种描述符又拥有不同的编号，分别是0、1、2。<br>
+<img src="https://sugar940.github.io//post-images/1661839422154.png" alt="" loading="lazy"></p>
+<h2 id="描述符介绍">描述符介绍</h2>
+<p>STDIN代表标准输入，也可以用&lt;表示。<br>
+STDOUT表示输出，可以用&gt;表示。<br>
+STDERR表示错误输出，一般会记录错误信息，也可以将自定义的错误信息添加到其中。</p>
+<h2 id="重定向正确和错误信息">重定向正确和错误信息</h2>
+<p>有时候输出的信息中正确信息与错误信息相互交织，想要从中寻找合适的信息非常麻烦，那么能否将正确信息和错误信息分隔开来输出呢？<br>
+使用两个特定的符号可以实现这个需求。</p>
+<pre><code>$ ls -al test test2 test3 badtest 2&gt; test6 1&gt; test7
+$ cat test6
+ls: cannot access test: No such file or directory
+ls: cannot access badtest: No such file or directory
+$ cat test7
+-rw-rw-r-- 1 rich rich 158 2014-10-16 11:32 test2
+-rw-rw-r-- 1 rich rich   0 2014-10-16 11:33 test3
+$
+</code></pre>
+<p>以上代码中，2&gt;只会提取输出列表中的错误信息，将ls -al中的错误信息输出到test6中，而1&gt;只会提取其中的正确信息，将正确的信息输出到test7文件中，这样就实现了正确信息和错误信息的划分，使得查看日志更为方便。</p>
+<h2 id="将报错信息重定向到stderr">将报错信息重定向到STDERR</h2>
+<p>有时候为了将一些自定义的错误信息通过错误描述符同时输出到指定的日志文件中，我们会将一些自定义的错误信息先添加到错误描述符中，之后再统一将错误的信息分隔出来，可以使用&amp;2来表示错误描述符，&gt;&amp;2来将一些自定义的错误信息输入到错误描述符中之后再统一输出。例子如下：</p>
+<pre><code>$ cat test8
+#!/bin/bash
+# testing STDERR messages
+
+echo &quot;This is an error&quot; &gt;&amp;2
+echo &quot;This is normal output&quot;
+$
+</code></pre>
+<pre><code>$ ./test8
+This is an error
+This is normal output
+$
+</code></pre>
+<pre><code>$ ./test8 2&gt; test9
+This is normal output
+$ cat test9
+This is an error
+$
+</code></pre>
+<p>以上的三个例子，首先将自定义的错误信息存到了&amp;2即错误符中，之后调用脚本发现没有什么特别之处，但是在最后一段代码中，将test8脚本的错误信息保存到test9后，再进入test9中可以发现已经有了自定义的错误信息，可见将自定义错误信息保存到&amp;2中，可以实现自定义错误信息的及时记录。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Shell->遍历操作]]></title>
+        <id>https://sugar940.github.io/post/shell-greaterbian-li-cao-zuo/</id>
+        <link href="https://sugar940.github.io/post/shell-greaterbian-li-cao-zuo/">
+        </link>
+        <updated>2022-08-30T02:26:41.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="7遍历操作">7.遍历操作</h1>
+<p>以下介绍shell中常用的遍历操作，比如for、while和until命令。</p>
+<h2 id="for命令">for命令</h2>
+<p>for的遍历方式见如下代码所示：</p>
+<pre><code>$ cat test1b
+#!/bin/bash
+# testing the for variable after the looping
+
+for test in Alabama Alaska Arizona Arkansas California Colorado
+do
+   echo &quot;The next state is $test&quot;
+done
+echo &quot;The last state we visited was $test&quot;
+test=Connecticut
+echo &quot;Wait, now we're visiting $test&quot;
+$ ./test1b
+The next state is Alabama
+The next state is Alaska
+The next state is Arizona
+The next state is Arkansas
+The next state is California
+The next state is Colorado
+The last state we visited was Colorado
+Wait, now we're visiting Connecticut
+$
+</code></pre>
+<p>如上可见，for是会遍历in后面的多个单词，每一个单词都会被遍历一遍，do代表每一次执行的操作，done表示整个for循环执行完成后的操作。</p>
+<h2 id="for命令的误判">for命令的误判</h2>
+<p>如果只读取没有特殊符号的列表是不会存在问题的，但是如果读取的列表中多了一些含义符号，那么for循环将会误判，例子如下：</p>
+<pre><code>$ cat badtest1
+#!/bin/bash
+# another example of how not to use the for command
+
+for test in I don't know if this'll work
+do
+    echo &quot;word:$test&quot;
+done
+$ ./badtest1
+word:I
+word:dont know if thisll
+word:work
+$
+</code></pre>
+<p>如上，for并没有完全按照空格进行分割来输出列表，而是将'dont know if this'作为一个整体，衔接了前后的语句进行整体输出。<br>
+为了避免这类问题出现，我们需要使用转义字符将会引号转义，方式shell认为我们要将其作为一个整体。</p>
+<ul>
+<li>使用\</li>
+<li>使用&quot; &quot;</li>
+</ul>
+<pre><code>for test in I don\'t know if &quot;this'll&quot; work
+</code></pre>
+<p>PS：此处我们是为了避免空格被划分，但是如果我需要将空格也包含进来，就可以使用上诉的方法，使用单引号把空格包含进来即可。</p>
+<h2 id="从变量或命令读取列表">从变量或命令读取列表</h2>
+<p>列表除了可以手动输出之外，shell也可以从含有列表的变量或者会输出列表的命令中读取列表。<br>
+从变量中读取：</p>
+<pre><code>$ cat test4
+#!/bin/bash
+# using a variable to hold the list
+
+list=&quot;Alabama Alaska Arizona Arkansas Colorado&quot;
+list=$list&quot; Connecticut&quot;
+
+for state in $list
+do
+    echo &quot;Have you ever visited $state?&quot;
+done
+$ ./test4
+Have you ever visited Alabama?
+Have you ever visited Alaska?
+Have you ever visited Arizona?
+Have you ever visited Arkansas?
+Have you ever visited Colorado?
+Have you ever visited Connecticut?
+$
+</code></pre>
+<p>从命令中读取：</p>
+<pre><code>$ cat test5
+#!/bin/bash
+# reading values from a file
+
+file=&quot;states&quot;
+
+for state in $(cat $file)
+do
+    echo &quot;Visit beautiful $state&quot;
+done
+$ cat states
+Alabama
+Alaska
+Arizona
+Arkansas
+Colorado
+Connecticut
+Delaware
+Florida
+Georgia
+$ ./test5
+Visit beautiful Alabama
+Visit beautiful Alaska
+Visit beautiful Arizona
+Visit beautiful Arkansas
+Visit beautiful Colorado
+Visit beautiful Connecticut
+Visit beautiful Delaware
+Visit beautiful Florida
+Visit beautiful Georgia
+$
+</code></pre>
+<h2 id="for命令遍历文件">for命令遍历文件</h2>
+<p>for命令除了可以遍历列表外，还可以用来遍历文件使用方法如下：</p>
+<pre><code>$ cat test6
+#!/bin/bash
+# iterate through all the files in a directory
+
+for file in /home/rich/test/*
+do
+
+    if [ -d &quot;$file&quot; ]
+    then
+       echo &quot;$file is a directory&quot;
+    elif [ -f &quot;$file&quot; ]
+    then
+       echo &quot;$file is a file&quot;
+    fi
+done
+$ ./test6
+/home/rich/test/dir1 is a directory
+/home/rich/test/myprog.c is a file
+/home/rich/test/myprog is a file
+/home/rich/test/myscript is a file
+/home/rich/test/newdir is a directory
+/home/rich/test/newfile is a file
+/home/rich/test/newfile2 is a file
+/home/rich/test/testdir is a directory
+/home/rich/test/testing is a file
+/home/rich/test/testprog is a file
+/home/rich/test/testprog.c is a file
+$
+</code></pre>
+<p>如上遍历了/home/rich/test文件夹下的所有文件，并且进行了文件类型的判断和进行相关输出。</p>
+<p>PS：在遍历文件名的时候，由于在Linux中包含空格的文件名是合法的，所以要使用双引号将文件名括起来，避免因为空格导致shell误判。</p>
+<pre><code>if [ -d &quot;$file&quot; ]
+</code></pre>
+<h2 id="while命令">while命令</h2>
+<p>while命令的基本格式如下：</p>
+<pre><code># while command test
+
+var1=10
+while [ $var1 -gt 0 ]
+do
+    echo $var1
+    var1=$[ $var1 - 1 ]
+done
+$ ./test10
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+$
+</code></pre>
+<h2 id="until命令">until命令</h2>
+<p>until可以认为是while的逆向思维，但是用法是类似的。</p>
+<pre><code>$ cat test12
+#!/bin/bash
+# using the until command
+
+var1=100
+until [ $var1 -eq 0 ]
+do
+    echo $var1
+    var1=$[ $var1 - 25 ]
+done
+$ ./test12
+100
+75
+50
+25
+$
+</code></pre>
+<p>知道var1符合某个条件时，until命令才会停止。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Shell->[入门][变量][重定向][数学运算][test命令]]]></title>
+        <id>https://sugar940.github.io/post/shell-xue-xi-ji-lu/</id>
+        <link href="https://sugar940.github.io/post/shell-xue-xi-ji-lu/">
+        </link>
+        <updated>2022-08-29T08:53:01.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-shell入门">1. Shell入门</h1>
+<p>以下介绍shell的基本入门</p>
+<h2 id="创建shell文件">创建shell文件</h2>
+<p>使用文本编辑器来创建一个shell文件，注意在第一行指定使用的编辑器。</p>
+<pre><code>#!/bin/bash
+</code></pre>
+<p>一般#代表注释，但是在第一行#!代表指定编辑器。</p>
+<h2 id="执行shell">执行shell</h2>
+<p>执行shell有两种方式，一种是添加到path目录中，一种是sh指定路径下的shell文件。当shell文件的权限不足时，应该使用chmod来修改对应的权限。</p>
+<h2 id="使用shell输出语句">使用shell输出语句</h2>
+<p>正常情况下直接在shell里面使用echo命令即可，但是如果有时候要输出引号，则需要在外面再用一层引号将其包围，不然可能会导致误判。</p>
+<h1 id="2shell中的变量">2.shell中的变量</h1>
+<p>以下将介绍shell常用变量的核心用法。</p>
+<h2 id="注意事项">注意事项</h2>
+<p>shell的赋值语句中，=两边是不允许有空格的！一定要注意！</p>
+<h2 id="自定义变量">自定义变量</h2>
+<p>直接变量名=变量值即可</p>
+<pre><code>var1=10
+</code></pre>
+<h2 id="调用变量">调用变量</h2>
+<p>调用变量要使用$变量，否则shell不知道你是要输出名字还是变量。</p>
+<pre><code>echo $var1 #10
+var2=$var1
+echo $var2 #10
+echo var2 #var2
+echo &quot;var1 is&quot;$var1
+</code></pre>
+<h2 id="输出命令">输出命令</h2>
+<p>有时候需要将命令获取的内容输出，比如需要获取date的内容，此时只需要使用反引号字符(`)或者$()格式即可<br>
+一般情况下都将命令赋予变量，最后再输出变量即可。</p>
+<pre><code>echo `date` #输出date命令的内容
+date=`date`
+echo date #同上效果
+date2=$(date +%y%m%d%)
+echo date2 #同上效果
+</code></pre>
+<h1 id="3内容重定向">3.内容重定向</h1>
+<p>内容重定向即将内容转到其他的地方，可以是文件也可以是一个方法。</p>
+<h2 id="文件覆盖">文件覆盖</h2>
+<p>shell中可以直接使用&gt;来覆盖文件</p>
+<pre><code>command &gt; outputfile
+</code></pre>
+<p>如上使用一定的命令就可以将内容覆盖到outputfile中。</p>
+<p>PS:此处有一个小技巧，可以直接使用&gt;来创建文件</p>
+<pre><code>&gt; newfile
+</code></pre>
+<p>因为没有内容重定向，所以此处会创建一个空的新文件newfile</p>
+<h2 id="文件追加">文件追加</h2>
+<p>文件追加命令使用&gt;&gt;来实现，其用法类似&gt;，只是效果是在文件的最后一行添加内容而不是覆盖内容。</p>
+<pre><code>added &gt;&gt; oldfile
+</code></pre>
+<h2 id="命令内容追加">命令内容追加</h2>
+<p>命令内容追加可以理解为把文件里面的内容添加给命令，此处使用和文件夹方向相反的符号，即&lt;。</p>
+<pre><code>wc &lt; test
+</code></pre>
+<p>如上，将test文件的内容传给wc，wc会将文本的行数、词数和字节数进行输出。</p>
+<h2 id="管道">管道</h2>
+<p>如上文所说的重定向都是需要借助文件实现的重定向，但是有时候若想要将命令的内容传递给命令，使用上文的方式只能将命令获取的内容传递到文件中去，然后再从文件中获取输出给下一个命令，这样的过程则较为繁琐，有没有一种方式能够直接将命令的内容传递给命令呢？<br>
+这正是管道。</p>
+<pre><code>command1 | command2
+</code></pre>
+<p>如上诉代码，可以将command1获取的命令传递给command2<br>
+管道是打通两个命令之间的符号，是的多个命令可以组合起来灵活使用。</p>
+<pre><code>rpm -qa | sort &gt; rpm.list
+</code></pre>
+<h1 id="4数学运算">4.数学运算</h1>
+<p>由于expr命令使用较为繁杂，此处只介绍使用方括号的方式来进行数学运算的方法。</p>
+<h2 id="中括号">中括号</h2>
+<p>如下，因为linux中直接使用运算符有时候会出现各种各样的问题，所以我们直接用中括号包起来，可以避免所有奇怪的问题。</p>
+<pre><code>var1=$[1+5]
+echo $var1 #6
+var2=$[$var1 * 2]
+echo $var2 #12
+</code></pre>
+<h2 id="浮点问题的处理">浮点问题的处理</h2>
+<p>虽然中括号解决了数学运算符的识别问题，但是这种计算只适用于非浮点的运算，如果运算存在浮点是无法准确地计算出来的。</p>
+<pre><code>var1=100
+var2=45
+var3=$[var1/$var2]
+echo var3 #2
+</code></pre>
+<p>为了解决浮点运算的问题我们使用bc方法。如下所示：</p>
+<pre><code>bc
+12 * 5.4
+64.8
+</code></pre>
+<p>使用bc相对于进入到一个计算器的页面，在里面输入需要计算的数学运算式子即可。<br>
+可是我不可能说每一次都进入到bc的运算界面进行运算，所以此处可以使用管道将内容传递给bc计算器。</p>
+<h3 id="使用管道传递给bc">使用管道传递给bc</h3>
+<pre><code>var1=$(echo &quot;scale=4; 3.44/5&quot; | bc)
+echo var1 #.6880
+</code></pre>
+<p>如上式子的意思是将指定的内容传递给bc同时设置结果的小数位为4，神奇的就是要通过echo的方式将内容传递给bc，同时在echo中知道你scale的值，用；进行分割刻度与式子。</p>
+<h3 id="使用注释传递给bc">使用注释传递给bc</h3>
+<p>虽然使用管道也可以实现浮点的运算，但是如果有时候式子比较多，再使用管道进行数据的传输则会较为麻烦。所以此处还有另外一种方法来进行内容的传递</p>
+<pre><code>$ cat test12
+#!/bin/bash
+
+var1=10.46
+var2=43.67
+var3=33.2
+var4=71
+
+var5=$(bc &lt;&lt; EOF
+scale = 4
+a1 = ( $var1 * $var2)
+b1 = ($var3 * $var4)
+a1 + b1
+EOF
+)
+
+echo The final answer for this mess is $var5
+$
+</code></pre>
+<p>此处可以发现，我们还可以通过bc赋值给变量。</p>
+<h1 id="5test命令">5.test命令</h1>
+<p>有时候比如要判断文件是否可读，需要使用命令进行判断，这时候就需要用到test指令了。<br>
+一帮使用中括号将需要test的内容围起来进行判断即可，无需每次都使用test指令。</p>
+<pre><code>if [$value -gt 5]
+then ...
+</code></pre>
+<h2 id="三种比较">三种比较</h2>
+<h3 id="数字比较">数字比较</h3>
+<figure data-type="image" tabindex="1"><img src="https://sugar940.github.io//post-images/1661823094286.png" alt="" loading="lazy"></figure>
+<h3 id="字符串比较">字符串比较</h3>
+<p><img src="https://sugar940.github.io//post-images/1661823112912.png" alt="" loading="lazy"><br>
+使用字符串要注意字符的转义，比如&gt;会被识别为文件重定向，需要在前面添加转移斜杆即\&gt;</p>
+<h3 id="文件比较">文件比较</h3>
+<figure data-type="image" tabindex="2"><img src="https://sugar940.github.io//post-images/1661823155134.png" alt="" loading="lazy"></figure>
+<h2 id="复合条件">复合条件</h2>
+<p>可以使用符合条件来结合多个条件进行联合比较。格式如下：<br>
+[condition1] &amp;&amp; [condition2] 两个条件同时满足<br>
+[condition1] || [condition2] 满足其中一个条件</p>
+<h1 id="6if-else的高级特性">6.if-else的高级特性</h1>
+<p>if else的高级特性其实就是多了使用java中常用的自增以及正则表达式和case等操作。</p>
+<h2 id="使用双括号">使用双括号</h2>
+<pre><code>((expression))
+</code></pre>
+<p>通过使用双括号，可以在其中使用一些自增、自减等操作，详细的使用表格如下所示：<br>
+<img src="https://sugar940.github.io//post-images/1661822971217.png" alt="" loading="lazy"><br>
+在代码中的使用方法如下：</p>
+<pre><code>$ cat test23.sh
+#!/bin/bash
+# using double parenthesis
+#
+val1=10
+#
+if (( $val1 ** 2 &gt; 90 ))
+then
+   (( val2 = $val1 ** 2 ))
+   echo &quot;The square of $val1 is $val2&quot;
+fi
+$
+$ ./test23.sh
+The square of 10 is 100
+$
+</code></pre>
+<h2 id="使用双方括号">使用双方括号</h2>
+<p>双方括号可以用来匹配正则表达式，以后在双方括号中输入想要匹配的正则表达式。</p>
+<pre><code>[[]]
+</code></pre>
+<p>比如：</p>
+<pre><code>if [[$USER == r*]]
+then 
+	echo &quot;Hello $USER&quot;
+</code></pre>
+<h2 id="case语句">case语句</h2>
+<p>case语句可以使得代码看起来更加清晰明了，通过以下的两个对比例子进行相应的展示。<br>
+使用if：</p>
+<pre><code>$ cat test25.sh
+#!/bin/bash
+# looking for a possible value
+#
+if [ $USER = &quot;rich&quot; ]
+then
+   echo &quot;Welcome $USER&quot;
+   echo &quot;Please enjoy your visit&quot;
+elif [ $USER = &quot;barbara&quot; ]
+then
+   echo &quot;Welcome $USER&quot;
+   echo &quot;Please enjoy your visit&quot;
+elif [ $USER = &quot;testing&quot; ]
+then
+   echo &quot;Special testing account&quot;
+elif [ $USER = &quot;jessica&quot; ]
+then
+   echo &quot;Do not forget to logout when you're done&quot;
+else
+   echo &quot;Sorry, you are not allowed here&quot;
+fi
+$
+$ ./test25.sh
+Welcome rich
+Please enjoy your visit
+$
+</code></pre>
+<p>使用case：</p>
+<pre><code>$ cat test26.sh
+#!/bin/bash
+# using the case command
+#
+case $USER in
+rich | barbara)
+   echo &quot;Welcome, $USER&quot;
+   echo &quot;Please enjoy your visit&quot;;;
+testing)
+  echo &quot;Special testing account&quot;;;
+jessica)
+   echo &quot;Do not forget to log off when you're done&quot;;;
+*)
+   echo &quot;Sorry, you are not allowed here&quot;;;
+esac
+$
+$ ./test26.sh
+Welcome, rich
+Please enjoy your visit
+$
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[回溯法合集二]]></title>
+        <id>https://sugar940.github.io/post/hui-su-he-ji-er/</id>
+        <link href="https://sugar940.github.io/post/hui-su-he-ji-er/">
+        </link>
+        <updated>2022-01-26T12:03:12.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="216组合总和-iii">216.组合总和 III</h2>
+<p><a href="https://leetcode.com/problems/combination-sum-iii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/combination-sum-iii/description/">力扣</a></p>
+<pre><code>Input: k = 3, n = 9
+
+Output:
+
+[[1,2,6], [1,3,5], [2,3,4]]
+</code></pre>
+<p>从 1-9 数字中选出 k 个数不重复的数，使得它们的和为 n。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    
+    void backtrapping(int n,int k,vector&lt;int&gt; &amp;path,int sum,int begin){
+        if(sum &gt; n){
+            return;
+        }
+       if(sum == n &amp;&amp; path.size() == k){
+           result.push_back(path);
+           return;
+       }
+       //i &lt;= 9-(k-path.size())+1是精髓，k-path.size():还要放进去的数的个数
+       //如果for循环之后的元素个数不足我们需要的元素个数，那么停止搜索
+       for(int i = begin;i &lt;= 9-(k-path.size())+1 ;i++){
+           path.push_back(i);
+           sum += i;
+           backtrapping(n, k, path, sum,i+1);
+           path.pop_back();
+           sum -= i;
+       }
+    }
+    vector&lt;vector&lt;int&gt;&gt; combinationSum3(int k, int n) {
+        backtrapping(n, k,path,0,1);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>结束条件：总和为n并且子集合的长度和k相等，说明子集寻找完毕</li>
+<li>递归条件：从begin开始运行到9-(k-path.size())+1，保证元素不重合，同时当循环之后的元素个数不足我们需要的元素的个数时，停止搜索。因为不能有重复的所以从i+1开始。</li>
+<li>回溯：把加入的数组弹出去，开始新一轮</li>
+</ul>
+<h2 id="78子集">78.子集</h2>
+<p><a href="https://leetcode.com/problems/subsets/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/subsets/description/">力扣</a></p>
+<p>找出集合的所有子集，子集不能重复，[1, 2] 和 [2, 1] 这种子集算重复</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    void backtripping(vector&lt;int&gt;&amp; nums,vector&lt;int&gt; path,int begin){
+        if(path.size() &gt; nums.size()){
+            return;
+        }
+        result.push_back(path);
+        for(int i = begin;i &lt; nums.size();i++){
+            path.push_back(nums[i]);
+            backtripping(nums, path, i+1);
+            path.pop_back();
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; subsets(vector&lt;int&gt;&amp; nums) {
+        backtripping(nums, path, 0);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>每次遍历都把新情况存入数组中，每次递归都从新的数字开始。</li>
+</ul>
+<h2 id="90子集-ii">90.子集 II</h2>
+<p><a href="https://leetcode.com/problems/subsets-ii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/subsets-ii/description/">力扣</a></p>
+<pre><code>For example,
+If nums = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    vector&lt;vector&lt;int&gt;&gt; result;
+    vector&lt;int&gt; path;
+    void backtripping(vector&lt;int&gt;&amp; nums,int begin,vector&lt;bool&gt;used){
+        
+        result.push_back(path);
+        for(int i = begin;i &lt; nums.size();i++){
+            //常用的去重代码，几乎每一题要去重都是用这个来去重的
+            if(i&gt;0&amp;&amp;nums[i] == nums[i-1] &amp;&amp; used[i-1] == false){
+                continue;
+            }else{
+                used[i] = true;
+                path.push_back(nums[i]);
+                backtripping(nums, i+1,used);
+                path.pop_back();
+                used[i] = false;
+            }
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; subsetsWithDup(vector&lt;int&gt;&amp; nums) {
+        vector&lt;bool&gt; used(nums.size(),false);
+        sort(nums.begin(),nums.end());
+        backtripping(nums,0,used);
+        return result;
+    }
+};
+</code></pre>
+<p>used[i-1]==true说明在同一树枝上有相同的，可以继续。</p>
+<p>used[i-1]==false说明在同一树层上，但是同一树层上不允许有相同的，所以这个可以用来过滤不合理的成员。</p>
+<h2 id="131分割回文串">131.分割回文串</h2>
+<p><a href="https://leetcode.com/problems/palindrome-partitioning/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/palindrome-partitioning/description/">力扣</a></p>
+<pre><code>For example, given s = &quot;aab&quot;,
+Return
+
+[
+  [&quot;aa&quot;,&quot;b&quot;],
+  [&quot;a&quot;,&quot;a&quot;,&quot;b&quot;]
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+private:
+    vector&lt;vector&lt;string&gt;&gt; result;
+    vector&lt;string&gt; path; // 放已经回文的子串
+    void backtracking (const string&amp; s, int startIndex) {
+        // 如果起始位置已经大于s的大小，说明已经找到了一组分割方案了
+        if (startIndex &gt;= s.size()) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = startIndex; i &lt; s.size(); i++) {
+            if (isPalindrome(s, startIndex, i)) {   // 是回文子串
+                // 获取[startIndex,i]在s中的子串
+                string str = s.substr(startIndex, i - startIndex + 1);
+                path.push_back(str);
+            } else {                                // 不是回文，跳过
+                continue;
+            }
+            backtracking(s, i + 1); // 寻找i+1为起始位置的子串
+            path.pop_back(); // 回溯过程，弹出本次已经填在的子串
+        }
+    }
+    bool isPalindrome(const string&amp; s, int start, int end) {
+        for (int i = start, j = end; i &lt; j; i++, j--) {
+            if (s[i] != s[j]) {
+                return false;
+            }
+        }
+        return true;
+    }
+public:
+    vector&lt;vector&lt;string&gt;&gt; partition(string s) {
+        result.clear();
+        path.clear();
+        backtracking(s, 0);
+        return result;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>先写一个判定是否是回文的函数</li>
+<li>把判断回文作为循环判定条件，是回文就存入，不是就往下接着递归。注意这里取的是一整个串。</li>
+</ul>
+<h2 id="37解数独">37.解数独</h2>
+<p><a href="https://leetcode.com/problems/sudoku-solver/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/sudoku-solver/description/">力扣</a></p>
+<p>编写一个程序，通过填充空格来解决数独问题。</p>
+<p>数独的解法需 遵循如下规则：</p>
+<p>数字 1-9 在每一行只能出现一次。<br>
+数字 1-9 在每一列只能出现一次。<br>
+数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。（请参考示例图）<br>
+数独部分空格内已填入了数字，空白格用 '.' 表示。</p>
+<figure data-type="image" tabindex="1"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2021/04/12/250px-sudoku-by-l2g-20050714svg.png" alt="img" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+private:
+bool backtracking(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+    for (int i = 0; i &lt; board.size(); i++) {        // 遍历行
+        for (int j = 0; j &lt; board[0].size(); j++) { // 遍历列
+            if (board[i][j] != '.') continue;
+            for (char k = '1'; k &lt;= '9'; k++) {     // (i, j) 这个位置放k是否合适
+                if (isValid(i, j, k, board)) {
+                    board[i][j] = k;                // 放置k
+                    if (backtracking(board)) return true; // 如果找到合适一组立刻返回
+                    board[i][j] = '.';              // 回溯，撤销k
+                }
+            }
+            return false;                           // 9个数都试完了，都不行，那么就返回false
+        }
+    }
+    return true; // 遍历完没有返回false，说明找到了合适棋盘位置了
+}
+bool isValid(int row, int col, char val, vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+    for (int i = 0; i &lt; 9; i++) { // 判断行里是否重复
+        if (board[row][i] == val) {
+            return false;
+        }
+    }
+    for (int j = 0; j &lt; 9; j++) { // 判断列里是否重复
+        if (board[j][col] == val) {
+            return false;
+        }
+    }
+    //保证从九宫格的左上角到右下角
+    //这样就不会弄错九宫格的判断
+    int startRow = (row / 3) * 3;
+    int startCol = (col / 3) * 3;
+    for (int i = startRow; i &lt; startRow + 3; i++) { // 判断9方格里是否重复
+        for (int j = startCol; j &lt; startCol + 3; j++) {
+            if (board[i][j] == val ) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+public:
+    void solveSudoku(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        backtracking(board);
+    }
+};
+</code></pre>
+<ul>
+<li>判断：
+<ul>
+<li>是否同行</li>
+<li>是否同列</li>
+<li>是否同九宫格</li>
+</ul>
+</li>
+<li>判断通过
+<ul>
+<li>取新的数递归（注意是二维取数）</li>
+<li>回溯</li>
+</ul>
+</li>
+</ul>
+<h2 id="51n皇后">51.N皇后</h2>
+<p><a href="https://leetcode.com/problems/n-queens/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/n-queens/description/">力扣</a></p>
+<p>n 皇后问题 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。</p>
+<p>给你一个整数 n ，返回所有不同的 n 皇后问题 的解决方案。</p>
+<p>每一种解法包含一个不同的 n 皇后问题 的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。</p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/11/13/queens.jpg" alt="img" loading="lazy"></figure>
+<pre><code class="language-C++">class Solution {
+private:
+vector&lt;vector&lt;string&gt;&gt; result;
+// n 为输入的棋盘大小
+// row 是当前递归到***的第几行了
+void backtracking(int n, int row, vector&lt;string&gt;&amp; chessboard) {
+    if (row == n) {
+        result.push_back(chessboard);
+        return;
+    }
+    for (int col = 0; col &lt; n; col++) {
+        if (isValid(row, col, chessboard, n)) { // 验证合法就可以放
+            chessboard[row][col] = 'Q'; // 放置皇后
+            backtracking(n, row + 1, chessboard);
+            chessboard[row][col] = '.'; // 回溯，撤销皇后
+        }
+    }
+}
+bool isValid(int row, int col, vector&lt;string&gt;&amp; chessboard, int n) {
+    int count = 0;
+    // 检查列
+    for (int i = 0; i &lt; row; i++) { // 这是一个剪枝
+        if (chessboard[i][col] == 'Q') {
+            return false;
+        }
+    }
+    // 检查 45度角是否有皇后
+    for (int i = row - 1, j = col - 1; i &gt;=0 &amp;&amp; j &gt;= 0; i--, j--) {
+        if (chessboard[i][j] == 'Q') {
+            return false;
+        }
+    }
+    // 检查 135度角是否有皇后
+    for(int i = row - 1, j = col + 1; i &gt;= 0 &amp;&amp; j &lt; n; i--, j++) {
+        if (chessboard[i][j] == 'Q') {
+            return false;
+        }
+    }
+    return true;
+}
+public:
+    vector&lt;vector&lt;string&gt;&gt; solveNQueens(int n) {
+        result.clear();
+        std::vector&lt;std::string&gt; chessboard(n, std::string(n, '.'));
+        backtracking(n, 0, chessboard);
+        return result;
+    }
+};
+</code></pre>
+<ul>
+<li>判断45度是否有皇后</li>
+<li>判断135度是否有皇后</li>
+<li>符合判断需求则往后取新的数</li>
+<li>此题相当于对数独的其中一个九宫格简化求解。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[回溯法合集一]]></title>
+        <id>https://sugar940.github.io/post/hui-su-fa-he-ji-yi/</id>
+        <link href="https://sugar940.github.io/post/hui-su-fa-he-ji-yi/">
+        </link>
+        <updated>2022-01-26T03:52:59.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="17数字键盘组合">17.数字键盘组合</h2>
+<p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/description/">力扣</a></p>
+<figure data-type="image" tabindex="1"><a href="https://camo.githubusercontent.com/3774807b632f5c4869c8317dd1cb04532463dc1d94777fefc654e32d85eee2e6/68747470733a2f2f63732d6e6f7465732d313235363130393739362e636f732e61702d6775616e677a686f752e6d7971636c6f75642e636f6d2f39383233373638632d323132622d346231612d623639612d6233663539653037623937372e6a7067"><img src="https://camo.githubusercontent.com/3774807b632f5c4869c8317dd1cb04532463dc1d94777fefc654e32d85eee2e6/68747470733a2f2f63732d6e6f7465732d313235363130393739362e636f732e61702d6775616e677a686f752e6d7971636c6f75642e636f6d2f39383233373638632d323132622d346231612d623639612d6233663539653037623937372e6a7067" alt="img" loading="lazy"></a></figure>
+<pre><code>Input:Digit string &quot;23&quot;
+Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void dfs(string &amp;digits,int index,unordered_map&lt;char,string&gt; phone,vector&lt;string&gt; &amp;ans,string &amp;member){
+        if(index == digits.size()){
+            ans.push_back(member);
+            
+        }else{
+            //按钮
+            char map_index = digits[index];
+            //取出当前按钮的内容
+            string temp = phone.find(map_index)-&gt;second;
+            //遍历当前按钮的内容，和下一个按钮的内容拼凑到一起
+            for(int i = 0;i &lt; temp.size();i++){
+                //取出拼凑的字符
+                char a = temp[i];
+                //把当前字母拼凑到成员中
+                member.push_back(a);
+                //继续像下一层进发
+                dfs(digits,index+1,phone,ans,member);
+
+                //************注意要弹出刚刚插入的！！！因为这边要开始一个新的循环了！！**********
+                member.pop_back();
+            }
+        }
+        
+    }
+    vector&lt;string&gt; letterCombinations(string digits) {
+        vector&lt;string&gt; ans;
+        if(digits.size() == 0){
+            return ans;
+        }
+        string member;
+        //把键盘录入
+        unordered_map&lt;char,string&gt; phone = {
+            {'2',&quot;abc&quot;},
+            {'3',&quot;def&quot;},
+            {'4',&quot;ghi&quot;},
+            {'5',&quot;jkl&quot;},
+            {'6',&quot;mno&quot;},
+            {'7',&quot;pqrs&quot;},
+            {'8',&quot;tuv&quot;},
+            {'9',&quot;wxyz&quot;}
+        };
+        
+        dfs(digits,0,phone,ans,member);
+        return ans;
+    }
+};
+</code></pre>
+<p>思路:</p>
+<ul>
+<li>把每一个按键对应的字母先存入unordered_map中保存好</li>
+<li>设置终止条件：当子成员的长度和按键的数量相等，即一组组合已经生成，即可存入总数组中。</li>
+<li>设置递归条件：每次取一个字母，之后前往index+1，即下一个字母。</li>
+<li>设置回溯：让总数组把最后一个字母弹出来，然后重新循环。即开始一个新的组合。</li>
+</ul>
+<h2 id="93复原ip地址">93.复原ip地址</h2>
+<p><a href="https://leetcode.com/problems/restore-ip-addresses/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/restore-ip-addresses/description/">力扣</a></p>
+<pre><code>Given &quot;25525511135&quot;,
+return [&quot;255.255.11.135&quot;, &quot;255.255.111.35&quot;].
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;string&gt;ans;
+    void backtrace(string&amp; s,int cnt,int index,string&amp; str){
+        //标点符号超过3或者到达最后一位
+        if(cnt==4 || index==s.size() ){
+            //标点符号超过3并且到达最后一位则说明划分完成
+            if(cnt==4 &amp;&amp; index==s.size())
+                ans.push_back(str.substr(0,str.size()-1));
+            //若不是最后一位则不执行以上操作直接返回
+            return;
+        }
+        //打入三个小数点
+        for(int i=1;i&lt;=3;i++){
+            //如果越界则不执行
+            if(index+i&gt;s.size()) return;
+            //如果起点是0，那么它只能单独成块，后面不能跟别的数字（即不含有前导0）
+            if(s[index]=='0' &amp;&amp; i!=1) return;
+            //如果取了3位，并且它们加起来超过255则返回
+            if(i==3 &amp;&amp; s.substr(index,i)&gt;&quot;255&quot;) return;
+            //符合以上过滤规则则执行拼接
+            str+=s.substr(index,i);
+            //拼接完成后再后面加一个.
+            str.push_back('.');
+            //对后面的单词执行拼接
+            backtrace(s,cnt+1,index+i,str);
+            //还原为上述回溯步骤之前
+            str = str.substr(0,str.size()-i-1);
+        }
+    }
+    vector&lt;string&gt; restoreIpAddresses(string s) {
+        string str =&quot;&quot;;
+        backtrace(s,0,0,str);
+        return ans;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置结束条件：当标点数超过三或者标点位置在最后则可以结束，当标点位置超过3且位于最后一位则把这组ip地址插入总数组中。</li>
+<li>设置递归条件:
+<ul>
+<li>越界返回</li>
+<li>0不和其他数字组合返回</li>
+<li>3位合超过255返回</li>
+<li>以上情况都不发生就循环递归</li>
+<li>每次递归标点数+1，指针+1</li>
+</ul>
+</li>
+<li>设置回朔条件：
+<ul>
+<li>让str字符串最后以为消去，即只取字符串的0到长度str.size()-i-1位。（打点可能垮了几个字符所以要-i-1）</li>
+<li>打点数变成cnt-1</li>
+</ul>
+</li>
+</ul>
+<h2 id="79单词搜索">79.单词搜索</h2>
+<p><a href="https://leetcode.com/problems/word-search/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/word-search/description/">力扣</a></p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/11/04/word2.jpg" alt="img" loading="lazy"></figure>
+<pre><code>For example,
+Given board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+word = &quot;ABCCED&quot;, -&gt; returns true,
+word = &quot;SEE&quot;, -&gt; returns true,
+word = &quot;ABCB&quot;, -&gt; returns false.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    bool exist(vector&lt;vector&lt;char&gt;&gt;&amp; board, string word) {
+        for(int i = 0; i &lt; board.size(); i++)
+            for(int j = 0; j &lt; board[i].size(); j++)
+                if(dfs(board,word,0,i,j)) return true;
+        return false;        
+    }
+    int dx[4] = {-1,0,1,0}, dy[4] = {0,1,0,-1}; //方向数组
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board, string&amp; word,int u,int x,int y)
+    {
+        if(board[x][y] != word[u]) return false;
+        if(u == word.size() - 1)   return true;
+        char t = board[x][y];
+        board[x][y] = '.';
+        for(int i = 0; i &lt; 4; i++)
+        {
+            int a = x + dx[i], b = y + dy[i];
+            //出界或者走到已经搜索过的位置
+            if(a &lt; 0 || a &gt;= board.size() || b &lt; 0 || b &gt;= board[0].size() || board[a][b] == '.')  continue;
+            if(dfs(board,word,u+1,a,b)) return true;
+        }
+        board[x][y] = t;
+        return false;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置结束条件：
+<ul>
+<li>遍历的块和目标块不一样返回false</li>
+<li>遍历到最后一位，说明前面的都没有问题，返回true</li>
+<li>没有返回数组说整个区块没有正确的组合，返回false。</li>
+</ul>
+</li>
+<li>设置递归：
+<ul>
+<li>延四个方向递归</li>
+<li>出界返回或者遇到'.'返回false</li>
+<li>正常继续往下递归，u+1(u记录遍历长度)</li>
+<li>递归过的位置变成'.'</li>
+</ul>
+</li>
+</ul>
+<h2 id="257二叉树的所有路径">257.二叉树的所有路径</h2>
+<p><a href="https://leetcode.com/problems/binary-tree-paths/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/binary-tree-paths/description/">力扣</a></p>
+<pre><code>  1
+ /  \
+2    3
+ \
+  5
+[&quot;1-&gt;2-&gt;5&quot;, &quot;1-&gt;3&quot;]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void construct_paths(TreeNode* root, string path, vector&lt;string&gt;&amp; paths) {
+        //首先判断是否为空节点，因为是同时传的左右结点，都有为空的可能性,如果为空此处直接略过
+        if (root != nullptr) {
+            //如果不为空则往后添加值
+            path += to_string(root-&gt;val);
+            //判断是否为叶子结点，如果不是叶子结点则继续往下遍历
+            if (root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr) {  // 当前节点是叶子节点
+                paths.push_back(path);                              // 把路径加入到答案中
+            } else {
+                //不是叶子结点说明后面还有结点，最为加-&gt;并继续遍历
+                path += &quot;-&gt;&quot;;  // 当前节点不是叶子节点，继续递归遍历
+                construct_paths(root-&gt;left, path, paths);
+                construct_paths(root-&gt;right, path, paths);
+            }
+        }
+    }
+
+    vector&lt;string&gt; binaryTreePaths(TreeNode* root) {
+        vector&lt;string&gt; paths;
+        construct_paths(root, &quot;&quot;, paths);
+        return paths;
+    }
+};
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>设置递归条件
+<ul>
+<li>节点非空就递归</li>
+<li>每次递归往path后插入结点的值</li>
+<li>如果该结点非叶子结点，插入&quot;-&gt;&quot;，并且往左边和右边递归</li>
+<li>如果为叶子结点：插入路径到数组中。</li>
+</ul>
+</li>
+</ul>
+<h2 id="46全排列">46.全排列</h2>
+<p><a href="https://leetcode.com/problems/permutations/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/permutations/description/">力扣</a></p>
+<pre><code>[1,2,3] have the following permutations:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    void backtrpping(vector&lt;int&gt;&amp; nums,vector&lt;bool&gt;&amp; passed,vector&lt;int&gt;&amp; path){
+        //如果已存入数组的大小和待排序数组的大小相等，则说明这一组数据排序完成
+        if(path.size() == nums.size()){
+            ans.push_back(path);
+            return;
+        }
+        for(int i = 0;i &lt; nums.size();i++){
+            if(passed[i] == true){
+                continue;
+            }else{
+                //如果这个点没有去过就进行标记并记录下来
+                passed[i] = true;
+                path.push_back(nums[i]);
+                backtrpping(nums, passed, path);
+                //回溯
+                path.pop_back();
+                //这一步写的时候忽略了！
+                passed[i] = false;
+
+            }
+        }
+    }
+   
+    vector&lt;vector&lt;int&gt;&gt; permute(vector&lt;int&gt;&amp; nums) {
+       
+        //对vector数组进行赋值
+        vector&lt;bool&gt; passed(nums.size(),false);
+        vector&lt;int&gt; path;
+        backtrpping(nums, passed, path);
+        return ans;
+
+    }
+};
+</code></pre>
+<ul>
+<li>结束条件：当子成员的长度和数组的长度一样，子成员插入数组中去。</li>
+<li>递归条件：
+<ul>
+<li>没有去过这个点，则把这个点插入子成员，并且把这个点设置为true，传入下一层递归</li>
+<li>最后记得把刚刚改变的路径还原</li>
+</ul>
+</li>
+</ul>
+<h2 id="47含有相同元素的全排列">47.含有相同元素的全排列</h2>
+<p><a href="https://leetcode.com/problems/permutations-ii/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/permutations-ii/description/">力扣</a></p>
+<pre><code>[1,1,2] have the following unique permutations:
+[[1,1,2], [1,2,1], [2,1,1]]
+</code></pre>
+<p>数组元素可能含有相同的元素，进行排列时就有可能出现重复的排列，要求重复的排列只返回一个。</p>
+<p>在实现上，和 Permutations 不同的是要先排序，然后在添加一个元素时，判断这个元素是否等于前一个元素，如果等于，并且前一个元素还未访问，那么就跳过这个元素。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    vector&lt;int&gt; path;
+    void backtrpping(vector&lt;int&gt;&amp; nums,vector&lt;bool&gt;&amp; passed){
+        //如果已存入数组的大小和待排序数组的大小相等，则说明这一组数据排序完成
+        if(path.size() == nums.size()){
+            ans.push_back(path);
+            return;
+        }
+        for(int i = 0;i &lt; nums.size();i++){
+            //此处的passed[i-1]为true或者false都可以
+            if(i&gt;0 &amp;&amp; nums[i] == nums[i-1] &amp;&amp; passed[i-1] == false){
+                continue;
+            }
+            //注意此处需要额外判断passed[i]是否为false，只有passed[i]为false时才执行以下步骤
+            if(passed[i] == false){
+                //如果这个点没有去过就进行标记并记录下来
+                passed[i] = true;
+                path.push_back(nums[i]);
+                
+                backtrpping(nums, passed);
+                //回溯
+                path.pop_back();
+              
+                //这一步写的时候忽略了！
+                passed[i] = false;
+            }
+           
+
+            
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; permuteUnique(vector&lt;int&gt;&amp; nums) {
+       
+        //对vector数组进行赋值
+        
+        sort(nums.begin(),nums.end());
+        vector&lt;bool&gt; passed(nums.size(),false);
+        backtrpping(nums, passed);
+        return ans;
+    }
+};
+</code></pre>
+<ul>
+<li>
+<p>结束条件：</p>
+<ul>
+<li>当子成员的大小和序列大小一样时把子成员存入数组中</li>
+</ul>
+</li>
+<li>
+<p>递归条件：</p>
+<ul>
+<li>
+<p><strong>首先要排除重复元素的干扰</strong></p>
+<ul>
+<li>
+<figure data-type="image" tabindex="3"><img src="https://pic.leetcode-cn.com/1631608102-VjiWOk-file_1631608102208" alt="47.全排列II1" loading="lazy"></figure>
+</li>
+<li>
+<pre><code class="language-C++">//只要符合如图所示条件就跳过此次循环
+//遇到相等的元素，并且
+if(i&gt;0 &amp;&amp; nums[i] == nums[i-1] &amp;&amp; passed[i-1] == false){
+                continue;
+ }
+</code></pre>
+</li>
+<li>
+<p>经过上述去重后判断该点是否之前经过，防止出现重复的数字，如果之前去过了跳过，没去过插入</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>回溯条件：</p>
+<ul>
+<li>路径回溯</li>
+<li>结果点回溯</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[深度优先遍历合集]]></title>
+        <id>https://sugar940.github.io/post/shen-du-you-xian-bian-li-he-ji/</id>
+        <link href="https://sugar940.github.io/post/shen-du-you-xian-bian-li-he-ji/">
+        </link>
+        <updated>2022-01-19T09:55:23.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="695查找最大连通面积">695.查找最大连通面积</h2>
+<p><a href="https://leetcode.com/problems/max-area-of-island/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/max-area-of-island/description/">力扣</a></p>
+<pre><code>[[0,0,1,0,0,0,0,1,0,0,0,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,1,1,0,1,0,0,0,0,0,0,0,0],
+ [0,1,0,0,1,1,0,0,1,0,1,0,0],
+ [0,1,0,0,1,1,0,0,1,1,1,0,0],
+ [0,0,0,0,0,0,0,0,0,0,1,0,0],
+ [0,0,0,0,0,0,0,1,1,1,0,0,0],
+ [0,0,0,0,0,0,0,1,1,0,0,0,0]]
+</code></pre>
+<p>示例 1：</p>
+<figure data-type="image" tabindex="1"><img src="https://assets.leetcode.com/uploads/2021/05/01/maxarea1-grid.jpg" alt="img" loading="lazy"></figure>
+<p>输入：grid = [[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]<br>
+输出：6<br>
+解释：答案不应该是 11 ，因为岛屿只能包含水平或垂直这四个方向上的 1 。</p>
+<pre><code class="language-C++">class Solution {
+public:
+    int dfs(vector&lt;vector&lt;int&gt;&gt;&amp; grid,int x,int y){
+        if(x &lt; 0 || y &lt; 0 ||  x == grid.size()  || y == grid[0].size() ||grid[x][y] == 0 ){
+            return 0;
+        }
+        int d_x[4] = {0,0,-1,1};
+        int d_y[4] = {1,-1,0,0};
+        int ans = 1;
+        grid[x][y] = 0;
+        for(int i =0;i &lt; 4;i++){
+            int new_x = x+d_x[i];
+            int new_y = y+d_y[i];
+            ans += dfs(grid,new_x,new_y);
+        }
+        return ans;
+    }
+    int maxAreaOfIsland(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int ans = 0;
+        for(int i = 0;i &lt; grid.size();i++){
+            for(int j = 0;j &lt; grid[0].size();j++){
+                ans = max(ans,dfs(grid,i,j));
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>使用深度优先遍历对每一个地图块进行深度优先遍历，同时记录每一次遍历的最大值，最终返回最大值就是可以得到的最大块数。</p>
+<h2 id="200岛屿数量">200.岛屿数量</h2>
+<p><a href="https://leetcode.com/problems/number-of-islands/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/number-of-islands/description/">力扣</a></p>
+<pre><code>Input:
+11000
+11000
+00100
+00011
+
+Output: 3
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; grid,int x,int y){
+        if(x &lt; 0 || y &lt; 0 || x == grid.size() || y == grid[0].size() || grid[x][y] == '0'){
+            return false;
+        }
+        int d_x[4] = {0,0,1,-1};
+        int d_y[4] = {1,-1,0,0};
+        grid[x][y] = '0';
+        for(int i = 0; i &lt; 4;i++){
+            int new_x = x+d_x[i];
+            int new_y = y+d_y[i];
+            dfs(grid,new_x,new_y);
+        }
+        return true;
+
+    }
+    int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        int ans = 0;
+        for(int i = 0;i &lt; grid.size();i++){
+            for(int j = 0; j &lt; grid[0].size();j++){
+                if(dfs(grid,i,j)){
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<p>对每一格进行深度遍历，把遍历过的岛屿都变成海，同时进行计数，没填一个岛屿就进行加一，最终返回计数的总数即可。</p>
+<h2 id="547省份数量">547.省份数量</h2>
+<p><a href="https://leetcode.com/problems/friend-circles/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/friend-circles/description/">力扣</a></p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode.com/uploads/2020/12/24/graph1.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input:
+[[1,1,0],
+ [1,1,0],
+ [0,0,1]]
+
+Output: 2
+
+Explanation:The 0th and 1st students are direct friends, so they are in a friend circle.
+The 2nd student himself is in a friend circle. So return 2.
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected, vector&lt;int&gt;&amp; visited, int provinces, int i) {
+        for (int j = 0; j &lt; provinces; j++) {
+            if (isConnected[i][j] == 1 &amp;&amp; !visited[j]) {
+                visited[j] = 1;
+                dfs(isConnected, visited, provinces, j);
+            }
+        }
+    }
+
+    int findCircleNum(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected) {
+        int provinces = isConnected.size();
+        vector&lt;int&gt; visited(provinces);
+        int circles = 0;
+        for (int i = 0; i &lt; provinces; i++) {
+            if (!visited[i]) {
+                dfs(isConnected, visited, provinces, i);
+                circles++;
+            }
+        }
+        return circles;
+    }
+};
+</code></pre>
+<p>对省份进行深度优先遍历，使用visited数组来记录已经访问过的省份。</p>
+<h2 id="130被围绕的区域">130.被围绕的区域</h2>
+<p><a href="https://leetcode.com/problems/surrounded-regions/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/surrounded-regions/description/">力扣</a></p>
+<pre><code>For example,
+X X X X
+X O O X
+X X O X
+X O X X
+
+After running your function, the board should be:
+X X X X
+X X X X
+X X X X
+X O X X
+</code></pre>
+<pre><code class="language-C++">class Solution {
+public:
+    int n, m;
+
+    void dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board, int x, int y) {
+        if (x &lt; 0 || x &gt;= n || y &lt; 0 || y &gt;= m || board[x][y] != 'O') {
+            return;
+        }
+        board[x][y] = 'A';
+        dfs(board, x + 1, y);
+        dfs(board, x - 1, y);
+        dfs(board, x, y + 1);
+        dfs(board, x, y - 1);
+    }
+
+    void solve(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        n = board.size();
+        if (n == 0) {
+            return;
+        }
+        m = board[0].size();
+        //遍历边界，把和边界相连的的O变为A
+        for (int i = 0; i &lt; n; i++) {
+            dfs(board, i, 0);
+            dfs(board, i, m - 1);
+        }
+        for (int i = 1; i &lt; m - 1; i++) {
+            dfs(board, 0, i);
+            dfs(board, n - 1, i);
+        }
+        //遍历数组，把边界的A还原为X，把正常的O变为X。
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; m; j++) {
+                if (board[i][j] == 'A') {
+                    board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+};
+
+
+</code></pre>
+<p>对于被围绕区域的筛查，首先可以把和边界相连的区域进行标记，之后再对剩余的区域进行深度优先遍历，使之变成x，之后再把之前标记过的元素还原为O即可。</p>
+<h2 id="417太平洋和大西洋水流问题">417.太平洋和大西洋水流问题</h2>
+<p><a href="https://leetcode.com/problems/pacific-atlantic-water-flow/description/">Leetcode</a> / <a href="https://leetcode-cn.com/problems/pacific-atlantic-water-flow/description/">力扣</a></p>
+<pre><code>Given the following 5x5 matrix:
+
+  Pacific ~   ~   ~   ~   ~
+       ~  1   2   2   3  (5) *
+       ~  3   2   3  (4) (4) *
+       ~  2   4  (5)  3   1  *
+       ~ (6) (7)  1   4   5  *
+       ~ (5)  1   1   2   4  *
+          *   *   *   *   * Atlantic
+
+Return:
+[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+</code></pre>
+<p>左边和上边是太平洋，右边和下边是大西洋，内部的数字代表海拔，海拔高的地方的水能够流到低的地方，求解水能够流到太平洋和大西洋的所有位置。</p>
+<pre><code class="language-C++">class Solution {
+private:
+    vector&lt;int&gt; direction{-1, 0, 1, 0, -1};
+    void DFS(const vector&lt;vector&lt;int&gt;&gt;&amp; heights, vector&lt;vector&lt;bool&gt;&gt;&amp; canReach, int i, int j) {
+        if (canReach[i][j]) return;
+        canReach[i][j] = true;
+        for (int k = 0; k &lt; 4; k++) {
+            int p = i + direction[k];
+            int q = j + direction[k + 1];
+            if (p &gt;= 0 &amp;&amp; p &lt; heights.size() &amp;&amp; q &gt;= 0 &amp;&amp; q &lt; heights[0].size() &amp;&amp; heights[p][q] &gt;= heights[i][j]) {
+                DFS(heights, canReach, p, q);
+            }
+        }
+    }
+public:
+    vector&lt;vector&lt;int&gt;&gt; pacificAtlantic(vector&lt;vector&lt;int&gt;&gt;&amp; heights) {
+        // 采用 DFS 
+        if (heights.empty() || heights[0].empty()) {
+            return {};
+        }
+        int m = heights.size(), n = heights[0].size();
+        vector&lt;vector&lt;int&gt;&gt; res;
+        vector&lt;vector&lt;bool&gt;&gt; canReachA (m, vector&lt;bool&gt;(n, false));
+        vector&lt;vector&lt;bool&gt;&gt; canReachP (m, vector&lt;bool&gt;(n, false));
+        // can reach Atlantic
+        for (int i = 0; i &lt; m; i++) {
+            // 左边太平洋
+            DFS(heights, canReachA, i, 0);
+            // 右边大西洋
+            DFS(heights, canReachP, i, n - 1);
+        }
+        for (int j = 0; j &lt; heights[0].size(); j++) {
+            // 上边太平洋
+            DFS(heights, canReachA, 0, j);
+            // 下边大西洋
+            DFS(heights, canReachP, m - 1, j);
+        }
+        // 找到都能到达的坐标
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (canReachA[i][j] &amp;&amp; canReachP[i][j]) {
+                    res.push_back({i, j});
+                }
+            }
+        }
+        return res;
+    }
+};
+</code></pre>
+<p>直接考虑从高处往低处流的情况比较难考虑，因为水流既要满足大西洋又要满足太平洋，很难写出同时满足的判断代码，所以此题换一个角度进行考虑，逆向思维，反过来求解水往高处流，分别从大西洋和太平洋出发进行深度优先遍历，把可以到达的点都进行记录，最后取两个记录数组的交集就是既可以到达大西洋又可以到达太平洋的点。</p>
+]]></content>
+    </entry>
+</feed>
